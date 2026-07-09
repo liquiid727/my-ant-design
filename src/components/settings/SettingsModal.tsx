@@ -1,11 +1,15 @@
-import { App, Button, Form, Input, Modal, Select, Space } from 'antd';
+import { App, AutoComplete, Button, Form, Input, Modal, Select, Space } from 'antd';
 import type { LLMConfig, LLMProvider } from '../../types';
 import { LLMClient } from '../../services/ai/LLMClient';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { useUIStore } from '../../stores/uiStore';
 
 const providerDefaults: Record<LLMProvider, { baseURL: string; model: string; models: string[] }> = {
-  openai: { baseURL: 'https://api.openai.com/v1', model: 'gpt-4o-mini', models: ['gpt-4o-mini', 'gpt-4o'] },
+  openai: {
+    baseURL: 'https://api.openai.com/v1',
+    model: 'gpt-5.5',
+    models: ['gpt-5.5', 'gpt-5.4', 'gpt-5.6', 'gpt-4o-mini', 'gpt-4o'],
+  },
   deepseek: { baseURL: 'https://api.deepseek.com/v1', model: 'deepseek-chat', models: ['deepseek-chat'] },
   qwen: { baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-plus', models: ['qwen-plus', 'qwen-max'] },
   openrouter: { baseURL: 'https://openrouter.ai/api/v1', model: 'openai/gpt-4o-mini', models: ['openai/gpt-4o-mini'] },
@@ -55,7 +59,10 @@ export function SettingsModal() {
           <Input.Password placeholder="sk-..." />
         </Form.Item>
         <Form.Item label="Model" name="model" rules={[{ required: true }]}>
-          <Select mode="tags" options={models.map((model) => ({ label: model, value: model }))} />
+          <AutoComplete
+            options={models.map((model) => ({ label: model, value: model }))}
+            placeholder="Select or enter a model"
+          />
         </Form.Item>
         <Space>
           <Button
@@ -73,4 +80,3 @@ export function SettingsModal() {
     </Modal>
   );
 }
-

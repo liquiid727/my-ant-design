@@ -6,7 +6,7 @@ const defaultConfig: LLMConfig = {
   provider: 'openai',
   baseURL: 'https://api.openai.com/v1',
   apiKey: '',
-  model: 'gpt-4o-mini',
+  model: 'gpt-5.5',
 };
 
 type SettingsState = {
@@ -35,4 +35,3 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     return Boolean(config.baseURL && config.apiKey && config.model);
   },
 }));
-
