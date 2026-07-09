@@ -1,0 +1,1777 @@
+:root {
+  color-scheme: light;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 8% 9%, rgba(140, 226, 255, 0.28), transparent 28%),
+    radial-gradient(circle at 94% 12%, rgba(170, 236, 231, 0.35), transparent 24%),
+    radial-gradient(circle at 4% 92%, rgba(203, 232, 255, 0.42), transparent 22%),
+    #f8fbff;
+}
+
+body::before {
+  background:
+    linear-gradient(115deg, transparent 0 18%, rgba(255, 255, 255, 0.72) 18% 55%, transparent 55%),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.58), transparent);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: fixed;
+  z-index: -1;
+}
+
+.app-shell {
+  background: transparent;
+  min-height: 100vh;
+}
+
+.app-header {
+  align-items: center;
+  background: transparent;
+  border-bottom: 0;
+  display: flex;
+  gap: 16px;
+  height: 58px;
+  margin: 0 auto;
+  max-width: 1680px;
+  padding: 14px 18px 0;
+  position: relative;
+  z-index: 20;
+}
+
+.nav-dropdown-label {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+}
+
+.brand {
+  align-items: center;
+  color: #334155;
+  display: flex;
+  font-size: 14px;
+  font-weight: 700;
+  gap: 10px;
+  min-width: 230px;
+}
+
+.brand-mark {
+  align-items: center;
+  background: #1677ff;
+  border-radius: 10px;
+  color: #fff;
+  display: inline-flex;
+  font-size: 12px;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.app-header .ant-segmented {
+  background: rgba(255, 255, 255, 0.58);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.header-actions .ant-btn {
+  border-radius: 999px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+.app-content {
+  padding: 10px 24px 32px;
+}
+
+.theme-playground {
+  margin: 0 auto;
+  max-width: 1680px;
+}
+
+.preview-panel,
+.editor-panel,
+.library-panel {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(169, 203, 218, 0.42);
+  border-radius: 8px;
+  box-shadow: 0 18px 50px rgba(70, 105, 120, 0.12);
+}
+
+.reference-panel {
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(164, 211, 232, 0.42);
+  border-radius: 24px;
+  box-shadow:
+    0 30px 90px rgba(80, 128, 145, 0.2),
+    0 14px 38px rgba(68, 110, 130, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88);
+  overflow: hidden;
+  position: relative;
+}
+
+.reference-panel::before {
+  animation: border-spin 4.8s linear infinite;
+  background: conic-gradient(
+    from var(--border-angle),
+    transparent 0deg,
+    transparent 252deg,
+    rgba(105, 184, 255, 0.2) 282deg,
+    rgba(105, 184, 255, 0.98) 306deg,
+    rgba(22, 119, 255, 1) 326deg,
+    rgba(105, 184, 255, 0.98) 346deg,
+    transparent 360deg
+  );
+  border-radius: inherit;
+  box-shadow:
+    0 0 18px rgba(22, 119, 255, 0.42),
+    inset 0 0 18px rgba(22, 119, 255, 0.12);
+  content: "";
+  inset: 0;
+  padding: 2px;
+  pointer-events: none;
+  position: absolute;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  z-index: 2;
+}
+
+.reference-panel::after {
+  content: none;
+}
+
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-spin {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+.reference-tabs,
+.reference-padding {
+  position: relative;
+  z-index: 4;
+}
+
+.reference-topbar {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+  justify-content: flex-end;
+  margin: 0 auto 14px;
+  padding: 0 18px;
+  position: relative;
+  z-index: 8;
+}
+
+.reference-padding {
+  min-height: 760px;
+  padding: 36px 40px;
+}
+
+.reference-tabs {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.reference-tabs > .ant-tabs-nav {
+  margin-bottom: 22px;
+  flex: 0 0 auto;
+}
+
+.reference-tabs > .ant-tabs-content-holder {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.reference-tabs > .ant-tabs-content-holder > .ant-tabs-content,
+.reference-tabs > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane {
+  height: 100%;
+}
+
+.reference-tabs > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane {
+  overflow: hidden;
+}
+
+.reference-tabs > .ant-tabs-nav::before,
+.reference-tabs .ant-tabs-ink-bar {
+  display: none;
+}
+
+.reference-tabs .ant-tabs-nav-wrap {
+  flex: 0 0 auto;
+}
+
+.reference-tabs .ant-tabs-nav-list {
+  background: rgba(255, 255, 255, 0.48);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  padding: 4px;
+}
+
+.reference-tabs .ant-tabs-tab {
+  margin: 0;
+  padding: 0;
+}
+
+.reference-tabs .ant-tabs-tab-btn {
+  border-radius: 999px;
+  color: #8a929a;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 8px 22px;
+}
+
+.reference-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 5px 16px rgba(79, 95, 108, 0.16);
+  color: #222;
+}
+
+.reference-actions {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+}
+
+.preset-bar {
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+}
+
+.preset-icon {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.65);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 7px 18px rgba(56, 82, 98, 0.13);
+  cursor: pointer;
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  line-height: 1;
+  padding: 4px;
+  transition:
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+  width: 28px;
+}
+
+.preset-icon::before {
+  content: "";
+  display: none;
+}
+
+.preset-icon-img {
+  display: block;
+  height: 20px;
+  object-fit: contain;
+  width: 20px;
+}
+
+.preset-icon.active {
+  box-shadow:
+    0 0 0 3px rgba(145, 202, 255, 0.55),
+    0 7px 18px rgba(56, 82, 98, 0.16);
+  transform: translateY(-1px);
+}
+
+.reference-tool-actions {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.official-tool-button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  color: #91caff;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 17px;
+  height: 28px;
+  justify-content: center;
+  padding: 0;
+  transition:
+    background 0.18s ease,
+    box-shadow 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+  width: 28px;
+}
+
+.official-tool-button:hover {
+  background: rgba(145, 202, 255, 0.13);
+  color: #69b1ff;
+  transform: translateY(-1px);
+}
+
+.official-tool-button.ai {
+  background: rgba(0, 0, 0, 0.04);
+  font-size: 19px;
+  height: 42px;
+  margin-left: 4px;
+  width: 42px;
+}
+
+.official-tool-button.ai:hover {
+  background: rgba(145, 202, 255, 0.18);
+  box-shadow: 0 8px 24px rgba(145, 202, 255, 0.22);
+}
+
+.reference-grid {
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1.48fr 1.16fr 1fr;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+  padding: 2px;
+  scroll-behavior: smooth;
+  scroll-snap-type: none;
+}
+
+.reference-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.reference-grid::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.04);
+  border-radius: 999px;
+}
+
+.reference-grid::-webkit-scrollbar-thumb {
+  background: rgba(22, 119, 255, 0.22);
+  border-radius: 999px;
+}
+
+.reference-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  scroll-snap-align: start;
+}
+
+.reference-left {
+  gap: 20px;
+}
+
+.reference-middle {
+  gap: 22px;
+  padding-top: 8px;
+}
+
+.reference-right {
+  gap: 28px;
+  padding-top: 10px;
+}
+
+.control-strip {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 180px 1fr;
+}
+
+.fruit-select {
+  grid-column: span 1;
+}
+
+.color-field,
+.soft-input.ant-input,
+.soft-input .ant-input,
+.soft-select .ant-select-selector,
+.soft-picker,
+.soft-button {
+  background: var(--official-control-bg, color-mix(in srgb, var(--preview-bg) 78%, transparent)) !important;
+  border-color: var(--official-control-border-color, var(--preview-border)) !important;
+  border-radius: var(--official-control-radius, var(--preview-radius)) !important;
+  border-style: solid !important;
+  border-width: var(--official-control-border-width, 1px) !important;
+  box-shadow: var(--official-control-shadow, none) !important;
+  color: var(--official-control-color, var(--preview-text)) !important;
+  min-height: var(--official-control-height, 32px);
+}
+
+.color-field {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  height: var(--official-control-height, 32px);
+  padding: 0 10px;
+}
+
+.soft-input.ant-input,
+.soft-input .ant-input,
+.soft-picker,
+.soft-button {
+  height: var(--official-control-height, 32px);
+}
+
+.soft-input.ant-input::placeholder,
+.soft-input .ant-input::placeholder,
+.soft-picker input::placeholder,
+.soft-select .ant-select-selection-placeholder {
+  color: var(--official-placeholder-color, var(--preview-text-secondary)) !important;
+  opacity: 1;
+}
+
+.soft-select .ant-select-selection-item {
+  color: var(--official-control-color, var(--preview-text)) !important;
+}
+
+.soft-select.ant-select-multiple .ant-select-selection-item {
+  background: var(--official-select-tag-bg, color-mix(in srgb, var(--official-control-color, #000) 8%, transparent)) !important;
+  border-color: var(--official-select-tag-border, transparent) !important;
+  border-radius: var(--official-select-tag-radius, calc(var(--official-control-radius, var(--preview-radius)) - 2px)) !important;
+  color: var(--official-control-color, var(--preview-text)) !important;
+}
+
+.reference-panel .ant-btn-primary,
+.button-cluster .ant-btn-primary,
+.signup-card .ant-btn-primary,
+.notification-actions .ant-btn-primary,
+.confirm-pop .ant-btn-primary {
+  background: var(--official-primary-bg, var(--preview-primary)) !important;
+  border-color: var(--official-primary-border-color, transparent) !important;
+  border-radius: var(--official-button-radius, var(--official-control-radius, var(--preview-radius))) !important;
+  border-style: solid !important;
+  border-width: var(--official-button-border-width, 1px) !important;
+  box-shadow: var(--official-primary-shadow, none) !important;
+  color: var(--official-primary-color, #fff) !important;
+  font-weight: var(--official-button-font-weight, 400) !important;
+  text-transform: var(--official-button-text-transform, none);
+}
+
+.reference-panel .ant-btn-dangerous:not(.ant-btn-primary),
+.button-cluster .ant-btn-dangerous:not(.ant-btn-primary) {
+  background: var(--official-danger-bg, var(--official-control-bg, #fff)) !important;
+  border-color: var(--official-danger-border-color, var(--preview-error)) !important;
+  border-radius: var(--official-danger-radius, var(--official-control-radius, var(--preview-radius))) !important;
+  border-style: solid !important;
+  border-width: var(--official-danger-border-width, var(--official-control-border-width, 1px)) !important;
+  box-shadow: var(--official-danger-shadow, var(--official-primary-shadow, none)) !important;
+  color: var(--official-danger-color, var(--preview-error)) !important;
+  font-weight: var(--official-danger-font-weight, var(--official-button-font-weight, 400)) !important;
+  text-transform: var(--official-danger-text-transform, var(--official-button-text-transform, none));
+}
+
+.reference-panel .ant-btn-default:not(.ant-btn-dangerous),
+.button-cluster .dashed-soft,
+.signup-card .ant-btn-default {
+  background: var(--official-control-bg, #fff) !important;
+  border-color: var(--official-control-border-color, var(--preview-border)) !important;
+  border-radius: var(--official-control-radius, var(--preview-radius)) !important;
+  border-width: var(--official-control-border-width, 1px) !important;
+  box-shadow: var(--official-control-shadow, none) !important;
+  color: var(--official-control-color, var(--preview-text)) !important;
+}
+
+.reference-left .ant-checkbox-wrapper,
+.reference-left .ant-radio-wrapper,
+.status-row .ant-badge-status-text,
+.progress-block .ant-progress-text {
+  color: var(--official-control-color, var(--preview-text));
+}
+
+.reference-left .ant-checkbox-inner,
+.reference-left .ant-radio-inner {
+  background: var(--official-control-bg, var(--preview-bg));
+  border-color: var(--official-control-border-color, var(--preview-border));
+  border-radius: var(--official-checkbox-radius, 4px);
+  border-width: var(--official-check-border-width, var(--official-control-border-width, 1px));
+  box-shadow: var(--official-control-shadow, none);
+}
+
+.reference-left .ant-checkbox-checked .ant-checkbox-inner,
+.reference-left .ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+  background: var(--official-primary-bg, var(--preview-primary));
+  border-color: var(--official-primary-bg, var(--preview-primary));
+}
+
+.reference-left .ant-radio-wrapper .ant-radio-checked .ant-radio-inner::after {
+  background: var(--official-primary-bg, var(--preview-primary));
+}
+
+.reference-left .ant-switch {
+  background: color-mix(in srgb, var(--preview-fill) 72%, var(--preview-border));
+  box-shadow: var(--preview-control-shadow, none);
+}
+
+.reference-left .ant-switch.ant-switch-checked {
+  background: var(--official-primary-bg, var(--preview-primary));
+  box-shadow: var(--official-switch-shadow, var(--official-control-shadow, none));
+}
+
+.reference-left .ant-spin-dot-item {
+  background-color: var(--official-primary-bg, var(--preview-primary));
+}
+
+.reference-left .ant-progress-bg {
+  background: var(--official-primary-bg, var(--preview-primary)) !important;
+  box-shadow: var(--preview-progress-shadow, 0 7px 20px color-mix(in srgb, var(--official-primary-bg, var(--preview-primary)) 28%, transparent));
+}
+
+.reference-left .ant-progress-status-exception .ant-progress-bg {
+  background: var(--official-danger-color, var(--preview-error)) !important;
+  box-shadow: var(--preview-error-shadow, 0 7px 20px color-mix(in srgb, var(--preview-error) 28%, transparent));
+}
+
+.toggle-row,
+.status-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.process-row {
+  align-items: center;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto 58px auto 58px auto;
+}
+
+.process-step {
+  align-items: center;
+  display: inline-flex;
+  font-size: 18px;
+  font-weight: 600;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.process-step.done {
+  color: var(--preview-text);
+}
+
+.process-step.done .anticon {
+  color: var(--preview-primary);
+  font-size: 32px;
+}
+
+.process-step.danger {
+  color: var(--preview-error);
+}
+
+.process-step.danger .anticon {
+  font-size: 32px;
+}
+
+.process-step.muted {
+  color: var(--preview-text-secondary);
+}
+
+.process-step.muted b {
+  align-items: center;
+  background: var(--preview-fill);
+  border-radius: 50%;
+  color: var(--preview-text-secondary);
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+}
+
+.process-line {
+  background: var(--preview-border);
+  height: 1px;
+}
+
+.process-line.hot {
+  background: var(--preview-error);
+}
+
+.progress-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.media-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 190px 1fr;
+}
+
+.qr-card,
+.segmented-card,
+.profile-card,
+.notification-card,
+.signup-card,
+.confirm-pop,
+.large-alert {
+  background: color-mix(in srgb, var(--preview-bg-elevated) 88%, transparent);
+  border: 1px solid var(--preview-border);
+  border-radius: var(--preview-radius-lg);
+  box-shadow: var(--preview-shadow);
+  color: var(--preview-text);
+}
+
+.qr-card {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+.signal-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+
+.dot-spinner {
+  display: inline-block;
+  height: 24px;
+  position: relative;
+  width: 24px;
+}
+
+.dot-spinner::before,
+.dot-spinner::after {
+  background: #8bc4ff;
+  border-radius: 50%;
+  box-shadow: 18px 0 0 #8bc4ff, 9px 14px 0 #8bc4ff;
+  content: "";
+  height: 8px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 8px;
+}
+
+.social-row {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.64);
+  border-radius: 7px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px;
+}
+
+.confirm-pop {
+  align-items: center;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto 1fr auto auto;
+  padding: 14px 16px;
+}
+
+.warning-dot {
+  align-items: center;
+  background: #faad14;
+  border-radius: 50%;
+  color: #fff;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 800;
+  height: 18px;
+  justify-content: center;
+  width: 18px;
+}
+
+.segmented-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.verify-card {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}
+
+.verify-card h4,
+.signup-card h3,
+.profile-card h4,
+.notification-card h4 {
+  margin-bottom: 0 !important;
+}
+
+.otp-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.otp-row span {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  display: inline-flex;
+  font-size: 24px;
+  height: 46px;
+  justify-content: center;
+  width: 46px;
+}
+
+.button-cluster {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.button-cluster .ant-btn {
+  border-radius: 7px;
+  font-size: 16px;
+}
+
+.button-cluster .dashed-soft {
+  border-style: dashed;
+  color: #222;
+}
+
+.profile-card {
+  align-items: center;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 90px 1fr;
+  padding: 28px;
+}
+
+.profile-logo {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  color: #ff4d4f;
+  font-size: 38px;
+  transform: rotate(45deg);
+}
+
+.large-alert {
+  padding: 22px 24px;
+}
+
+.signup-card {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 38px 28px 32px;
+  text-align: center;
+}
+
+.signup-card .ant-btn-primary {
+  height: 48px;
+  margin-top: 12px;
+}
+
+.hero-avatar {
+  background: #4b5563;
+  margin-bottom: 14px;
+}
+
+.notification-card {
+  min-height: 178px;
+  padding: 24px;
+  position: relative;
+}
+
+.notification-close {
+  color: #999;
+  font-size: 18px;
+  position: absolute;
+  right: 22px;
+  top: 24px;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.token-row {
+  align-items: center;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr auto;
+  margin-bottom: 14px;
+}
+
+.token-row label {
+  color: #334155;
+  font-size: 13px;
+}
+
+.editor-drawer .editor-panel {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.editor-drawer .ant-card {
+  box-shadow: none;
+}
+
+.dashboard-shell {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.chart-placeholder {
+  align-items: end;
+  background: linear-gradient(180deg, rgba(22, 119, 255, 0.08), rgba(22, 119, 255, 0.02));
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(10, 1fr);
+  height: 180px;
+  padding: 20px;
+}
+
+.chart-placeholder span {
+  background: currentColor;
+  border-radius: 4px 4px 0 0;
+  opacity: 0.7;
+}
+
+.chat-message {
+  border-radius: 8px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  white-space: pre-wrap;
+}
+
+.chat-message.user {
+  background: #e6f4ff;
+  margin-left: 28px;
+}
+
+.chat-message.assistant {
+  background: #f8fafc;
+  margin-right: 28px;
+}
+
+.diff-box {
+  background: #0f172a;
+  border-radius: 8px;
+  color: #dbeafe;
+  font-size: 12px;
+  max-height: 240px;
+  overflow: auto;
+  padding: 12px;
+}
+
+.library-panel {
+  padding: 20px;
+}
+
+/* Theme skins measured from https://ant.design/index-cn preview theme switcher. */
+.theme-skin .reference-panel,
+.theme-skin .signup-card,
+.theme-skin .notification-card,
+.theme-skin .profile-card,
+.theme-skin .segmented-card,
+.theme-skin .qr-card,
+.theme-skin .confirm-pop,
+.theme-skin .large-alert {
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    border-radius 0.18s ease,
+    box-shadow 0.18s ease,
+    color 0.18s ease;
+}
+
+.theme-skin-default {
+  --official-control-bg: rgb(255, 255, 255);
+  --official-control-color: rgba(0, 0, 0, 0.88);
+  --official-control-border-color: rgb(217, 217, 217);
+  --official-control-border-width: 1px;
+  --official-control-radius: 6px;
+  --official-control-height: 32px;
+  --official-control-shadow: none;
+  --official-placeholder-color: rgba(0, 0, 0, 0.25);
+  --official-primary-bg: rgb(22, 119, 255);
+  --official-primary-border-color: transparent;
+  --official-primary-color: #fff;
+  --official-button-radius: 4px;
+  --official-button-border-width: 1px;
+  --official-primary-shadow: rgba(5, 145, 255, 0.1) 0 2px 0;
+  --official-button-font-weight: 400;
+  --official-button-text-transform: none;
+  --official-danger-bg: rgb(255, 255, 255);
+  --official-danger-color: rgb(255, 77, 79);
+  --official-danger-border-color: rgb(255, 77, 79);
+  --official-danger-radius: 6px;
+  --official-danger-shadow: rgba(255, 38, 5, 0.06) 0 2px 0;
+  --official-checkbox-radius: 4px;
+}
+
+.theme-skin-mui {
+  --official-control-bg: rgb(255, 255, 255);
+  --official-control-color: rgba(0, 0, 0, 0.87);
+  --official-control-border-color: rgba(0, 0, 0, 0.23);
+  --official-control-border-width: 1px;
+  --official-control-radius: 4px;
+  --official-control-height: 32px;
+  --official-control-shadow: none;
+  --official-placeholder-color: rgba(33, 33, 33, 0.26);
+  --official-primary-bg: rgb(25, 118, 210);
+  --official-primary-border-color: transparent;
+  --official-primary-color: #fff;
+  --official-button-radius: 2px;
+  --official-button-border-width: 0;
+  --official-primary-shadow: rgba(0, 0, 0, 0.2) 0 3px 1px -2px, rgba(0, 0, 0, 0.14) 0 2px 2px, rgba(0, 0, 0, 0.12) 0 1px 5px;
+  --official-button-font-weight: 500;
+  --official-button-text-transform: uppercase;
+  --official-danger-bg: rgb(211, 47, 47);
+  --official-danger-color: rgb(255, 255, 255);
+  --official-danger-border-color: transparent;
+  --official-danger-radius: 4px;
+  --official-danger-border-width: 0;
+  --official-danger-shadow: var(--official-primary-shadow);
+  --official-checkbox-radius: 4px;
+}
+
+.theme-skin-shadcn {
+  --official-control-bg: rgb(255, 255, 255);
+  --official-control-color: rgb(24, 24, 27);
+  --official-control-border-color: rgb(228, 228, 231);
+  --official-control-border-width: 1px;
+  --official-control-radius: 6px;
+  --official-picker-radius: 10px;
+  --official-control-height: 32px;
+  --official-control-shadow: none;
+  --official-placeholder-color: rgb(163, 163, 163);
+  --official-primary-bg: rgb(24, 24, 27);
+  --official-primary-border-color: rgb(24, 24, 27);
+  --official-primary-color: #fff;
+  --official-button-radius: 6px;
+  --official-button-border-width: 1px;
+  --official-primary-shadow: none;
+  --official-button-font-weight: 500;
+  --official-button-text-transform: none;
+  --official-danger-bg: rgb(220, 38, 38);
+  --official-danger-color: #fff;
+  --official-danger-border-color: rgb(220, 38, 38);
+  --official-danger-radius: 6px;
+  --official-danger-shadow: none;
+  --official-checkbox-radius: 4px;
+}
+
+.theme-skin-bootstrap {
+  --official-control-bg: rgb(255, 255, 255);
+  --official-control-color: rgba(0, 0, 0, 0.88);
+  --official-control-border-color: rgb(217, 217, 217);
+  --official-control-border-width: 1px;
+  --official-control-radius: 4px;
+  --official-control-height: 32px;
+  --official-control-shadow: none;
+  --official-placeholder-color: rgba(0, 0, 0, 0.25);
+  --official-primary-bg: rgb(22, 119, 255);
+  --official-primary-border-color: rgba(0, 0, 0, 0.3);
+  --official-primary-color: #fff;
+  --official-button-radius: 4px;
+  --official-button-border-width: 1px;
+  --official-primary-shadow: rgba(255, 255, 255, 0.15) 0 1px 0 inset;
+  --official-button-font-weight: 400;
+  --official-button-text-transform: none;
+  --official-danger-bg: #fff;
+  --official-danger-color: rgb(255, 77, 79);
+  --official-danger-border-color: rgba(0, 0, 0, 0.3);
+  --official-danger-radius: 4px;
+  --official-danger-shadow: var(--official-primary-shadow);
+  --official-switch-shadow: rgba(0, 0, 0, 0.4) 0 1px 3px inset;
+  --official-checkbox-radius: 4px;
+}
+
+.theme-skin-cartoon {
+  --official-control-bg: rgb(245, 245, 243);
+  --official-control-color: rgb(81, 70, 59);
+  --official-control-border-color: rgb(34, 85, 85);
+  --official-control-border-width: 2px;
+  --official-control-radius: 18px;
+  --official-control-height: 36px;
+  --official-control-shadow: none;
+  --official-placeholder-color: rgba(0, 0, 0, 0.25);
+  --official-primary-bg: rgb(34, 85, 85);
+  --official-primary-border-color: transparent;
+  --official-primary-color: #fff;
+  --official-button-radius: 18px;
+  --official-button-border-width: 2px;
+  --official-primary-shadow: none;
+  --official-button-font-weight: 400;
+  --official-button-text-transform: none;
+  --official-danger-bg: rgb(245, 245, 243);
+  --official-danger-color: rgb(218, 135, 135);
+  --official-danger-border-color: rgb(218, 135, 135);
+  --official-danger-radius: 18px;
+  --official-danger-border-width: 2px;
+  --official-danger-shadow: none;
+  --official-checkbox-radius: 6px;
+}
+
+.theme-skin-dark {
+  --official-control-bg: rgb(20, 20, 20);
+  --official-control-color: rgba(255, 255, 255, 0.85);
+  --official-control-border-color: rgb(66, 66, 66);
+  --official-control-border-width: 1px;
+  --official-control-radius: 6px;
+  --official-control-height: 32px;
+  --official-control-shadow: none;
+  --official-placeholder-color: rgba(255, 255, 255, 0.25);
+  --official-primary-bg: rgb(22, 104, 220);
+  --official-primary-border-color: transparent;
+  --official-primary-color: #fff;
+  --official-button-radius: 4px;
+  --official-button-border-width: 1px;
+  --official-primary-shadow: rgba(23, 117, 249, 0.31) 0 2px 0;
+  --official-button-font-weight: 400;
+  --official-button-text-transform: none;
+  --official-danger-bg: rgb(20, 20, 20);
+  --official-danger-color: rgb(220, 68, 70);
+  --official-danger-border-color: rgb(220, 68, 70);
+  --official-danger-radius: 6px;
+  --official-danger-shadow: rgba(238, 38, 56, 0.11) 0 2px 0;
+  --official-checkbox-radius: 4px;
+}
+
+.theme-skin-illustration {
+  --official-control-bg: rgb(255, 255, 255);
+  --official-control-color: rgb(44, 44, 44);
+  --official-control-border-color: rgb(44, 44, 44);
+  --official-control-border-width: 3px;
+  --official-control-radius: 12px;
+  --official-control-height: 42px;
+  --official-control-shadow: rgb(44, 44, 44) 4px 4px 0;
+  --official-placeholder-color: rgba(0, 0, 0, 0.25);
+  --official-primary-bg: rgb(82, 196, 26);
+  --official-primary-border-color: rgb(44, 44, 44);
+  --official-primary-color: #fff;
+  --official-button-radius: 8px;
+  --official-button-border-width: 3px;
+  --official-primary-shadow: rgb(44, 44, 44) 4px 4px 0;
+  --official-button-font-weight: 600;
+  --official-button-text-transform: uppercase;
+  --official-danger-bg: #fff;
+  --official-danger-color: rgb(250, 82, 82);
+  --official-danger-border-color: rgb(44, 44, 44);
+  --official-danger-radius: 12px;
+  --official-danger-border-width: 3px;
+  --official-danger-shadow: rgb(44, 44, 44) 4px 4px 0;
+  --official-danger-font-weight: 600;
+  --official-danger-text-transform: uppercase;
+  --official-checkbox-radius: 4px;
+}
+
+.theme-skin-glass {
+  --official-control-bg: color(srgb 1 1 1 / 0.15);
+  --official-control-color: rgba(0, 0, 0, 0.88);
+  --official-control-border-color: rgb(217, 217, 217);
+  --official-control-border-width: 1px;
+  --official-control-radius: 12px;
+  --official-control-height: 32px;
+  --official-control-shadow: rgba(85, 85, 85, 0.1) 0 8px 24px, rgba(255, 255, 255, 0.3) 0 0 5px 2px inset, rgba(255, 255, 255, 0.2) 0 5px 2px inset;
+  --official-placeholder-color: rgba(0, 0, 0, 0.25);
+  --official-primary-bg: rgb(22, 119, 255);
+  --official-primary-border-color: transparent;
+  --official-primary-color: #fff;
+  --official-button-radius: 12px;
+  --official-button-border-width: 1px;
+  --official-primary-shadow: var(--official-control-shadow);
+  --official-button-font-weight: 400;
+  --official-button-text-transform: none;
+  --official-danger-bg: rgba(255, 120, 117, 0.1);
+  --official-danger-color: rgb(255, 120, 117);
+  --official-danger-border-color: rgba(255, 120, 117, 0.24);
+  --official-danger-radius: 12px;
+  --official-danger-shadow: var(--official-control-shadow);
+  --official-switch-shadow: var(--official-control-shadow);
+  --official-checkbox-radius: 4px;
+}
+
+.theme-skin-geek {
+  --official-control-bg: rgb(20, 20, 20);
+  --official-control-color: rgb(57, 255, 20);
+  --official-control-border-color: rgb(51, 220, 20);
+  --official-control-border-width: 2px;
+  --official-control-radius: 0;
+  --official-control-height: 34px;
+  --official-control-shadow: rgb(51, 220, 20) 0 0 3px, rgb(51, 220, 20) 0 0 10px inset;
+  --official-placeholder-color: rgba(255, 255, 255, 0.25);
+  --official-primary-bg: rgb(51, 220, 20);
+  --official-primary-border-color: transparent;
+  --official-primary-color: rgb(20, 20, 20);
+  --official-button-radius: 0;
+  --official-button-border-width: 0;
+  --official-primary-shadow: var(--official-control-shadow);
+  --official-button-font-weight: 700;
+  --official-button-text-transform: none;
+  --official-danger-bg: rgb(20, 20, 20);
+  --official-danger-color: rgb(220, 68, 70);
+  --official-danger-border-color: rgb(51, 220, 20);
+  --official-danger-radius: 0;
+  --official-danger-border-width: 2px;
+  --official-danger-shadow: var(--official-control-shadow);
+  --official-checkbox-radius: 0;
+}
+
+.theme-skin-lark {
+  --official-control-bg: rgb(255, 255, 255);
+  --official-control-color: rgba(0, 0, 0, 0.88);
+  --official-control-border-color: rgb(217, 217, 217);
+  --official-control-border-width: 1px;
+  --official-control-radius: 4px;
+  --official-control-height: 32px;
+  --official-control-shadow: none;
+  --official-placeholder-color: rgba(0, 0, 0, 0.25);
+  --official-primary-bg: rgb(0, 185, 107);
+  --official-primary-border-color: transparent;
+  --official-primary-color: #fff;
+  --official-button-radius: 4px;
+  --official-button-border-width: 1px;
+  --official-primary-shadow: rgba(5, 213, 88, 0.12) 0 2px 0;
+  --official-button-font-weight: 400;
+  --official-button-text-transform: none;
+  --official-danger-bg: #fff;
+  --official-danger-color: rgb(255, 77, 79);
+  --official-danger-border-color: rgb(255, 77, 79);
+  --official-danger-radius: 4px;
+  --official-danger-shadow: rgba(255, 38, 5, 0.06) 0 2px 0;
+  --official-checkbox-radius: 4px;
+}
+
+.theme-skin-blossom {
+  --official-control-bg: rgb(255, 255, 255);
+  --official-control-color: rgba(0, 0, 0, 0.88);
+  --official-control-border-color: rgb(217, 217, 217);
+  --official-control-border-width: 1px;
+  --official-control-radius: 16px;
+  --official-control-height: 32px;
+  --official-control-shadow: none;
+  --official-placeholder-color: rgba(0, 0, 0, 0.25);
+  --official-primary-bg: rgb(237, 65, 146);
+  --official-primary-border-color: transparent;
+  --official-primary-color: #fff;
+  --official-button-radius: 8px;
+  --official-button-border-width: 1px;
+  --official-primary-shadow: rgba(255, 5, 72, 0.06) 0 2px 0;
+  --official-button-font-weight: 400;
+  --official-button-text-transform: none;
+  --official-danger-bg: #fff;
+  --official-danger-color: rgb(255, 77, 79);
+  --official-danger-border-color: rgb(255, 77, 79);
+  --official-danger-radius: 16px;
+  --official-danger-shadow: rgba(255, 38, 5, 0.06) 0 2px 0;
+  --official-checkbox-radius: 4px;
+}
+
+.theme-skin-v4 {
+  --official-control-bg: rgb(255, 255, 255);
+  --official-control-color: rgba(0, 0, 0, 0.85);
+  --official-control-border-color: rgb(217, 217, 217);
+  --official-control-border-width: 1px;
+  --official-control-radius: 2px;
+  --official-control-height: 32px;
+  --official-control-shadow: none;
+  --official-placeholder-color: rgba(0, 0, 0, 0.25);
+  --official-primary-bg: rgb(24, 144, 255);
+  --official-primary-border-color: transparent;
+  --official-primary-color: #fff;
+  --official-button-radius: 2px;
+  --official-button-border-width: 1px;
+  --official-primary-shadow: rgba(5, 175, 255, 0.1) 0 2px 0;
+  --official-button-font-weight: 400;
+  --official-button-text-transform: none;
+  --official-danger-bg: #fff;
+  --official-danger-color: rgb(255, 77, 79);
+  --official-danger-border-color: rgb(255, 77, 79);
+  --official-danger-radius: 2px;
+  --official-danger-shadow: rgba(255, 38, 5, 0.06) 0 2px 0;
+  --official-checkbox-radius: 2px;
+}
+
+.theme-skin-coffee {
+  --official-control-bg: rgb(252, 250, 248);
+  --official-control-color: rgb(42, 35, 29);
+  --official-control-border-color: rgb(226, 220, 213);
+  --official-control-border-width: 1px;
+  --official-control-radius: 4px;
+  --official-control-height: 32px;
+  --official-control-shadow: none;
+  --official-placeholder-color: rgb(196, 186, 176);
+  --official-primary-bg: rgb(49, 39, 33);
+  --official-primary-border-color: transparent;
+  --official-primary-color: #fff;
+  --official-button-radius: 4px;
+  --official-button-border-width: 1px;
+  --official-primary-shadow: none;
+  --official-button-font-weight: 500;
+  --official-button-text-transform: none;
+  --official-danger-bg: rgb(252, 250, 248);
+  --official-danger-color: rgb(190, 66, 55);
+  --official-danger-border-color: rgb(190, 66, 55);
+  --official-danger-radius: 4px;
+  --official-danger-shadow: none;
+  --official-checkbox-radius: 4px;
+}
+
+.theme-skin .reference-panel .ant-btn-primary {
+  border-color: transparent;
+}
+
+.theme-skin-default .reference-panel .ant-btn-primary {
+  border-radius: 4px;
+  box-shadow: rgba(5, 145, 255, 0.1) 0 2px 0;
+}
+
+.theme-skin-default .reference-panel .ant-input,
+.theme-skin-default .reference-panel .ant-select-selector,
+.theme-skin-default .color-field,
+.theme-skin-default .soft-button,
+.theme-skin-default .soft-picker {
+  border-radius: 6px !important;
+}
+
+.theme-skin-mui {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+.theme-skin-mui .reference-panel .ant-btn-primary {
+  background: #1976d2;
+  border-color: #fff;
+  border-radius: 2px;
+  box-shadow:
+    rgba(0, 0, 0, 0.2) 0 3px 1px -2px,
+    rgba(0, 0, 0, 0.14) 0 2px 2px,
+    rgba(0, 0, 0, 0.12) 0 1px 5px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.theme-skin-mui .reference-panel .ant-input,
+.theme-skin-mui .reference-panel .ant-select-selector,
+.theme-skin-mui .color-field,
+.theme-skin-mui .soft-button,
+.theme-skin-mui .soft-picker {
+  border-color: rgba(0, 0, 0, 0.23) !important;
+  border-radius: 4px !important;
+  color: rgba(0, 0, 0, 0.87);
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+.theme-skin-shadcn .reference-panel .ant-btn-primary {
+  background: #18181b;
+  border-color: #18181b;
+  border-radius: 6px;
+  box-shadow: none;
+  font-weight: 500;
+}
+
+.theme-skin-shadcn .reference-panel,
+.theme-skin-shadcn .signup-card,
+.theme-skin-shadcn .notification-card,
+.theme-skin-shadcn .profile-card,
+.theme-skin-shadcn .segmented-card,
+.theme-skin-shadcn .qr-card,
+.theme-skin-shadcn .confirm-pop,
+.theme-skin-shadcn .large-alert {
+  border-color: #e4e4e7;
+  border-radius: 14px;
+  color: #18181b;
+}
+
+.theme-skin-shadcn .reference-panel .ant-input,
+.theme-skin-shadcn .reference-panel .ant-select-selector,
+.theme-skin-shadcn .color-field,
+.theme-skin-shadcn .soft-button,
+.theme-skin-shadcn .soft-picker {
+  border-color: #e4e4e7 !important;
+  border-radius: 6px !important;
+}
+
+.theme-skin-bootstrap .reference-panel .ant-btn-primary {
+  background: #1677ff;
+  border-color: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.theme-skin-bootstrap .reference-panel .ant-input,
+.theme-skin-bootstrap .reference-panel .ant-select-selector,
+.theme-skin-bootstrap .color-field,
+.theme-skin-bootstrap .soft-button,
+.theme-skin-bootstrap .soft-picker,
+.theme-skin-bootstrap .signup-card,
+.theme-skin-bootstrap .notification-card,
+.theme-skin-bootstrap .profile-card,
+.theme-skin-bootstrap .segmented-card {
+  border-radius: 4px !important;
+}
+
+.theme-skin-cartoon .reference-panel,
+.theme-skin-cartoon .signup-card,
+.theme-skin-cartoon .notification-card,
+.theme-skin-cartoon .profile-card,
+.theme-skin-cartoon .segmented-card,
+.theme-skin-cartoon .qr-card,
+.theme-skin-cartoon .confirm-pop,
+.theme-skin-cartoon .large-alert {
+  background: #bbaa99;
+  border: 2px solid #51463b;
+  border-radius: 18px;
+  color: #51463b;
+}
+
+.theme-skin-cartoon .reference-panel .ant-btn-primary {
+  background: #225555;
+  border-radius: 18px;
+  box-shadow: none;
+}
+
+.theme-skin-cartoon .reference-panel .ant-input,
+.theme-skin-cartoon .reference-panel .ant-select-selector,
+.theme-skin-cartoon .color-field,
+.theme-skin-cartoon .soft-button,
+.theme-skin-cartoon .soft-picker {
+  background: #f5f5f3 !important;
+  border: 2px solid #225555 !important;
+  border-radius: 18px !important;
+  color: #51463b;
+}
+
+.theme-skin-dark {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.theme-skin-dark .reference-panel,
+.theme-skin-dark .signup-card,
+.theme-skin-dark .notification-card,
+.theme-skin-dark .profile-card,
+.theme-skin-dark .segmented-card,
+.theme-skin-dark .qr-card,
+.theme-skin-dark .confirm-pop,
+.theme-skin-dark .large-alert {
+  background: #141414;
+  border-color: #424242;
+  color: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    rgba(255, 255, 255, 0.01) 0 1px 2px,
+    rgba(255, 255, 255, 0.008) 0 1px 6px -1px,
+    rgba(255, 255, 255, 0.008) 0 2px 4px;
+}
+
+.theme-skin-dark .reference-panel .ant-input,
+.theme-skin-dark .reference-panel .ant-select-selector,
+.theme-skin-dark .color-field,
+.theme-skin-dark .soft-button,
+.theme-skin-dark .soft-picker {
+  background: #141414 !important;
+  border-color: #424242 !important;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.theme-skin-illustration .reference-panel,
+.theme-skin-illustration .signup-card,
+.theme-skin-illustration .notification-card,
+.theme-skin-illustration .profile-card,
+.theme-skin-illustration .segmented-card,
+.theme-skin-illustration .qr-card,
+.theme-skin-illustration .confirm-pop,
+.theme-skin-illustration .large-alert {
+  background: #fff0f6;
+  border: 2px solid #2c2c2c;
+  border-radius: 16px;
+  color: #2c2c2c;
+}
+
+.theme-skin-illustration .reference-panel .ant-btn-primary {
+  background: #52c41a;
+  border: 2px solid #2c2c2c;
+  border-radius: 8px;
+  box-shadow: #2c2c2c 4px 4px 0;
+  font-weight: 600;
+}
+
+.theme-skin-illustration .reference-panel .ant-input,
+.theme-skin-illustration .reference-panel .ant-select-selector,
+.theme-skin-illustration .color-field,
+.theme-skin-illustration .soft-button,
+.theme-skin-illustration .soft-picker {
+  border: 2px solid #2c2c2c !important;
+  border-radius: 12px !important;
+  box-shadow: #2c2c2c 4px 4px 0;
+}
+
+.theme-skin-glass .reference-panel,
+.theme-skin-glass .signup-card,
+.theme-skin-glass .notification-card,
+.theme-skin-glass .profile-card,
+.theme-skin-glass .segmented-card,
+.theme-skin-glass .qr-card,
+.theme-skin-glass .confirm-pop,
+.theme-skin-glass .large-alert {
+  background: color(srgb 1 1 1 / 0.4);
+  backdrop-filter: blur(18px);
+  border-radius: 12px;
+  box-shadow:
+    rgba(85, 85, 85, 0.1) 0 8px 24px,
+    rgba(255, 255, 255, 0.3) 0 0 5px 2px inset,
+    rgba(255, 255, 255, 0.2) 0 5px 2px inset;
+}
+
+.theme-skin-glass .reference-panel .ant-btn-primary,
+.theme-skin-glass .reference-panel .ant-input,
+.theme-skin-glass .reference-panel .ant-select-selector,
+.theme-skin-glass .color-field,
+.theme-skin-glass .soft-button,
+.theme-skin-glass .soft-picker {
+  background: color(srgb 1 1 1 / 0.15) !important;
+  border-radius: 12px !important;
+  box-shadow:
+    rgba(85, 85, 85, 0.1) 0 8px 24px,
+    rgba(255, 255, 255, 0.3) 0 0 5px 2px inset,
+    rgba(255, 255, 255, 0.2) 0 5px 2px inset;
+}
+
+.theme-skin-glass .reference-panel .ant-btn-primary {
+  background: #1677ff !important;
+}
+
+.theme-skin-geek {
+  color: #39ff14;
+}
+
+.theme-skin-geek .reference-panel,
+.theme-skin-geek .signup-card,
+.theme-skin-geek .notification-card,
+.theme-skin-geek .profile-card,
+.theme-skin-geek .segmented-card,
+.theme-skin-geek .qr-card,
+.theme-skin-geek .confirm-pop,
+.theme-skin-geek .large-alert {
+  background: #141414;
+  border: 1px solid #39ff14;
+  border-radius: 0;
+  color: #39ff14;
+  box-shadow: 0 0 18px rgba(51, 220, 20, 0.2);
+}
+
+.theme-skin-geek .reference-panel .ant-btn-primary {
+  background: #33dc14;
+  border: 1px solid #141414;
+  border-radius: 0;
+  box-shadow: #33dc14 0 0 3px, #33dc14 0 0 10px inset;
+  color: #141414;
+  font-weight: 700;
+}
+
+.theme-skin-geek .reference-panel .ant-input,
+.theme-skin-geek .reference-panel .ant-select-selector,
+.theme-skin-geek .color-field,
+.theme-skin-geek .soft-button,
+.theme-skin-geek .soft-picker {
+  background: #141414 !important;
+  border: 1px solid #33dc14 !important;
+  border-radius: 0 !important;
+  box-shadow: #33dc14 0 0 3px, #33dc14 0 0 10px inset;
+  color: #39ff14;
+}
+
+.theme-skin-lark .reference-panel .ant-btn-primary {
+  background: #00b96b;
+  border-radius: 4px;
+  box-shadow: rgba(5, 213, 88, 0.12) 0 2px 0;
+}
+
+.theme-skin-lark .reference-panel,
+.theme-skin-lark .signup-card,
+.theme-skin-lark .notification-card,
+.theme-skin-lark .profile-card,
+.theme-skin-lark .segmented-card,
+.theme-skin-lark .qr-card,
+.theme-skin-lark .confirm-pop,
+.theme-skin-lark .large-alert,
+.theme-skin-lark .reference-panel .ant-input,
+.theme-skin-lark .reference-panel .ant-select-selector,
+.theme-skin-lark .color-field,
+.theme-skin-lark .soft-button,
+.theme-skin-lark .soft-picker {
+  border-radius: 4px !important;
+}
+
+.theme-skin-blossom .reference-panel .ant-btn-primary {
+  background: #ed4192;
+  border-radius: 8px;
+  box-shadow: rgba(255, 5, 72, 0.06) 0 2px 0;
+}
+
+.theme-skin-blossom .reference-panel,
+.theme-skin-blossom .signup-card,
+.theme-skin-blossom .notification-card,
+.theme-skin-blossom .profile-card,
+.theme-skin-blossom .segmented-card,
+.theme-skin-blossom .qr-card,
+.theme-skin-blossom .confirm-pop,
+.theme-skin-blossom .large-alert {
+  border-radius: 16px;
+}
+
+.theme-skin-blossom .reference-panel .ant-input,
+.theme-skin-blossom .reference-panel .ant-select-selector,
+.theme-skin-blossom .color-field,
+.theme-skin-blossom .soft-button,
+.theme-skin-blossom .soft-picker {
+  border-radius: 16px !important;
+}
+
+.theme-skin-v4 .reference-panel .ant-btn-primary {
+  background: #1890ff;
+  border-radius: 2px;
+  box-shadow: rgba(5, 175, 255, 0.1) 0 2px 0;
+}
+
+.theme-skin-v4 .reference-panel,
+.theme-skin-v4 .signup-card,
+.theme-skin-v4 .notification-card,
+.theme-skin-v4 .profile-card,
+.theme-skin-v4 .segmented-card,
+.theme-skin-v4 .qr-card,
+.theme-skin-v4 .confirm-pop,
+.theme-skin-v4 .large-alert,
+.theme-skin-v4 .reference-panel .ant-input,
+.theme-skin-v4 .reference-panel .ant-select-selector,
+.theme-skin-v4 .color-field,
+.theme-skin-v4 .soft-button,
+.theme-skin-v4 .soft-picker {
+  border-radius: 2px !important;
+}
+
+.theme-skin-coffee {
+  font-family: Inter, -apple-system, system-ui, "Segoe UI", sans-serif;
+}
+
+.theme-skin-coffee .reference-panel,
+.theme-skin-coffee .signup-card,
+.theme-skin-coffee .notification-card,
+.theme-skin-coffee .profile-card,
+.theme-skin-coffee .segmented-card,
+.theme-skin-coffee .qr-card,
+.theme-skin-coffee .confirm-pop,
+.theme-skin-coffee .large-alert {
+  background: #fcfaf8;
+  border-color: #e2dcd5;
+  border-radius: 4px;
+  color: #2a231d;
+}
+
+.theme-skin-coffee .reference-panel .ant-btn-primary {
+  background: #312721;
+  border-radius: 4px;
+  box-shadow: none;
+  font-weight: 500;
+}
+
+.theme-skin-coffee .reference-panel .ant-input,
+.theme-skin-coffee .reference-panel .ant-select-selector,
+.theme-skin-coffee .color-field,
+.theme-skin-coffee .soft-button,
+.theme-skin-coffee .soft-picker {
+  background: #fcfaf8 !important;
+  border-color: #e2dcd5 !important;
+  border-radius: 4px !important;
+  color: #2a231d;
+}
+
+/* Final official theme adapter. Keep after legacy skin rules so the scraped
+   official values win consistently across native and custom preview controls. */
+.theme-skin .reference-panel .color-field,
+.theme-skin .reference-panel .soft-input.ant-input,
+.theme-skin .reference-panel .soft-input .ant-input,
+.theme-skin .reference-panel .soft-select .ant-select-selector,
+.theme-skin .reference-panel .soft-picker,
+.theme-skin .reference-panel .soft-button {
+  background: var(--official-control-bg) !important;
+  border-color: var(--official-control-border-color) !important;
+  border-radius: var(--official-control-radius) !important;
+  border-style: solid !important;
+  border-width: var(--official-control-border-width) !important;
+  box-shadow: var(--official-control-shadow) !important;
+  color: var(--official-control-color) !important;
+  min-height: var(--official-control-height) !important;
+}
+
+.theme-skin .reference-panel .soft-picker {
+  border-radius: var(--official-picker-radius, var(--official-control-radius)) !important;
+}
+
+.theme-skin .reference-panel .soft-input.ant-input,
+.theme-skin .reference-panel .soft-input .ant-input,
+.theme-skin .reference-panel .soft-picker,
+.theme-skin .reference-panel .soft-button {
+  height: var(--official-control-height) !important;
+}
+
+.theme-skin .reference-panel .soft-input.ant-input::placeholder,
+.theme-skin .reference-panel .soft-input .ant-input::placeholder,
+.theme-skin .reference-panel .soft-picker input::placeholder,
+.theme-skin .reference-panel .soft-select .ant-select-selection-placeholder {
+  color: var(--official-placeholder-color) !important;
+  opacity: 1 !important;
+}
+
+.theme-skin .reference-panel .soft-select .ant-select-selection-item {
+  color: var(--official-control-color) !important;
+}
+
+.theme-skin .reference-panel .soft-select.ant-select-multiple .ant-select-selection-item {
+  background: var(--official-select-tag-bg, color-mix(in srgb, var(--official-control-color) 8%, transparent)) !important;
+  border-color: var(--official-select-tag-border, transparent) !important;
+  border-radius: var(--official-select-tag-radius, calc(var(--official-control-radius) - 2px)) !important;
+}
+
+.theme-skin .reference-panel .ant-btn-primary {
+  background: var(--official-primary-bg) !important;
+  border-color: var(--official-primary-border-color) !important;
+  border-radius: var(--official-button-radius) !important;
+  border-width: var(--official-button-border-width) !important;
+  box-shadow: var(--official-primary-shadow) !important;
+  color: var(--official-primary-color) !important;
+  font-weight: var(--official-button-font-weight) !important;
+  text-transform: var(--official-button-text-transform) !important;
+}
+
+.theme-skin .reference-panel .ant-btn-dangerous:not(.ant-btn-primary) {
+  background: var(--official-danger-bg) !important;
+  border-color: var(--official-danger-border-color) !important;
+  border-radius: var(--official-danger-radius) !important;
+  border-width: var(--official-danger-border-width, var(--official-control-border-width)) !important;
+  box-shadow: var(--official-danger-shadow) !important;
+  color: var(--official-danger-color) !important;
+  font-weight: var(--official-danger-font-weight, var(--official-button-font-weight)) !important;
+  text-transform: var(--official-danger-text-transform, var(--official-button-text-transform)) !important;
+}
+
+.theme-skin .reference-panel .ant-checkbox-inner,
+.theme-skin .reference-panel .ant-radio-inner {
+  background: var(--official-control-bg) !important;
+  border-color: var(--official-control-border-color) !important;
+  border-radius: var(--official-checkbox-radius) !important;
+  border-width: var(--official-check-border-width, var(--official-control-border-width)) !important;
+  box-shadow: var(--official-control-shadow) !important;
+}
+
+.theme-skin .reference-panel .ant-checkbox-checked .ant-checkbox-inner,
+.theme-skin .reference-panel .ant-radio-checked .ant-radio-inner {
+  background: var(--official-primary-bg) !important;
+  border-color: var(--official-primary-bg) !important;
+}
+
+.theme-skin .reference-panel .ant-switch.ant-switch-checked {
+  background: var(--official-primary-bg) !important;
+  box-shadow: var(--official-switch-shadow, var(--official-control-shadow)) !important;
+}
+
+.theme-skin .reference-panel .process-step.done .anticon,
+.theme-skin .reference-panel .ant-spin-dot-item {
+  color: var(--official-primary-bg) !important;
+  background-color: var(--official-primary-bg) !important;
+}
+
+.theme-skin .reference-panel .ant-progress-bg {
+  background: var(--official-primary-bg) !important;
+}
+
+@media (max-width: 1080px) {
+  .reference-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reference-actions {
+    align-items: flex-end;
+    flex-direction: column;
+  }
+
+  .preset-bar {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 360px;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    height: auto;
+    padding: 12px;
+  }
+
+  .brand {
+    min-width: 100%;
+  }
+
+  .header-actions {
+    margin-left: 0;
+  }
+
+  .app-content {
+    padding: 10px;
+  }
+
+  .reference-padding {
+    padding: 16px;
+  }
+
+  .reference-tabs > .ant-tabs-nav {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .reference-actions {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .control-strip,
+  .media-grid,
+  .process-row,
+  .profile-card {
+    grid-template-columns: 1fr;
+  }
+
+  .button-cluster {
+    grid-template-columns: 1fr;
+  }
+}
