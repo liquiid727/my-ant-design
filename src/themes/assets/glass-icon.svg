@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="256" height="256" viewBox="0 0 256 256" fill="none">
+  <defs>
+    <linearGradient id="glassFill" x1="80" y1="40" x2="176" y2="216" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8FE8FF"></stop>
+      <stop offset="45%" stop-color="#4CB6FF"></stop>
+      <stop offset="100%" stop-color="#7C72FF"></stop>
+    </linearGradient>
+
+    <linearGradient id="glassStroke" x1="92" y1="54" x2="166" y2="202" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#46C8FF"></stop>
+      <stop offset="100%" stop-color="#635BFF"></stop>
+    </linearGradient>
+
+    <linearGradient id="glassInner" x1="100" y1="68" x2="156" y2="186" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.72"></stop>
+      <stop offset="60%" stop-color="#DDF3FF" stop-opacity="0.26"></stop>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.08"></stop>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(128 128) rotate(-35)">
+    
+    <rect x="-68" y="-92" width="136" height="184" rx="24" fill="url(#glassFill)" fill-opacity="0.88" stroke="url(#glassStroke)" stroke-width="6"></rect>
+
+    
+    <rect x="-54" y="-76" width="108" height="152" rx="18" fill="url(#glassInner)"></rect>
+
+    
+    <path d="M-35 -56H20C30 -56 38 -48 38 -38V-28C38 -21 32 -15 25 -16L-42 -28C-50 -29 -56 -36 -56 -44V-45C-56 -51 -50 -56 -44 -56H-35Z" fill="#FFFFFF" fill-opacity="0.34"></path>
+
+    
+    <path d="M-54 24C-54 10 -43 -1 -29 -1H54V55C54 67 45 76 33 76H-33C-45 76 -54 67 -54 55V24Z" fill="#3B7CFF" fill-opacity="0.15"></path>
+
+    
+    <circle cx="24" cy="-10" r="8" fill="#FFFFFF" fill-opacity="0.18"></circle>
+  </g>
+</svg>

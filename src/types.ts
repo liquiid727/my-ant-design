@@ -11,11 +11,24 @@ export type ThemeConfig = {
   updatedAt: string;
 };
 
+export type ThemeOverrides = {
+  token?: ThemeConfig['token'];
+  components?: ThemeConfig['components'];
+};
+
+export type ThemeSessionV2 = {
+  schemaVersion: 2;
+  activePresetId: string;
+  mode: 'preset' | 'custom';
+  overrides: ThemeOverrides;
+};
+
 export type ThemeRecord = {
   id: string;
   name: string;
   config: ThemeConfig;
   builtIn?: boolean;
+  basePresetId?: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -88,4 +101,3 @@ export type TokenMeta = {
   group: string;
   description: string;
 };
-

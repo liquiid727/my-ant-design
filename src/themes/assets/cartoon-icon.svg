@@ -1,0 +1,19 @@
+<svg width="256" height="256" viewBox="61.75 54.75 132.5 132.5" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cartoonFill" x1="128" y1="64" x2="128" y2="184" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD95F"></stop>
+      <stop offset="1" stop-color="#F4C63C"></stop>
+    </linearGradient>
+  </defs>
+  <path d="M128 66
+           C136 66 143 71 149 81
+           L186 144
+           C195 159 184 176 167 176
+           H89
+           C72 176 61 159 70 144
+           L107 81
+           C113 71 120 66 128 66Z" fill="url(#cartoonFill)" stroke="#00412F" stroke-width="10" stroke-linejoin="round"></path>
+  <circle cx="102" cy="124" r="8.5" fill="#111111"></circle>
+  <circle cx="154" cy="124" r="8.5" fill="#111111"></circle>
+  <path d="M113 145 C122 156 134 156 143 145" stroke="#111111" stroke-width="10" stroke-linecap="round"></path>
+</svg>

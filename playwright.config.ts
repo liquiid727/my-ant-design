@@ -13,7 +13,7 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
   },
   projects: [
-    { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
-    { name: 'mobile', use: { ...devices['Pixel 5'] } },
+    { name: 'desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 2048, height: 1152 } } },
+    { name: 'mobile', use: { ...devices['Pixel 5'], viewport: { width: 390, height: 844 } } },
   ],
 });

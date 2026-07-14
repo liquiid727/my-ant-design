@@ -1,0 +1,36 @@
+<svg width="256" height="256" viewBox="22.25 29.25 199.5 199.5" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="illuBlue" x1="64" y1="58" x2="155" y2="172" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1D83FF"></stop>
+      <stop offset="1" stop-color="#0A6AF3"></stop>
+    </linearGradient>
+    <linearGradient id="illuBack" x1="132" y1="102" x2="196" y2="197" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D9ECFF"></stop>
+      <stop offset="1" stop-color="#AED1F7"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect x="126" y="88" width="87" height="122" rx="18" transform="rotate(45 126 88)" fill="url(#illuBack)"></rect>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M51 119.5
+           C49 114 50.5 107.5 55.5 102.5
+           L123.5 34.5
+           C130 28 140.5 28 147 34.5
+           L191.5 79
+           C198 85.5 198 96 191.5 102.5
+           L123.5 170.5
+           C117 177 106.5 177 100 170.5
+           L55.5 126
+           C53.5 124 52 121.8 51 119.5Z
+
+           M75 121
+           C74 119 74.5 116.5 76.5 114.5
+           L115 76
+           C130 61 153 61 168 76
+           L179.5 87.5
+           L149.5 117.5
+           C142.5 124.5 131.5 125.5 123.5 120
+           C112 112 98.5 111.5 87.5 118.5
+           L76.5 125.5
+           C76 124.5 75.5 123 75 121Z" fill="url(#illuBlue)"></path>
+  <circle cx="154" cy="111" r="12" fill="#FF5A66"></circle>
+</svg>

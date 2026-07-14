@@ -7,10 +7,13 @@ import { TokenControl } from './TokenControl';
 export function ComponentTokenEditor() {
   const [component, setComponent] = useState(allComponentNames[0]);
   const currentTheme = useThemeStore((state) => state.currentTheme);
+  const overrides = useThemeStore((state) => state.overrides);
   const setComponentToken = useThemeStore((state) => state.setComponentToken);
-  const setTheme = useThemeStore((state) => state.setTheme);
+  const resetComponent = useThemeStore((state) => state.resetComponent);
   const componentValues =
     (currentTheme.components[component as keyof typeof currentTheme.components] as Record<string, unknown> | undefined) ?? {};
+  const overrideValues =
+    (overrides.components?.[component as keyof typeof currentTheme.components] as Record<string, unknown> | undefined) ?? {};
 
   return (
     <>
@@ -21,7 +24,7 @@ export function ComponentTokenEditor() {
         onChange={setComponent}
       />
       {(componentTokens[component] ?? []).map((meta) => {
-        const isOverridden = meta.name in componentValues;
+        const isOverridden = meta.name in overrideValues;
         return (
           <div className="token-row" key={meta.name}>
             <label title={meta.description}>
@@ -37,15 +40,10 @@ export function ComponentTokenEditor() {
       })}
       <Button
         block
-        onClick={() => {
-          const components = { ...currentTheme.components };
-          delete components[component as keyof typeof components];
-          setTheme({ components });
-        }}
+        onClick={() => resetComponent(component)}
       >
         Reset Component
       </Button>
     </>
   );
 }
-

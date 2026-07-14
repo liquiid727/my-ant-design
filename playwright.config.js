@@ -23,7 +23,7 @@ export default defineConfig({
         reuseExistingServer: !process.env.CI,
     },
     projects: [
-        { name: 'desktop', use: __assign({}, devices['Desktop Chrome']) },
-        { name: 'mobile', use: __assign({}, devices['Pixel 5']) },
+        { name: 'desktop', use: __assign(__assign({}, devices['Desktop Chrome']), { viewport: { width: 2048, height: 1152 } }) },
+        { name: 'mobile', use: __assign(__assign({}, devices['Pixel 5']), { viewport: { width: 390, height: 844 } }) },
     ],
 });

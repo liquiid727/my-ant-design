@@ -2,7 +2,7 @@ import { CopyOutlined, DeleteOutlined, DownloadOutlined, ExportOutlined, ImportO
 import { App, Button, Card, Col, Form, Input, Modal, Row, Select, Space, Tag, Typography } from 'antd';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
-import type { ThemeConfig, ThemeRecord } from '../../types';
+import type { ThemeConfig, ThemeOverrides, ThemeRecord } from '../../types';
 import { exportTheme } from '../../services/theme/themeExporter';
 import { validateThemeConfig } from '../../services/theme/themeValidator';
 import { useLibraryStore } from '../../stores/libraryStore';
@@ -35,8 +35,11 @@ export function LibraryPage() {
   const copyTheme = useLibraryStore((state) => state.copyTheme);
   const currentTheme = useThemeStore((state) => state.currentTheme);
   const setTheme = useThemeStore((state) => state.setTheme);
+  const setPreset = useThemeStore((state) => state.setPreset);
+  const activePresetId = useThemeStore((state) => state.activePresetId);
+  const overrides = useThemeStore((state) => state.overrides);
 
-  const exported = exportTheme(currentTheme, format);
+  const exported = exportTheme(currentTheme, format, { basePresetId: activePresetId, overrides });
 
   return (
     <Space direction="vertical" size={20} style={{ width: '100%' }}>
@@ -78,7 +81,13 @@ export function LibraryPage() {
               <Card
                 title={theme.name}
                 actions={[
-                  <ExportOutlined key="load" onClick={() => setTheme(theme.config)} />,
+                  <ExportOutlined
+                    key="load"
+                    onClick={() => {
+                      if (theme.basePresetId) setPreset(theme.basePresetId);
+                      if (!theme.builtIn) setTheme(theme.config);
+                    }}
+                  />,
                   <CopyOutlined key="copy" onClick={() => copyTheme(theme.id)} />,
                   <DeleteOutlined key="delete" onClick={() => deleteTheme(theme.id)} />,
                 ]}
@@ -115,7 +124,7 @@ export function LibraryPage() {
         onCancel={() => setSaveOpen(false)}
         onOk={() => {
           const name = form.getFieldValue('name') || currentTheme.name;
-          saveTheme(name, currentTheme);
+          saveTheme(name, currentTheme, activePresetId);
           setSaveOpen(false);
           message.success('Theme saved');
         }}
@@ -133,10 +142,29 @@ export function LibraryPage() {
         onCancel={() => setImportOpen(false)}
         onOk={() => {
           try {
-            const parsed = JSON.parse(importText) as Partial<ThemeConfig>;
-            const config = validateThemeConfig(parsed, currentTheme);
+            const parsed = JSON.parse(importText) as Partial<ThemeConfig> & {
+              schemaVersion?: number;
+              basePresetId?: string;
+              overrides?: ThemeOverrides;
+              resolvedTheme?: Partial<ThemeConfig>;
+            };
+            const sourceTheme = parsed.schemaVersion === 2
+              ? {
+                  ...(parsed.resolvedTheme ?? {}),
+                  token: parsed.overrides?.token ?? parsed.resolvedTheme?.token,
+                  components: parsed.overrides?.components ?? parsed.resolvedTheme?.components,
+                }
+              : parsed;
+            const config = validateThemeConfig(sourceTheme, currentTheme);
             const now = new Date().toISOString();
-            const record: ThemeRecord = { id: nanoid(), name: config.name || 'Imported Theme', config, createdAt: now, updatedAt: now };
+            const record: ThemeRecord = {
+              id: nanoid(),
+              name: config.name || 'Imported Theme',
+              config,
+              basePresetId: parsed.basePresetId ?? activePresetId,
+              createdAt: now,
+              updatedAt: now,
+            };
             importTheme(record);
             setImportOpen(false);
             setImportText('');
@@ -151,4 +179,3 @@ export function LibraryPage() {
     </Space>
   );
 }
-

@@ -2,21 +2,28 @@ import { create } from 'zustand';
 import { nanoid } from 'nanoid';
 import type { ThemeConfig, ThemeRecord } from '../types';
 import { StorageService } from '../services/storage';
-import { presetThemes } from '../services/theme/presets';
+import { defaultTheme, getPreset as getLegacyPreset } from '../services/theme/presets';
+import { themePresetRegistry } from '../themes/registry';
 
 const builtInRecords = (): ThemeRecord[] =>
-  presetThemes.map((preset) => ({
+  themePresetRegistry.map((preset) => ({
     id: preset.id,
     name: preset.name,
-    config: preset.config,
+    config: getLegacyPreset(preset.id)?.config ?? {
+      ...defaultTheme,
+      id: preset.id,
+      name: preset.name,
+      updatedAt: new Date(0).toISOString(),
+    },
     builtIn: true,
-    createdAt: preset.config.updatedAt,
-    updatedAt: preset.config.updatedAt,
+    basePresetId: preset.id,
+    createdAt: new Date(0).toISOString(),
+    updatedAt: new Date(0).toISOString(),
   }));
 
 type LibraryState = {
   themes: ThemeRecord[];
-  saveTheme: (name: string, config: ThemeConfig) => ThemeRecord;
+  saveTheme: (name: string, config: ThemeConfig, basePresetId?: string) => ThemeRecord;
   importTheme: (record: ThemeRecord) => void;
   deleteTheme: (id: string) => void;
   copyTheme: (id: string) => void;
@@ -37,12 +44,13 @@ const persistUserThemes = (themes: ThemeRecord[]) =>
 export const useLibraryStore = create<LibraryState>((set, get) => ({
   themes: loadThemes(),
 
-  saveTheme: (name, config) => {
+  saveTheme: (name, config, basePresetId) => {
     const now = new Date().toISOString();
     const record: ThemeRecord = {
       id: nanoid(),
       name,
       config: { ...config, id: nanoid(), name, updatedAt: now },
+      basePresetId,
       createdAt: now,
       updatedAt: now,
     };
@@ -70,7 +78,6 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
   copyTheme: (id) => {
     const source = get().themes.find((theme) => theme.id === id);
     if (!source) return;
-    get().saveTheme(`${source.name} (Copy)`, source.config);
+    get().saveTheme(`${source.name} (Copy)`, source.config, source.basePresetId);
   },
 }));
-

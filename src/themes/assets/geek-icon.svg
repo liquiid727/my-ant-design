@@ -1,0 +1,48 @@
+<svg width="256" height="256" viewBox="69 56 129 135" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="geekBody" x1="67" y1="59" x2="185" y2="191" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#15211F"></stop>
+      <stop offset="1" stop-color="#060909"></stop>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.2" result="blur"></feGaussianBlur>
+      <feMerge>
+        <feMergeNode in="blur"></feMergeNode>
+        <feMergeNode in="SourceGraphic"></feMergeNode>
+      </feMerge>
+    </filter>
+    <clipPath id="gClip">
+      <path d="M72 91L128 56L176 88L147 108L126 95L96 113V145L122 160L160 138L136 122L108 122L145 99H188V154L128 191L69 157V92L72 91Z"></path>
+    </clipPath>
+  </defs>
+
+  <path d="M72 91L128 56L176 88L147 108L126 95L96 113V145L122 160L160 138L136 122L108 122L145 99H188V154L128 191L69 157V92L72 91Z" fill="url(#geekBody)"></path>
+
+  <g clip-path="url(#gClip)" filter="url(#glow)" opacity="0.95">
+    <g stroke="#8AF77B" stroke-width="4.4" stroke-linecap="round">
+      <path d="M77 100H104"></path>
+      <path d="M79 111H109"></path>
+      <path d="M79 122H110"></path>
+      <path d="M79 133H109"></path>
+      <path d="M79 144H109"></path>
+      <path d="M79 155H116"></path>
+
+      <path d="M98 88H120"></path>
+      <path d="M108 79H132"></path>
+      <path d="M119 71H147"></path>
+      <path d="M131 67H160"></path>
+
+      <path d="M103 165H128"></path>
+      <path d="M114 173H144"></path>
+      <path d="M126 181H150"></path>
+
+      <path d="M132 126H155"></path>
+      <path d="M136 133H152"></path>
+    </g>
+  </g>
+
+  <path d="M115 122L144 122L128 134L115 122Z" fill="#8AF77B" filter="url(#glow)"></path>
+  <rect x="176" y="118" width="10" height="10" rx="1.5" fill="#8AF77B" filter="url(#glow)"></rect>
+  <rect x="188" y="112" width="10" height="10" rx="1.5" fill="#8AF77B" filter="url(#glow)"></rect>
+  <rect x="188" y="124" width="10" height="10" rx="1.5" fill="#8AF77B" filter="url(#glow)"></rect>
+</svg>
