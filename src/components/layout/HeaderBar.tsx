@@ -17,7 +17,7 @@ export function HeaderBar() {
         <span>Ant Design Theme Studio</span>
       </div>
       <Segmented
-        value={location.pathname === '/library' ? '/library' : '/'}
+        value={location.pathname === '/library' ? '/library' : location.pathname === '/about' ? '/about' : '/'}
         options={[
           {
             label: (
@@ -40,6 +40,7 @@ export function HeaderBar() {
             value: '/',
           },
           { label: 'Library', value: '/library' },
+          { label: 'About', value: '/about' },
         ]}
         onChange={(value) => {
           if (value === '/') navigate('/?view=components');
