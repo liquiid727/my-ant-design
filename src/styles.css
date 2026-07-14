@@ -605,6 +605,125 @@ body {
   padding: 20px;
 }
 
+/* ===== About Page ===== */
+
+.about-page {
+  background: #f5f5f5;
+  min-height: calc(100vh - 58px);
+  padding: 24px;
+}
+
+.about-shell {
+  margin: 0 auto;
+  max-width: 1120px;
+  width: 100%;
+}
+
+.about-hero,
+.about-section-card {
+  border: 1px solid rgba(5, 5, 5, 0.08);
+  border-radius: 8px;
+}
+
+.about-hero {
+  margin-bottom: 20px;
+}
+
+.about-hero .ant-card-body {
+  padding: 28px;
+}
+
+.about-hero .ant-typography:last-child,
+.about-section-card .ant-typography:last-child {
+  margin-bottom: 0;
+}
+
+.about-tabs {
+  background: #fff;
+  border: 1px solid rgba(5, 5, 5, 0.08);
+  border-radius: 8px;
+  padding: 0 20px 20px;
+}
+
+.about-tabs > .ant-tabs-nav {
+  margin-bottom: 20px;
+}
+
+.about-tabs .ant-tabs-nav-wrap {
+  overflow-x: auto;
+}
+
+.about-tabs .ant-tabs-nav-list {
+  min-width: max-content;
+}
+
+.about-section-stack {
+  width: 100%;
+}
+
+.about-section-card .ant-card-body {
+  padding: 20px;
+}
+
+.about-feature-card {
+  border: 1px solid rgba(5, 5, 5, 0.08);
+  border-radius: 8px;
+  height: 100%;
+}
+
+.about-feature-card .ant-card-body {
+  height: 100%;
+}
+
+.about-feature-icon {
+  align-items: center;
+  background: #e6f4ff;
+  border-radius: 10px;
+  color: #1677ff;
+  display: inline-flex;
+  font-size: 20px;
+  height: 40px;
+  justify-content: center;
+  margin-bottom: 12px;
+  width: 40px;
+}
+
+.about-steps .ant-steps-item-description {
+  max-width: none !important;
+}
+
+.about-step-body {
+  max-width: 100%;
+  padding-top: 4px;
+}
+
+.about-code-copy.ant-typography {
+  margin: 8px 0 0;
+  max-width: 100%;
+}
+
+.about-code-block {
+  background: #111827;
+  border-radius: 8px;
+  color: #e5e7eb;
+  font-family: "SF Mono", "Consolas", "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 14px;
+  white-space: pre;
+}
+
+.about-flow-item {
+  background: #fafafa;
+  border: 1px solid rgba(5, 5, 5, 0.06);
+  border-radius: 8px;
+  height: 100%;
+  padding: 16px;
+}
+
 @media (max-width: 1200px) {
   .reference-topbar {
     align-items: flex-start;
@@ -879,5 +998,23 @@ body {
 
   .library-panel {
     margin: 12px;
+  }
+
+  .about-page {
+    min-height: 100vh;
+    padding: 12px;
+  }
+
+  .about-tabs {
+    padding: 0 12px 12px;
+  }
+
+  .about-hero .ant-card-body,
+  .about-section-card .ant-card-body {
+    padding: 16px;
+  }
+
+  .about-code-block {
+    font-size: 11px;
   }
 }
