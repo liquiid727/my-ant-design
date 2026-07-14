@@ -1,0 +1,62 @@
+name: Compile Community Themes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/themes/community/*/theme.ts'
+      - 'src/themes/community/*/meta.json'
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Find advanced themes
+        id: find
+        run: |
+          DIRS=$(find src/themes/community -name "theme.ts" -exec dirname {} \; | sort)
+          echo "dirs<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$DIRS" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Compile themes
+        run: |
+          mkdir -p dist/community-themes
+          while IFS= read -r dir; do
+            [ -z "$dir" ] && continue
+            THEME_ID=$(basename "$dir")
+            echo "Compiling $THEME_ID..."
+            npx vite build \
+              --config vite.config.ts \
+              --mode production \
+              -- \
+              || npx esbuild "$dir/theme.ts" \
+                --bundle \
+                --format=esm \
+                --outfile="dist/community-themes/$THEME_ID.js" \
+                --external:react \
+                --external:react-dom \
+                --external:antd \
+                --external:antd-style
+          done <<< "${{ steps.find.outputs.dirs }}"
+
+      - name: Deploy to GitHub Pages
+        if: hashFiles('dist/community-themes/*.js') != ''
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/community-themes
+          destination_dir: community-themes
+          keep_files: true

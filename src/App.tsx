@@ -9,6 +9,7 @@ const SettingsModal = lazy(() =>
   import('./components/settings/SettingsModal').then((module) => ({ default: module.SettingsModal })),
 );
 const AIDrawer = lazy(() => import('./components/ai/AIDrawer').then((module) => ({ default: module.AIDrawer })));
+const PlazaDrawer = lazy(() => import('./components/plaza/PlazaDrawer').then((module) => ({ default: module.PlazaDrawer })));
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Suspense fallback={null}>
             <SettingsModal />
             <AIDrawer />
+            <PlazaDrawer />
           </Suspense>
         </div>
       </AntApp>

@@ -5,7 +5,7 @@ import { GlobalTokenEditor } from './GlobalTokenEditor';
 export function ThemeEditorSidebar() {
   return (
     <aside className="editor-panel">
-      <Card bordered={false} title="Theme Editor">
+      <Card variant="borderless" title="Theme Editor">
         <Tabs
           defaultActiveKey="global"
           items={[

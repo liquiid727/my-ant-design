@@ -1,4 +1,4 @@
-import { DownOutlined, RobotOutlined, SettingOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, DownOutlined, RobotOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Segmented } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUIStore } from '../../stores/uiStore';
@@ -8,6 +8,7 @@ export function HeaderBar() {
   const location = useLocation();
   const openSettings = useUIStore((state) => state.openSettings);
   const toggleAI = useUIStore((state) => state.toggleAI);
+  const openPlaza = useUIStore((state) => state.openPlaza);
 
   return (
     <LayoutHeaderShell>
@@ -46,6 +47,9 @@ export function HeaderBar() {
         }}
       />
       <div className="header-actions">
+        <Button icon={<AppstoreOutlined />} onClick={openPlaza}>
+          Plaza
+        </Button>
         <Button icon={<SettingOutlined />} onClick={openSettings}>
           Settings
         </Button>

@@ -3,6 +3,7 @@ import { App, Button, Drawer, Input, Space, Tooltip, Typography } from 'antd';
 import { useMemo, useRef, useState, useEffect } from 'react';
 import { LLMClient } from '../../services/ai/LLMClient';
 import { extractThemeFromResponse } from '../../services/ai/responseParser';
+import { serializeThemeContext } from '../../services/ai/themeContext';
 import { diffThemes } from '../../services/theme/themeDiff';
 import { validateThemeConfig } from '../../services/theme/themeValidator';
 import { useChatStore } from '../../stores/chatStore';
@@ -32,6 +33,8 @@ export function AIDrawer() {
   const updateMessage = useChatStore((state) => state.updateMessage);
   const clearSession = useChatStore((state) => state.clearSession);
   const currentTheme = useThemeStore((state) => state.currentTheme);
+  const activePresetId = useThemeStore((state) => state.activePresetId);
+  const overrides = useThemeStore((state) => state.overrides);
   const setTheme = useThemeStore((state) => state.setTheme);
   const createVersion = useVersionStore((state) => state.createVersion);
 
@@ -64,8 +67,12 @@ export function AIDrawer() {
 
     try {
       const client = new LLMClient(llmConfig);
+      const themeContext = serializeThemeContext(activePresetId, overrides);
       let content = '';
-      for await (const chunk of client.chat({ messages: [...messages, userMessage] })) {
+      for await (const chunk of client.chat({
+        messages: [...messages, userMessage],
+        promptOptions: { locale: llmConfig.locale, themeContext },
+      })) {
         content += chunk.content;
         updateMessage(assistant.id, content);
       }

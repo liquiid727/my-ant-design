@@ -1,10 +1,11 @@
-import { ApiOutlined, CheckCircleFilled, KeyOutlined, LinkOutlined, RobotOutlined } from '@ant-design/icons';
-import { App, AutoComplete, Button, Divider, Form, Input, Modal, Select, Space, Tag, Typography } from 'antd';
+import { ApiOutlined, CheckCircleFilled, CodeOutlined, KeyOutlined, LinkOutlined, RobotOutlined } from '@ant-design/icons';
+import { App, AutoComplete, Button, Collapse, Divider, Form, Input, Modal, Select, Space, Tag, Typography } from 'antd';
+import { useMemo, useState } from 'react';
 import type { LLMConfig, LLMProvider } from '../../types';
 import { LLMClient } from '../../services/ai/LLMClient';
+import { buildSystemPrompt } from '../../services/ai/systemPrompt';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { useUIStore } from '../../stores/uiStore';
-import { useState } from 'react';
 
 const providerDefaults: Record<LLMProvider, { baseURL: string; model: string; models: string[] }> = {
   openai: {
@@ -41,14 +42,20 @@ export function SettingsModal() {
   const setLLMConfig = useSettingsStore((state) => state.setLLMConfig);
 
   const provider = Form.useWatch('provider', form) ?? llmConfig.provider;
+  const locale = Form.useWatch('locale', form) ?? llmConfig.locale;
   const models = providerDefaults[provider].models;
+
+  const promptPreview = useMemo(
+    () => buildSystemPrompt({ locale: locale ?? undefined }),
+    [locale],
+  );
 
   return (
     <Modal
       title={null}
       open={isOpen}
       onCancel={closeSettings}
-      width={480}
+      width={520}
       footer={
         <div className="settings-modal-footer">
           <Button
@@ -141,6 +148,16 @@ export function SettingsModal() {
             placeholder="Select or enter a model"
           />
         </Form.Item>
+        <Form.Item label="AI Language" name="locale">
+          <Select
+            allowClear
+            placeholder="Auto-detect"
+            options={[
+              { label: '中文 (zh-CN)', value: 'zh-CN' },
+              { label: 'English (en-US)', value: 'en-US' },
+            ]}
+          />
+        </Form.Item>
 
         {testResult === 'success' && (
           <div className="settings-test-success">
@@ -148,6 +165,26 @@ export function SettingsModal() {
             <Typography.Text type="secondary" style={{ fontSize: 12 }}>Connection verified successfully</Typography.Text>
           </div>
         )}
+
+        <Collapse
+          ghost
+          size="small"
+          items={[
+            {
+              key: 'prompt',
+              label: (
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
+                  <CodeOutlined /> AI Prompt Preview
+                </span>
+              ),
+              children: (
+                <pre className="settings-prompt-preview">
+                  {promptPreview}
+                </pre>
+              ),
+            },
+          ]}
+        />
       </Form>
     </Modal>
   );

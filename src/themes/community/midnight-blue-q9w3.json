@@ -1,0 +1,33 @@
+{
+  "id": "midnight-blue-q9w3",
+  "name": "Midnight Blue",
+  "author": "community",
+  "description": "A deep dark theme with electric blue accents for night owls",
+  "tags": ["dark", "blue", "modern", "developer"],
+  "preview": "midnight-blue-q9w3-preview.png",
+  "config": {
+    "algorithm": "dark",
+    "token": {
+      "colorPrimary": "#177ddc",
+      "colorSuccess": "#49aa19",
+      "colorBgBase": "#0d1117",
+      "colorTextBase": "#e6edf3",
+      "borderRadius": 6,
+      "borderRadiusSM": 4,
+      "borderRadiusLG": 8,
+      "borderRadiusXS": 2
+    },
+    "components": {
+      "Button": {
+        "primaryShadow": "0 2px 8px rgba(23, 125, 220, 0.3)"
+      },
+      "Card": {
+        "colorBgContainer": "#161b22"
+      },
+      "Table": {
+        "headerBg": "#161b22",
+        "rowHoverBg": "#1c2128"
+      }
+    }
+  }
+}

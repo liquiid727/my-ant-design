@@ -1,0 +1,29 @@
+{
+  "id": "sakura-pink-f7k2",
+  "name": "Sakura Pink",
+  "author": "community",
+  "description": "A soft cherry blossom inspired theme with warm pink tones",
+  "tags": ["pink", "warm", "light", "elegant"],
+  "preview": "sakura-pink-f7k2-preview.png",
+  "config": {
+    "algorithm": "default",
+    "token": {
+      "colorPrimary": "#eb2f96",
+      "colorSuccess": "#52c41a",
+      "colorBgBase": "#fffbff",
+      "borderRadius": 10,
+      "borderRadiusSM": 8,
+      "borderRadiusLG": 14,
+      "borderRadiusXS": 4
+    },
+    "components": {
+      "Button": {
+        "borderRadius": 10,
+        "primaryShadow": "0 2px 8px rgba(235, 47, 150, 0.2)"
+      },
+      "Card": {
+        "borderRadiusLG": 14
+      }
+    }
+  }
+}

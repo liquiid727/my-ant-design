@@ -1,0 +1,34 @@
+{
+  "id": "forest-green-h5n8",
+  "name": "Forest Green",
+  "author": "community",
+  "description": "A natural, earthy theme inspired by forest landscapes",
+  "tags": ["green", "nature", "light", "calm"],
+  "preview": "forest-green-h5n8-preview.png",
+  "config": {
+    "algorithm": "default",
+    "token": {
+      "colorPrimary": "#389e0d",
+      "colorSuccess": "#52c41a",
+      "colorWarning": "#d4b106",
+      "colorBgBase": "#f6ffed",
+      "borderRadius": 8,
+      "borderRadiusSM": 6,
+      "borderRadiusLG": 12,
+      "borderRadiusXS": 4,
+      "padding": 16,
+      "paddingLG": 28
+    },
+    "components": {
+      "Button": {
+        "borderRadius": 8,
+        "controlHeight": 36,
+        "primaryShadow": "0 2px 8px rgba(56, 158, 13, 0.2)"
+      },
+      "Card": {
+        "borderRadiusLG": 12,
+        "colorBgContainer": "#ffffff"
+      }
+    }
+  }
+}

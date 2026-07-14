@@ -1,8 +1,9 @@
 import type { ChatChunk, ChatMessage, LLMConfig, Result } from '../../types';
-import { buildSystemPrompt } from './systemPrompt';
+import { buildSystemPrompt, type SystemPromptOptions } from './systemPrompt';
 
 type ChatParams = {
   messages: ChatMessage[];
+  promptOptions?: SystemPromptOptions;
 };
 
 const providerPaths: Record<LLMConfig['provider'], string> = {
@@ -80,7 +81,7 @@ export class LLMClient {
   }
 
   async *chat(params: ChatParams): AsyncGenerator<ChatChunk> {
-    const response = await this.request(params.messages);
+    const response = await this.request(params.messages, params.promptOptions);
     if (!response.ok) throw new Error(await normalizeError(response));
 
     if (response.body) {
@@ -92,9 +93,10 @@ export class LLMClient {
     yield { content: json.choices?.[0]?.message?.content ?? '', done: true };
   }
 
-  private async request(messages: ChatMessage[]) {
+  private async request(messages: ChatMessage[], promptOptions?: SystemPromptOptions) {
+    const systemPrompt = buildSystemPrompt(promptOptions);
     const payload = [
-      { role: 'system' as const, content: buildSystemPrompt() },
+      { role: 'system' as const, content: systemPrompt },
       ...messages.slice(-10).map((message) => ({ role: message.role, content: message.content })),
     ];
 
@@ -136,11 +138,12 @@ export class LLMClient {
 
   private body(messages: { role: string; content: string }[]) {
     if (this.config.provider === 'claude') {
+      const system = messages.find((message) => message.role === 'system')?.content ?? '';
       return {
         model: this.config.model,
         max_tokens: 1600,
         stream: true,
-        system: buildSystemPrompt(),
+        system,
         messages: messages.filter((message) => message.role !== 'system'),
       };
     }

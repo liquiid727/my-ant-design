@@ -112,7 +112,7 @@ export function PlaygroundPage() {
         className="editor-drawer"
         title="Theme Editor"
         open={isEditorOpen}
-        width={420}
+        size={420}
         onClose={() => setIsEditorOpen(false)}
       >
         <ThemeEditorSidebar />

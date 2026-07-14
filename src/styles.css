@@ -342,6 +342,21 @@ body {
   padding: 8px 12px;
 }
 
+.settings-prompt-preview {
+  background: #fafafa;
+  border: 1px solid rgba(5, 5, 5, 0.06);
+  border-radius: 6px;
+  font-family: 'SF Mono', 'Consolas', 'Liberation Mono', monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 0;
+  max-height: 300px;
+  overflow: auto;
+  padding: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 /* ===== AI Drawer ===== */
 
 .ant-drawer-content-wrapper:has(.ai-drawer) {
@@ -605,6 +620,216 @@ body {
     justify-content: flex-end;
     max-width: 360px;
   }
+}
+
+/* ─── Plaza Drawer ─── */
+
+.ant-drawer-content-wrapper:has(.plaza-drawer) {
+  width: 480px !important;
+}
+
+.plaza-drawer-header {
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 16px;
+}
+
+.plaza-drawer-title {
+  align-items: center;
+  display: flex;
+  font-size: 15px;
+  font-weight: 600;
+  gap: 10px;
+}
+
+.plaza-drawer-title-icon {
+  align-items: center;
+  background: linear-gradient(135deg, #f0f5ff 0%, #d6e4ff 100%);
+  border-radius: 8px;
+  color: #1677ff;
+  display: flex;
+  font-size: 14px;
+  height: 30px;
+  justify-content: center;
+  width: 30px;
+}
+
+.plaza-search-area {
+  border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+  padding: 12px 16px;
+}
+
+.plaza-search-input {
+  margin-bottom: 8px;
+}
+
+.plaza-tag-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.plaza-cache-banner {
+  background: #fffbe6;
+  padding: 4px 16px;
+  text-align: center;
+}
+
+.plaza-error-banner {
+  align-items: center;
+  background: #fff2f0;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 8px 16px;
+}
+
+.plaza-theme-grid {
+  display: grid;
+  flex: 1;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+  overflow-y: auto;
+  padding: 16px;
+  align-content: start;
+}
+
+.plaza-theme-card {
+  border: 1px solid rgba(5, 5, 5, 0.06);
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.plaza-theme-card:hover {
+  border-color: #1677ff;
+  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.12);
+}
+
+.plaza-card-preview {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.plaza-card-preview img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.plaza-card-preview-fallback {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+}
+
+.plaza-card-color-dot {
+  border-radius: 50%;
+  height: 32px;
+  width: 32px;
+}
+
+.plaza-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px 10px;
+}
+
+.plaza-card-name {
+  font-size: 13px;
+}
+
+.plaza-card-author {
+  font-size: 11px;
+}
+
+.plaza-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.plaza-card-tag {
+  font-size: 10px !important;
+  line-height: 18px !important;
+  margin: 0 !important;
+  padding: 0 4px !important;
+}
+
+.plaza-skeleton-card {
+  padding: 12px;
+}
+
+.plaza-empty-state {
+  grid-column: 1 / -1;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+/* ─── Plaza Preview Modal ─── */
+
+.plaza-preview-header {
+  margin-bottom: 16px;
+}
+
+.plaza-preview-body {
+  margin-bottom: 16px;
+}
+
+.plaza-preview-components {
+  border: 1px solid rgba(5, 5, 5, 0.06);
+}
+
+.plaza-preview-diff {
+  background: #fafafa;
+  border: 1px solid rgba(5, 5, 5, 0.06);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  padding: 12px;
+}
+
+.plaza-diff-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.plaza-diff-row {
+  align-items: center;
+  display: flex;
+  font-family: monospace;
+  font-size: 12px;
+  gap: 6px;
+}
+
+.plaza-diff-key {
+  color: #8c8c8c;
+  min-width: 140px;
+}
+
+.plaza-diff-arrow {
+  color: #bfbfbf;
+}
+
+.plaza-diff-value {
+  color: #1677ff;
+  font-weight: 500;
+}
+
+.plaza-preview-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
 }
 
 @media (max-width: 768px) {
