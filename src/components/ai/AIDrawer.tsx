@@ -1,5 +1,6 @@
-import { App, Button, Drawer, Empty, Input, Space, Typography } from 'antd';
-import { useMemo, useState } from 'react';
+import { ClearOutlined, RobotOutlined, SendOutlined, SettingOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { App, Button, Drawer, Input, Space, Tooltip, Typography } from 'antd';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { LLMClient } from '../../services/ai/LLMClient';
 import { extractThemeFromResponse } from '../../services/ai/responseParser';
 import { diffThemes } from '../../services/theme/themeDiff';
@@ -10,12 +11,17 @@ import { useThemeStore } from '../../stores/themeStore';
 import { useUIStore } from '../../stores/uiStore';
 import { useVersionStore } from '../../stores/versionStore';
 
-const suggestions = ['生成苹果风格主题', '把主色调成红色', '调整圆角为圆润风格'];
+const suggestions = [
+  { text: '生成苹果风格主题', icon: '🍎' },
+  { text: '把主色调成红色', icon: '🎨' },
+  { text: '调整圆角为圆润风格', icon: '✨' },
+];
 
 export function AIDrawer() {
   const { message } = App.useApp();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const isOpen = useUIStore((state) => state.isAIDrawerOpen);
   const closeAI = useUIStore((state) => state.closeAI);
   const openSettings = useUIStore((state) => state.openSettings);
@@ -38,6 +44,10 @@ export function AIDrawer() {
   }, [currentTheme, messages]);
 
   const diffs = lastTheme ? diffThemes(currentTheme, lastTheme) : [];
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const submit = async (value = input) => {
     if (!value.trim()) return;
@@ -66,68 +76,173 @@ export function AIDrawer() {
     }
   };
 
+  const configured = isConfigured();
+
   return (
     <Drawer
-      title="AI Theme Agent"
-      width={440}
+      title={null}
       open={isOpen}
       onClose={closeAI}
-      extra={<Button onClick={clearSession}>Clear</Button>}
+      closable={false}
+      className="ai-drawer"
+      size="large"
+      styles={{
+        body: { display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' },
+        header: { display: 'none' },
+      }}
     >
-      {!isConfigured() && (
-        <Empty description="请先配置 AI 模型">
-          <Button type="primary" onClick={openSettings}>
-            Open Settings
-          </Button>
-        </Empty>
-      )}
-
-      <Space wrap style={{ marginBottom: 16 }}>
-        {suggestions.map((suggestion) => (
-          <Button key={suggestion} size="small" onClick={() => submit(suggestion)}>
-            {suggestion}
-          </Button>
-        ))}
-      </Space>
-
-      <div>
-        {messages.map((item) => (
-          <div key={item.id} className={`chat-message ${item.role}`}>
-            {item.content || '...'}
+      {/* Header */}
+      <div className="ai-drawer-header">
+        <div className="ai-drawer-title">
+          <div className="ai-drawer-title-icon">
+            <ThunderboltOutlined />
           </div>
-        ))}
+          <span>AI Theme Agent</span>
+        </div>
+        <Space size={4}>
+          <Tooltip title="Clear history">
+            <Button
+              type="text"
+              size="small"
+              icon={<ClearOutlined />}
+              onClick={clearSession}
+              disabled={messages.length === 0}
+            />
+          </Tooltip>
+          <Tooltip title="Settings">
+            <Button type="text" size="small" icon={<SettingOutlined />} onClick={openSettings} />
+          </Tooltip>
+          <Button type="text" size="small" onClick={closeAI} style={{ fontSize: 18, lineHeight: 1 }}>×</Button>
+        </Space>
       </div>
 
-      {lastTheme && (
-        <Space direction="vertical" style={{ width: '100%', marginTop: 16 }}>
-          <Typography.Text strong>Theme Diff Preview</Typography.Text>
-          <pre className="diff-box">
-            {diffs.slice(0, 20).map((diff) => `${diff.type} ${diff.key}: ${String(diff.oldValue)} -> ${String(diff.newValue)}`).join('\n') ||
-              'No token changes detected'}
-          </pre>
-          <Button
-            type="primary"
-            block
-            onClick={() => {
-              createVersion(currentTheme.id, currentTheme, 'Before AI Apply');
-              setTheme(lastTheme);
-              message.success('AI theme applied');
-            }}
-          >
-            Apply Theme
-          </Button>
-        </Space>
+      {/* Messages area */}
+      <div className="ai-drawer-messages">
+        {!configured && messages.length === 0 && (
+          <div className="ai-drawer-empty">
+            <div className="ai-drawer-empty-icon">
+              <RobotOutlined />
+            </div>
+            <Typography.Text strong style={{ fontSize: 15 }}>Configure AI Model</Typography.Text>
+            <Typography.Text type="secondary" style={{ fontSize: 13, textAlign: 'center' }}>
+              Connect an LLM provider to start generating themes with AI
+            </Typography.Text>
+            <Button type="primary" icon={<SettingOutlined />} onClick={openSettings} style={{ marginTop: 8 }}>
+              Open Settings
+            </Button>
+          </div>
+        )}
+
+        {configured && messages.length === 0 && (
+          <div className="ai-drawer-empty">
+            <div className="ai-drawer-empty-icon">
+              <ThunderboltOutlined />
+            </div>
+            <Typography.Text strong style={{ fontSize: 15 }}>Ready to go!</Typography.Text>
+            <Typography.Text type="secondary" style={{ fontSize: 13, textAlign: 'center' }}>
+              Describe the theme you want, or try a suggestion below
+            </Typography.Text>
+          </div>
+        )}
+
+        {messages.map((item) => (
+          <div key={item.id} className={`ai-chat-bubble ${item.role}`}>
+            {item.role === 'assistant' && (
+              <div className="ai-chat-avatar">
+                <ThunderboltOutlined />
+              </div>
+            )}
+            <div className={`ai-chat-content ${item.role}`}>
+              {item.content || (
+                <span className="ai-chat-typing">
+                  <span /><span /><span />
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
+
+        {/* Theme diff */}
+        {lastTheme && (
+          <div className="ai-diff-card">
+            <div className="ai-diff-card-header">
+              <Typography.Text strong style={{ fontSize: 13 }}>Theme Changes</Typography.Text>
+              <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                {diffs.length} token{diffs.length !== 1 ? 's' : ''} modified
+              </Typography.Text>
+            </div>
+            <div className="ai-diff-list">
+              {diffs.slice(0, 8).map((diff) => (
+                <div key={diff.key} className="ai-diff-row">
+                  <span className="ai-diff-key">{diff.key}</span>
+                  <span className="ai-diff-arrow">→</span>
+                  <span className="ai-diff-value">{String(diff.newValue)}</span>
+                </div>
+              ))}
+              {diffs.length > 8 && (
+                <Typography.Text type="secondary" style={{ fontSize: 11, paddingInlineStart: 8 }}>
+                  +{diffs.length - 8} more changes
+                </Typography.Text>
+              )}
+              {diffs.length === 0 && (
+                <Typography.Text type="secondary" style={{ fontSize: 12 }}>No token changes detected</Typography.Text>
+              )}
+            </div>
+            <Button
+              type="primary"
+              block
+              onClick={() => {
+                createVersion(currentTheme.id, currentTheme, 'Before AI Apply');
+                setTheme(lastTheme);
+                message.success('AI theme applied');
+              }}
+              style={{ marginTop: 8 }}
+            >
+              Apply Theme
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {/* Suggestions */}
+      {messages.length === 0 && configured && (
+        <div className="ai-drawer-suggestions">
+          {suggestions.map((s) => (
+            <button key={s.text} className="ai-suggestion-chip" onClick={() => submit(s.text)}>
+              <span>{s.icon}</span>
+              <span>{s.text}</span>
+            </button>
+          ))}
+        </div>
       )}
 
-      <Input.Search
-        enterButton="Send"
-        loading={isLoading}
-        value={input}
-        placeholder="Describe a theme..."
-        onChange={(event) => setInput(event.target.value)}
-        onSearch={submit}
-        style={{ marginTop: 16 }}
-      />
+      {/* Input */}
+      <div className="ai-drawer-input">
+        <Input.TextArea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Describe a theme style..."
+          autoSize={{ minRows: 1, maxRows: 4 }}
+          onPressEnter={(e) => {
+            if (!e.shiftKey) {
+              e.preventDefault();
+              submit();
+            }
+          }}
+          disabled={isLoading}
+          className="ai-input-textarea"
+        />
+        <Button
+          type="primary"
+          shape="circle"
+          icon={<SendOutlined />}
+          onClick={() => submit()}
+          loading={isLoading}
+          disabled={!input.trim()}
+          className="ai-send-btn"
+        />
+      </div>
     </Drawer>
   );
 }
