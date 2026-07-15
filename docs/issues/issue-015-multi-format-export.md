@@ -6,13 +6,13 @@
 
 ## Acceptance Criteria
 
-- [ ] `theme.ts` 格式：生成 TypeScript 文件，包含 ConfigProvider 使用方式 + 完整 ThemeConfig 对象
-- [ ] `theme.json` 格式：纯 JSON 格式的 ThemeConfig
-- [ ] `design-token.json` 格式：扁平化 Token 列表（兼容 Style Dictionary）
-- [ ] `tailwind.config.ts` 格式：将 Token 映射到 Tailwind 的 extend 配置（colors, borderRadius, spacing, fontSize）
-- [ ] `css-variables` 格式：生成 CSS 自定义属性（`--ant-color-primary: #1677FF;`）
-- [ ] 导出面板 UI：格式选择 + 代码预览（语法高亮）+ 复制 + 下载
-- [ ] 文件下载：使用 Blob + URL.createObjectURL + a.download
+- [x] `theme.ts` 格式：生成 TypeScript 文件，包含 ConfigProvider 使用方式 + 完整 ThemeConfig 对象
+- [x] `theme.json` 格式：纯 JSON 格式的 ThemeConfig
+- [x] `design-token.json` 格式：扁平化 Token 列表（兼容 Style Dictionary）
+- [x] `tailwind.config.ts` 格式：将 Token 映射到 Tailwind 的 extend 配置（colors, borderRadius, spacing, fontSize）
+- [x] `css-variables` 格式：生成 CSS 自定义属性（`--ant-color-primary: #1677FF;`）
+- [x] 导出面板 UI：格式选择 + 代码预览（语法高亮）+ 复制 + 下载
+- [x] 文件下载：使用 Blob + URL.createObjectURL + a.download
 
 ## Dependencies
 

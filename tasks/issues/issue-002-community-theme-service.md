@@ -8,20 +8,20 @@
 
 ## Acceptance Criteria
 
-- [ ] 创建 `src/services/community/communityThemeService.ts`
-- [ ] 实现 `fetchIndex(force?: boolean)` 方法：优先使用缓存，过期后请求 GitHub API
-- [ ] 仓库配置 hardcode 默认值（`COMMUNITY_REPO`），支持 `VITE_COMMUNITY_REPO_OWNER` / `VITE_COMMUNITY_REPO_NAME` 环境变量覆盖
-- [ ] 通过 GitHub Contents API (`https://api.github.com/repos/{owner}/{repo}/contents/src/themes/community`) 读取目录
-- [ ] 解析 API 返回的 base64 编码 `content` 字段为 JSON
-- [ ] 过滤 `.json` 文件（排除 `community-theme.schema.json` 和 `README.md`）
-- [ ] 对拉取的主题通过 `themeValidator` 校验，跳过无效主题
-- [ ] 缓存到 localStorage（key: `ts_community_themes`），TTL 30 分钟
-- [ ] GitHub API 返回 403（rate limit）时，回退到缓存数据或构建时快照
-- [ ] 网络错误时同样回退到缓存/快照
-- [ ] 实现 `getPreviewUrl(filename)` 方法：返回 `raw.githubusercontent.com` 的图片 URL
-- [ ] 并行拉取最多 5 个主题文件的内容
-- [ ] 编写单元测试覆盖：缓存命中、缓存过期、API 失败降级、强制刷新
-- [ ] Typecheck/lint passes
+- [x] 创建 `src/services/community/communityThemeService.ts`
+- [x] 实现 `fetchIndex(force?: boolean)` 方法：优先使用缓存，过期后请求 GitHub API
+- [x] 仓库配置 hardcode 默认值（`COMMUNITY_REPO`），支持 `VITE_COMMUNITY_REPO_OWNER` / `VITE_COMMUNITY_REPO_NAME` 环境变量覆盖
+- [x] 通过 GitHub Contents API (`https://api.github.com/repos/{owner}/{repo}/contents/src/themes/community`) 读取目录
+- [x] 解析 API 返回的 base64 编码 `content` 字段为 JSON
+- [x] 过滤 `.json` 文件（排除 `community-theme.schema.json` 和 `README.md`）
+- [x] 对拉取的主题通过 `themeValidator` 校验，跳过无效主题
+- [x] 缓存到 localStorage（key: `ts_community_themes`），TTL 30 分钟
+- [x] GitHub API 返回 403（rate limit）时，回退到缓存数据或构建时快照
+- [x] 网络错误时同样回退到缓存/快照
+- [x] 实现 `getPreviewUrl(filename)` 方法：返回 `raw.githubusercontent.com` 的图片 URL
+- [x] 并行拉取最多 5 个主题文件的内容
+- [x] 编写单元测试覆盖：缓存命中、缓存过期、API 失败降级、强制刷新
+- [x] Typecheck/lint passes
 
 ## Dependencies
 

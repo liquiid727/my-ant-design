@@ -1,4 +1,4 @@
-import { CopyOutlined, DeleteOutlined, DownloadOutlined, ExportOutlined, ImportOutlined, SaveOutlined } from '@ant-design/icons';
+import { CopyOutlined, DeleteOutlined, DownloadOutlined, ExportOutlined, ImportOutlined, SaveOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { App, Button, Card, Col, Form, Input, Modal, Row, Select, Space, Tag, Typography } from 'antd';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
@@ -20,6 +20,18 @@ const download = (filename: string, content: string) => {
   anchor.click();
   URL.revokeObjectURL(url);
 };
+
+const serializeShareTheme = (theme: ThemeConfig, basePresetId?: string, overrides?: ThemeOverrides) => JSON.stringify(
+  {
+    schemaVersion: 2,
+    name: theme.name,
+    basePresetId,
+    overrides: overrides ?? { token: theme.token, components: theme.components },
+    resolvedTheme: theme,
+  },
+  null,
+  2,
+);
 
 export function LibraryPage() {
   const { message } = App.useApp();
@@ -69,8 +81,11 @@ export function LibraryPage() {
           <Button icon={<CopyOutlined />} onClick={() => navigator.clipboard.writeText(exported).then(() => message.success('Copied'))}>
             Copy Export
           </Button>
+          <Button icon={<ShareAltOutlined />} onClick={() => navigator.clipboard.writeText(serializeShareTheme(currentTheme, activePresetId, overrides)).then(() => message.success('Share payload copied'))}>
+            Share Current
+          </Button>
         </Space>
-        <pre className="diff-box">{exported}</pre>
+        <pre className={`diff-box code-block language-${format}`}>{exported}</pre>
       </section>
 
       <Row gutter={[16, 16]}>
@@ -89,6 +104,10 @@ export function LibraryPage() {
                     }}
                   />,
                   <CopyOutlined key="copy" onClick={() => copyTheme(theme.id)} />,
+                  <ShareAltOutlined
+                    key="share"
+                    onClick={() => navigator.clipboard.writeText(serializeShareTheme(theme.config, theme.basePresetId)).then(() => message.success('Share payload copied'))}
+                  />,
                   <DeleteOutlined key="delete" onClick={() => deleteTheme(theme.id)} />,
                 ]}
               >

@@ -1,8 +1,9 @@
 import { ConfigProvider, App as AntApp } from 'antd';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
 import { PlaygroundPage } from './components/playground/PlaygroundPage';
+import { STORAGE_USAGE_WARNING_EVENT } from './services/storage';
 
 const LibraryPage = lazy(() => import('./components/library/LibraryPage').then((module) => ({ default: module.LibraryPage })));
 const AboutPage = lazy(() => import('./components/about/AboutPage').then((module) => ({ default: module.AboutPage })));
@@ -16,23 +17,37 @@ export default function App() {
   return (
     <ConfigProvider>
       <AntApp>
-        <div className="studio-root">
-          <AppLayout>
-            <Suspense fallback={null}>
-              <Routes>
-                <Route path="/" element={<PlaygroundPage />} />
-                <Route path="/library" element={<LibraryPage />} />
-                <Route path="/about" element={<AboutPage />} />
-              </Routes>
-            </Suspense>
-          </AppLayout>
-          <Suspense fallback={null}>
-            <SettingsModal />
-            <AIDrawer />
-            <PlazaDrawer />
-          </Suspense>
-        </div>
+        <StudioApp />
       </AntApp>
     </ConfigProvider>
+  );
+}
+
+function StudioApp() {
+  const { message } = AntApp.useApp();
+
+  useEffect(() => {
+    const handler = () => message.warning('Local storage is close to the 5MB browser limit. Please export or clean old themes.');
+    window.addEventListener(STORAGE_USAGE_WARNING_EVENT, handler);
+    return () => window.removeEventListener(STORAGE_USAGE_WARNING_EVENT, handler);
+  }, [message]);
+
+  return (
+    <div className="studio-root">
+      <AppLayout>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/" element={<PlaygroundPage />} />
+            <Route path="/library" element={<LibraryPage />} />
+            <Route path="/about" element={<AboutPage />} />
+          </Routes>
+        </Suspense>
+      </AppLayout>
+      <Suspense fallback={null}>
+        <SettingsModal />
+        <AIDrawer />
+        <PlazaDrawer />
+      </Suspense>
+    </div>
   );
 }

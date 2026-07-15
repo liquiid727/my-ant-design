@@ -6,12 +6,12 @@
 
 ## Acceptance Criteria
 
-- [ ] 展示产品名称和一句话简介
-- [ ] 展示核心功能列表，每个功能配图标和简要说明
-- [ ] 使用 antd Typography、Card 组件排版，风格简洁
-- [ ] 内容在不同屏幕宽度下排版合理
-- [ ] Typecheck/lint passes
-- [ ] Verify in browser using dev-browser skill
+- [x] 展示产品名称和一句话简介
+- [x] 展示核心功能列表，每个功能配图标和简要说明
+- [x] 使用 antd Typography、Card 组件排版，风格简洁
+- [x] 内容在不同屏幕宽度下排版合理
+- [x] Typecheck/lint passes
+- [x] Verify in browser using dev-browser skill
 
 ## Dependencies
 

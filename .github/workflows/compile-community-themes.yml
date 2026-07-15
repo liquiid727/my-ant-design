@@ -38,18 +38,16 @@ jobs:
             [ -z "$dir" ] && continue
             THEME_ID=$(basename "$dir")
             echo "Compiling $THEME_ID..."
-            npx vite build \
-              --config vite.config.ts \
-              --mode production \
-              -- \
-              || npx esbuild "$dir/theme.ts" \
-                --bundle \
-                --format=esm \
-                --outfile="dist/community-themes/$THEME_ID.js" \
-                --external:react \
-                --external:react-dom \
-                --external:antd \
-                --external:antd-style
+            npx esbuild "$dir/theme.ts" \
+              --bundle \
+              --format=esm \
+              --platform=browser \
+              --target=es2020 \
+              --outfile="dist/community-themes/$THEME_ID.js" \
+              --external:react \
+              --external:react-dom \
+              --external:antd \
+              --external:antd-style
           done <<< "${{ steps.find.outputs.dirs }}"
 
       - name: Deploy to GitHub Pages

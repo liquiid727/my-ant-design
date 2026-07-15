@@ -1,10 +1,13 @@
-import { App, Button, ConfigProvider, Modal, Typography, theme as antdTheme } from 'antd';
+import { App, Button, Modal, Typography, theme as antdTheme } from 'antd';
+import { useState } from 'react';
 import type { CommunityThemeMeta } from '../../services/community/types';
+import { CommunityThemeService } from '../../services/community/communityThemeService';
 import { diffThemes } from '../../services/theme/themeDiff';
 import { validateThemeConfig } from '../../services/theme/themeValidator';
 import { useThemeStore } from '../../stores/themeStore';
 import { useVersionStore } from '../../stores/versionStore';
 import { defaultTheme } from '../../services/theme/presets';
+import OfficialComponentsPreview from '../playground/official/OfficialComponentsPreview';
 
 type ThemePreviewModalProps = {
   theme: CommunityThemeMeta | null;
@@ -14,6 +17,8 @@ type ThemePreviewModalProps = {
 
 export function ThemePreviewModal({ theme, open, onClose }: ThemePreviewModalProps) {
   const { message } = App.useApp();
+  const [advancedError, setAdvancedError] = useState<string | null>(null);
+  const [applying, setApplying] = useState(false);
   const currentTheme = useThemeStore((state) => state.currentTheme);
   const setTheme = useThemeStore((state) => state.setTheme);
   const createVersion = useVersionStore((state) => state.createVersion);
@@ -34,11 +39,27 @@ export function ThemePreviewModal({ theme, open, onClose }: ThemePreviewModalPro
   const diffs = diffThemes(defaultTheme, previewConfig);
   const isDark = theme.config.algorithm === 'dark' || theme.config.algorithm === 'darkCompact';
 
-  const handleApply = () => {
-    createVersion(currentTheme.id, currentTheme, `Before applying community theme: ${theme.name}`);
-    setTheme(previewConfig);
-    message.success(`Applied theme: ${theme.name}`);
-    onClose();
+  const handleApply = async () => {
+    setAdvancedError(null);
+    setApplying(true);
+    try {
+      if (theme.format === 'advanced') {
+        await CommunityThemeService.loadAdvancedTheme(theme.id);
+      }
+      createVersion(currentTheme.id, currentTheme, `Before applying community theme: ${theme.name}`);
+      if (previewConfig.id !== currentTheme.id) {
+        createVersion(previewConfig.id, currentTheme, `Before applying community theme: ${theme.name}`);
+      }
+      setTheme(previewConfig);
+      message.success(`Applied theme: ${theme.name}`);
+      onClose();
+    } catch (error) {
+      const text = error instanceof Error ? error.message : '该高级主题加载失败';
+      setAdvancedError(text.includes('该高级主题加载失败') ? text : '该高级主题加载失败');
+      message.error('该高级主题加载失败');
+    } finally {
+      setApplying(false);
+    }
   };
 
   return (
@@ -58,27 +79,25 @@ export function ThemePreviewModal({ theme, open, onClose }: ThemePreviewModalPro
       </div>
 
       <div className="plaza-preview-body">
-        <ConfigProvider
-          theme={{
-            algorithm: isDark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-            token: theme.config.token as Record<string, unknown>,
-            components: theme.config.components as Record<string, Record<string, unknown>>,
-          }}
-        >
-          <div className="plaza-preview-components" style={{ padding: 24, borderRadius: 8, background: isDark ? '#141414' : '#fafafa' }}>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
-              <Button type="primary">Primary</Button>
-              <Button>Default</Button>
-              <Button type="dashed">Dashed</Button>
-              <Button danger>Danger</Button>
-            </div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <Button type="primary" size="small">Small</Button>
-              <Button type="primary" size="middle">Middle</Button>
-              <Button type="primary" size="large">Large</Button>
-            </div>
-          </div>
-        </ConfigProvider>
+        <div className="plaza-preview-components">
+          <OfficialComponentsPreview
+            containerClassName="plaza-preview-components-inner"
+            config={{
+              theme: {
+                algorithm: isDark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+                token: theme.config.token,
+                components: theme.config.components,
+              },
+            }}
+            isDark={isDark}
+            isDarkTheme={isDark}
+          />
+        </div>
+        {advancedError && (
+          <Typography.Text type="danger" style={{ display: 'block', marginTop: 8, fontSize: 12 }}>
+            {advancedError}
+          </Typography.Text>
+        )}
       </div>
 
       {diffs.length > 0 && (
@@ -106,7 +125,7 @@ export function ThemePreviewModal({ theme, open, onClose }: ThemePreviewModalPro
 
       <div className="plaza-preview-actions">
         <Button onClick={onClose}>Cancel</Button>
-        <Button type="primary" onClick={handleApply}>Apply Theme</Button>
+        <Button type="primary" onClick={handleApply} loading={applying}>Apply Theme</Button>
       </div>
     </Modal>
   );

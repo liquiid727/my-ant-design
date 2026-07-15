@@ -6,13 +6,13 @@
 
 ## Acceptance Criteria
 
-- [ ] `npm create vite` 初始化项目，配置 TypeScript strict mode
-- [ ] 安装依赖：antd 5.x, antd-style, zustand, react-router-dom, nanoid
-- [ ] 配置 vite.config.ts（React plugin、antd chunk 分割）
-- [ ] 创建 vercel.json（SPA rewrites）
-- [ ] 创建全局 Layout 组件：HeaderBar（Logo + Nav + Settings 按钮 + AI Chat 按钮）+ Content 区域
-- [ ] 配置 React Router：`/` → Playground，`/library` → Library
-- [ ] 项目可 `npm run dev` 正常启动，显示空白 Layout
+- [x] `npm create vite` 初始化项目，配置 TypeScript strict mode
+- [x] 安装依赖：antd 5.x, antd-style, zustand, react-router-dom, nanoid
+- [x] 配置 vite.config.ts（React plugin、antd chunk 分割）
+- [x] 创建 vercel.json（SPA rewrites）
+- [x] 创建全局 Layout 组件：HeaderBar（Logo + Nav + Settings 按钮 + AI Chat 按钮）+ Content 区域
+- [x] 配置 React Router：`/` → Playground，`/library` → Library
+- [x] 项目可 `npm run dev` 正常启动，显示空白 Layout
 
 ## Dependencies
 

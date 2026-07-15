@@ -6,14 +6,14 @@
 
 ## Acceptance Criteria
 
-- [ ] `LLMClient` 接口：`chat(params): AsyncGenerator<ChatChunk>`, `testConnection(): Promise<Result>`
-- [ ] OpenAI-compatible 适配器：支持 OpenAI / DeepSeek / Qwen / OpenRouter / 自定义 Base URL
-- [ ] Claude 适配器：Anthropic Messages API 格式转换
-- [ ] Gemini 适配器：Google Generative AI API 格式转换
-- [ ] 流式响应：使用 `ReadableStream` + `TextDecoder` 逐 token 返回
-- [ ] 错误处理：401 (API Key 无效), 429 (限流), 网络错误 → 友好提示
-- [ ] 重试策略：最多 2 次，间隔 2s/5s
-- [ ] CORS 检测：不支持时提示用户使用 OpenRouter 或 Proxy
+- [x] `LLMClient` 接口：`chat(params): AsyncGenerator<ChatChunk>`, `testConnection(): Promise<Result>`
+- [x] OpenAI-compatible 适配器：支持 OpenAI / DeepSeek / Qwen / OpenRouter / 自定义 Base URL
+- [x] Claude 适配器：Anthropic Messages API 格式转换
+- [x] Gemini 适配器：Google Generative AI API 格式转换
+- [x] 流式响应：使用 `ReadableStream` + `TextDecoder` 逐 token 返回
+- [x] 错误处理：401 (API Key 无效), 429 (限流), 网络错误 → 友好提示
+- [x] 重试策略：最多 2 次，间隔 2s/5s
+- [x] CORS 检测：不支持时提示用户使用 OpenRouter 或 Proxy
 
 ## Dependencies
 

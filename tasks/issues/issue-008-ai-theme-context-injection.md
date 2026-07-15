@@ -8,16 +8,16 @@
 
 ## Acceptance Criteria
 
-- [ ] 创建 `src/services/ai/themeContext.ts`，导出 `serializeThemeContext(activePresetId, overrides, currentTheme)` 函数
-- [ ] 序列化格式为：`Current theme state: { preset: "{presetId}", overrides: { token: {...}, components: {...} } }`
-- [ ] 空 overrides 时输出简化格式：`Current theme state: { preset: "{presetId}", overrides: {} }`
-- [ ] 修改 `src/services/ai/LLMClient.ts` 的 `request()` 方法：将 themeContext 作为 system prompt 的补充部分注入
-- [ ] 对 Claude provider：themeContext 追加到 `system` 字段
-- [ ] 对 OpenAI-compatible providers：themeContext 追加到 system message 的 content
-- [ ] 修改 `src/components/ai/AIDrawer.tsx`：从 `useThemeStore` 获取当前主题状态并传递给 `LLMClient`
-- [ ] 用户切换 preset 后，下一次 AI 对话自动使用最新主题上下文
-- [ ] 编写单元测试：验证上下文序列化格式、空 overrides 处理
-- [ ] Typecheck/lint passes
+- [x] 创建 `src/services/ai/themeContext.ts`，导出 `serializeThemeContext(activePresetId, overrides, currentTheme)` 函数
+- [x] 序列化格式为：`Current theme state: { preset: "{presetId}", overrides: { token: {...}, components: {...} } }`
+- [x] 空 overrides 时输出简化格式：`Current theme state: { preset: "{presetId}", overrides: {} }`
+- [x] 修改 `src/services/ai/LLMClient.ts` 的 `request()` 方法：将 themeContext 作为 system prompt 的补充部分注入
+- [x] 对 Claude provider：themeContext 追加到 `system` 字段
+- [x] 对 OpenAI-compatible providers：themeContext 追加到 system message 的 content
+- [x] 修改 `src/components/ai/AIDrawer.tsx`：从 `useThemeStore` 获取当前主题状态并传递给 `LLMClient`
+- [x] 用户切换 preset 后，下一次 AI 对话自动使用最新主题上下文
+- [x] 编写单元测试：验证上下文序列化格式、空 overrides 处理
+- [x] Typecheck/lint passes
 
 ## Dependencies
 

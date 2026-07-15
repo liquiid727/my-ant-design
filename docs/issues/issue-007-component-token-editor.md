@@ -6,12 +6,12 @@
 
 ## Acceptance Criteria
 
-- [ ] 组件选择器：下拉列表选择目标组件（Button, Input, Select, Card, Modal, Alert, Table, Menu 等）
-- [ ] 选择组件后展示该组件的可编辑 Token 列表（基于 tokenRegistry）
-- [ ] 每个 Token 根据类型展示对应编辑器（颜色 → ColorPicker, 数值 → Slider, 字符串 → Input）
-- [ ] 修改 Component Token → themeStore.components[component] 更新 → 仅影响目标组件
-- [ ] 已覆写的 Token 标记高亮，可单独 Reset
-- [ ] 预览区中目标组件实时更新
+- [x] 组件选择器：下拉列表选择目标组件（Button, Input, Select, Card, Modal, Alert, Table, Menu 等）
+- [x] 选择组件后展示该组件的可编辑 Token 列表（基于 tokenRegistry）
+- [x] 每个 Token 根据类型展示对应编辑器（颜色 → ColorPicker, 数值 → Slider, 字符串 → Input）
+- [x] 修改 Component Token → themeStore.components[component] 更新 → 仅影响目标组件
+- [x] 已覆写的 Token 标记高亮，可单独 Reset
+- [x] 预览区中目标组件实时更新
 
 ## Dependencies
 

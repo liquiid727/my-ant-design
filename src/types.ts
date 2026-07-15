@@ -63,7 +63,7 @@ export type LLMConfig = {
   baseURL: string;
   apiKey: string;
   model: string;
-  locale?: 'zh-CN' | 'en-US';
+  locale: 'zh-CN' | 'en-US';
 };
 
 export type ChatRole = 'system' | 'user' | 'assistant';

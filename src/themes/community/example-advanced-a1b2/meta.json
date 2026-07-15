@@ -1,0 +1,30 @@
+{
+  "id": "example-advanced-a1b2",
+  "name": "Advanced Aurora",
+  "author": "community",
+  "description": "An advanced ESM theme with subtle CSS-in-JS component polish",
+  "tags": ["advanced", "aurora", "blue", "purple"],
+  "preview": "example-advanced-a1b2/preview.png",
+  "format": "advanced",
+  "config": {
+    "algorithm": "default",
+    "token": {
+      "colorPrimary": "#722ed1",
+      "colorInfo": "#1677ff",
+      "colorBgBase": "#fbfbff",
+      "borderRadius": 10,
+      "borderRadiusSM": 8,
+      "borderRadiusLG": 16,
+      "borderRadiusXS": 4
+    },
+    "components": {
+      "Button": {
+        "borderRadius": 10,
+        "primaryShadow": "0 8px 20px rgba(114, 46, 209, 0.24)"
+      },
+      "Card": {
+        "borderRadiusLG": 16
+      }
+    }
+  }
+}

@@ -6,14 +6,14 @@
 
 ## Acceptance Criteria
 
-- [ ] Header 齿轮按钮点击 → 打开 antd Modal
-- [ ] ProviderSelector：下拉选择 Provider（OpenAI / Claude / Gemini / DeepSeek / Qwen / OpenRouter / Custom）
-- [ ] 选择 Provider 后自动填充默认 Base URL
-- [ ] APIKeyInput：`type="password"` + 可见切换 + mask 显示 `sk-****xxxx`
-- [ ] ModelSelector：根据 Provider 动态列出可选模型（支持手动输入自定义模型）
-- [ ] TestConnectionButton：调用 LLM API 验证连接 → 成功/失败提示
-- [ ] 保存配置到 settingsStore + LocalStorage
-- [ ] 未配置时 AI Drawer 显示引导提示卡片（"请先配置 AI 模型"）
+- [x] Header 齿轮按钮点击 → 打开 antd Modal
+- [x] ProviderSelector：下拉选择 Provider（OpenAI / Claude / Gemini / DeepSeek / Qwen / OpenRouter / Custom）
+- [x] 选择 Provider 后自动填充默认 Base URL
+- [x] APIKeyInput：`type="password"` + 可见切换 + mask 显示 `sk-****xxxx`
+- [x] ModelSelector：根据 Provider 动态列出可选模型（支持手动输入自定义模型）
+- [x] TestConnectionButton：调用 LLM API 验证连接 → 成功/失败提示
+- [x] 保存配置到 settingsStore + LocalStorage
+- [x] 未配置时 AI Drawer 显示引导提示卡片（"请先配置 AI 模型"）
 
 ## Dependencies
 

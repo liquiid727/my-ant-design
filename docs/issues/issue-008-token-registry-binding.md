@@ -6,11 +6,11 @@
 
 ## Acceptance Criteria
 
-- [ ] `tokenRegistry.ts`：全局 Token 列表 + 每个组件的 Component Token 列表
-- [ ] 每个 Token 条目：`{ name, type: 'color'|'number'|'string', default, min?, max?, group, description }`
-- [ ] Editor 修改 → themeStore 更新 → Preview 实时重渲染（< 50ms）
-- [ ] Token 值校验：颜色 hex 格式、数值范围限制、非法值回退到默认
-- [ ] debounce 策略：ColorPicker/Slider 修改 300ms 防抖
+- [x] `tokenRegistry.ts`：全局 Token 列表 + 每个组件的 Component Token 列表
+- [x] 每个 Token 条目：`{ name, type: 'color'|'number'|'string', default, min?, max?, group, description }`
+- [x] Editor 修改 → themeStore 更新 → Preview 实时重渲染（< 50ms）
+- [x] Token 值校验：颜色 hex 格式、数值范围限制、非法值回退到默认
+- [x] debounce 策略：ColorPicker/Slider 修改 300ms 防抖
 
 ## Dependencies
 

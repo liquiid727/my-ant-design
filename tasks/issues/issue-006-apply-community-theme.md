@@ -8,14 +8,14 @@
 
 ## Acceptance Criteria
 
-- [ ] 点击「应用主题」时，先调用 `versionStore.createVersion(currentTheme.id, currentTheme, "Before applying community theme: {themeName}")` 创建版本快照
-- [ ] 使用 `validateThemeConfig()` 校验社区主题 config，确保 token 值在合法范围内
-- [ ] 调用 `themeStore.setTheme()` 注入校验后的主题配置
-- [ ] 应用后关闭 PreviewModal，显示 `message.success('Applied theme: {themeName}')`
-- [ ] 应用后 Playground 实时刷新，展示新主题效果
-- [ ] 应用后用户可在 Editor 中继续微调主题 token
-- [ ] Typecheck/lint passes
-- [ ] Verify in browser using dev-browser skill：应用主题后验证颜色变化、回退到历史版本
+- [x] 点击「应用主题」时，先调用 `versionStore.createVersion(currentTheme.id, currentTheme, "Before applying community theme: {themeName}")` 创建版本快照
+- [x] 使用 `validateThemeConfig()` 校验社区主题 config，确保 token 值在合法范围内
+- [x] 调用 `themeStore.setTheme()` 注入校验后的主题配置
+- [x] 应用后关闭 PreviewModal，显示 `message.success('Applied theme: {themeName}')`
+- [x] 应用后 Playground 实时刷新，展示新主题效果
+- [x] 应用后用户可在 Editor 中继续微调主题 token
+- [x] Typecheck/lint passes
+- [x] Verify in browser using dev-browser skill：应用主题后验证颜色变化、回退到历史版本
 
 ## Dependencies
 

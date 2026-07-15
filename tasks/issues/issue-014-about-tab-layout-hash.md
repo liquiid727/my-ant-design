@@ -6,15 +6,15 @@
 
 ## Acceptance Criteria
 
-- [ ] 页面使用 antd `Tabs` 组件，包含四个 Tab：产品介绍（intro）、接入 Ant Design（antd）、配置 AI（ai）、Agent 配置（agent）
-- [ ] Tab 切换时 URL hash 同步更新（如 `#intro`, `#antd`, `#ai`, `#agent`），使用 `replace: true` 避免历史堆积
-- [ ] 刷新页面后根据 URL hash 自动定位到对应 Tab
-- [ ] 无 hash 或无效 hash 时默认定位到 `intro` Tab
-- [ ] 页面整体风格与 PlaygroundPage / LibraryPage 保持一致
-- [ ] 在 `styles.css` 中添加 `.about-*` 基础样式
-- [ ] 移动端 viewport 下 Tabs 可横向滚动，内容区块不溢出
-- [ ] Typecheck/lint passes
-- [ ] Verify in browser using dev-browser skill
+- [x] 页面使用 antd `Tabs` 组件，包含四个 Tab：产品介绍（intro）、接入 Ant Design（antd）、配置 AI（ai）、Agent 配置（agent）
+- [x] Tab 切换时 URL hash 同步更新（如 `#intro`, `#antd`, `#ai`, `#agent`），使用 `replace: true` 避免历史堆积
+- [x] 刷新页面后根据 URL hash 自动定位到对应 Tab
+- [x] 无 hash 或无效 hash 时默认定位到 `intro` Tab
+- [x] 页面整体风格与 PlaygroundPage / LibraryPage 保持一致
+- [x] 在 `styles.css` 中添加 `.about-*` 基础样式
+- [x] 移动端 viewport 下 Tabs 可横向滚动，内容区块不溢出
+- [x] Typecheck/lint passes
+- [x] Verify in browser using dev-browser skill
 
 ## Dependencies
 

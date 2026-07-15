@@ -1,6 +1,7 @@
 const PREFIX = 'ts_';
 const MAX_BYTES = 5 * 1024 * 1024;
 const WARNING_THRESHOLD = MAX_BYTES * 0.9;
+export const STORAGE_USAGE_WARNING_EVENT = 'ts-storage-usage-warning';
 
 const encode = (value: unknown) => JSON.stringify(value);
 
@@ -24,7 +25,11 @@ export const StorageService = {
 
   set<T>(key: string, value: T) {
     localStorage.setItem(this.key(key), encode(value));
-    return this.getUsage();
+    const usage = this.getUsage();
+    if (usage.isNearLimit && typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent(STORAGE_USAGE_WARNING_EVENT, { detail: usage }));
+    }
+    return usage;
   },
 
   remove(key: string) {
@@ -67,4 +72,3 @@ export const decodeApiKey = (apiKey: string) => {
     return apiKey;
   }
 };
-
