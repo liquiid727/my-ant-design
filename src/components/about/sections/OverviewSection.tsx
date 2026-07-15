@@ -15,6 +15,11 @@ export function OverviewSection() {
       <Card className="about-section-card">
         <Space orientation="vertical" size={8}>
           <Tag icon={<CheckCircleOutlined />} color="success">面向已有前端项目</Tag>
+          <Space wrap>
+            <Tag color="blue">内容版本 0709</Tag>
+            <Tag>最近更新 2026-07-15</Tag>
+            <Tag>CLI/MCP 最近核验 2026-07-15</Tag>
+          </Space>
           <Typography.Title level={3}>五步完成一致的 Agent UI 工作流</Typography.Title>
           <Typography.Paragraph type="secondary">
             将当前主题变成开发者和 Agent 都能读取的工程约束，减少组件选择、Token 使用和响应式实现之间的偏差。

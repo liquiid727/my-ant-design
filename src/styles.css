@@ -1126,13 +1126,11 @@ body {
   justify-content: flex-end;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .app-header {
-    align-items: flex-start;
     flex-wrap: wrap;
     height: auto;
     padding: 12px;
-    position: static;
   }
 
   .brand {
@@ -1141,6 +1139,13 @@ body {
 
   .header-actions {
     margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    align-items: flex-start;
+    position: static;
   }
 
   .theme-playground {
