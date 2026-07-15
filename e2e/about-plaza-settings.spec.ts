@@ -51,6 +51,17 @@ test('about layout does not overflow mobile width', async ({ page }) => {
   expect(overflow).toBe(false);
 });
 
+test('Ant Design guide covers install, theme imports, ConfigProvider, and component verification', async ({ page }) => {
+  await page.goto('/about#antd');
+  await expect(page.getByText('Ant Design 6', { exact: true })).toBeVisible();
+  await expect(page.getByText('npm install antd @ant-design/icons', { exact: true })).toBeVisible();
+  await expect(page.getByText("import theme from './theme'", { exact: false })).toBeVisible();
+  await expect(page.getByLabel('ConfigProvider theme 接入示例')).toBeVisible();
+  await expect(page.getByLabel('Button Card Form 主题验证示例')).toBeVisible();
+  await expect(page.locator('.about-code-copy .ant-typography-copy')).toHaveCount(5);
+  await expect(page.locator('body')).not.toContainText('npm create vite');
+});
+
 test('settings language changes prompt preview', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /Settings/ }).click();

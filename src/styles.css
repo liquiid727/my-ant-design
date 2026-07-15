@@ -801,6 +801,16 @@ body {
   max-width: 100%;
 }
 
+.about-code-artifact,
+.about-code-artifact .ant-typography {
+  min-width: 0;
+  width: 100%;
+}
+
+.about-verification-steps {
+  margin-top: 20px;
+}
+
 .about-code-block {
   background: #111827;
   border-radius: 8px;
