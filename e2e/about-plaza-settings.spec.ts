@@ -5,18 +5,42 @@ test.beforeEach(async ({ page }) => {
   await page.route('https://api.github.com/**', (route) => route.abort());
 });
 
-test('about route opens and tab hash sync works', async ({ page }) => {
+test('about route opens and tab hash sync works', async ({ page }, testInfo) => {
   await page.goto('/about#agent');
   await expect(page.getByRole('heading', { name: 'Ant Design Theme Studio' })).toBeVisible();
+  await expect(page).toHaveURL(/\/about#agents$/);
 
   for (const [label, hash] of [
-    ['产品介绍', '#intro'],
-    ['接入 Ant Design', '#antd'],
-    ['配置 AI', '#ai'],
-    ['Agent 配置', '#agent'],
+    ['产品介绍', '#overview'],
+    ['Ant Design 接入', '#antd'],
+    ['design.md', '#design'],
+    ['CLI / MCP', '#tooling'],
+    ['UI Agent', '#agents'],
   ] as const) {
-    await page.getByRole('tab', { name: label }).click();
+    const tab = page.getByRole('tab', { name: label });
+    if (testInfo.project.name === 'mobile') {
+      await page.goto(`/about${hash}`);
+      await expect(tab).toHaveAttribute('aria-selected', 'true');
+    } else {
+      await tab.click();
+    }
     await expect(page).toHaveURL(new RegExp(`/about${hash}$`));
+  }
+});
+
+test('about legacy and unknown hashes normalize without adding history entries', async ({ page }) => {
+  for (const [legacy, canonical, heading] of [
+    ['intro', 'overview', '五步完成一致的 Agent UI 工作流'],
+    ['ai', 'design', 'design.md 设计规范'],
+    ['agent', 'agents', 'Claude Code / Codex UI Agent'],
+    ['unknown', 'overview', '五步完成一致的 Agent UI 工作流'],
+  ] as const) {
+    await page.goto('/?history=marker');
+    await page.goto(`/about#${legacy}`);
+    await expect(page).toHaveURL(new RegExp(`/about#${canonical}$`));
+    await expect(page.getByRole('heading', { name: heading })).toBeVisible();
+    await page.goBack();
+    await expect(page).toHaveURL(/\/?history=marker$/);
   }
 });
 
