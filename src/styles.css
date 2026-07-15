@@ -860,6 +860,17 @@ body {
   white-space: pre;
 }
 
+.about-agent-section,
+.about-agent-picker,
+.about-agent-picker .ant-card-body,
+.about-agent-picker .ant-segmented {
+  min-width: 0;
+}
+
+.about-agent-platform-note {
+  margin: 12px 0 0 !important;
+}
+
 .about-flow-item {
   background: #fafafa;
   border: 1px solid rgba(5, 5, 5, 0.06);
