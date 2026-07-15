@@ -31,7 +31,7 @@ test('about route opens and tab hash sync works', async ({ page }, testInfo) => 
 test('about legacy and unknown hashes normalize without adding history entries', async ({ page }) => {
   for (const [legacy, canonical, heading] of [
     ['intro', 'overview', '五步完成一致的 Agent UI 工作流'],
-    ['ai', 'design', 'design.md 设计规范'],
+    ['ai', 'design', '当前主题的 design.md'],
     ['agent', 'agents', 'Claude Code / Codex UI Agent'],
     ['unknown', 'overview', '五步完成一致的 Agent UI 工作流'],
   ] as const) {
@@ -75,6 +75,30 @@ test('design document can be previewed, copied, and downloaded', async ({ page, 
   await page.getByRole('button', { name: '下载' }).click();
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toBe('design.md');
+});
+
+test('UI Agent module switches and exports platform-correct files without leaving the section', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/about#agents');
+  await expect(page.getByText('共享设计约束')).toBeVisible();
+  await expect(page.getByLabel('CLAUDE.md 完整预览')).toContainText('@design.md');
+
+  const claudeDownload = page.waitForEvent('download');
+  await page.getByRole('button', { name: '下载' }).click();
+  expect((await claudeDownload).suggestedFilename()).toBe('CLAUDE.md');
+
+  await page.evaluate(() => window.scrollTo(0, 500));
+  const before = await page.evaluate(() => window.scrollY);
+  await page.getByText('Codex', { exact: true }).click();
+  await expect(page).toHaveURL(/\/about#agents$/);
+  await expect(page.getByLabel('AGENTS.md 完整预览')).toContainText('read `./design.md`');
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(before - 1);
+
+  await page.getByRole('button', { name: '复制' }).click();
+  await expect(page.getByText('AGENTS.md 已复制')).toBeVisible();
+  const codexDownload = page.waitForEvent('download');
+  await page.getByRole('button', { name: '下载' }).click();
+  expect((await codexDownload).suggestedFilename()).toBe('AGENTS.md');
 });
 
 test('settings language changes prompt preview', async ({ page }) => {
