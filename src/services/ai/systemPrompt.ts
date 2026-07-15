@@ -24,6 +24,10 @@ Return only JSON. Do not include markdown unless the user explicitly asks for ex
 }
 Only include fields that change. Omit "algorithm" if unchanged.`;
 
+  const constraints = `Hard constraints:
+- Ensure border radius values follow XS < SM < Base < LG.
+- Keep the base prompt concise; detailed current-theme context is injected separately.`;
+
   const tokens = `Allowed global tokens:
 ${tokenRegistry.global.map((t) => `- ${t.name}: ${t.type}`).join('\n')}
 
@@ -37,7 +41,7 @@ Use valid hex colors and reasonable numeric values.`;
   const design = designLanguage[locale];
   const examples = fewShotExamples[locale];
 
-  const parts = [role, design, shape, tokens, examples];
+  const parts = [role, design, shape, constraints, tokens, examples];
 
   if (options.themeContext) {
     parts.push(options.themeContext);

@@ -6,14 +6,14 @@
 
 ## Acceptance Criteria
 
-- [ ] vercel.json：SPA rewrites 配置
-- [ ] vite.config.ts 构建优化：manualChunks 分割 antd / vendor
-- [ ] `npm run build` 成功，产出 dist/ 目录
+- [x] vercel.json：SPA rewrites 配置
+- [x] vite.config.ts 构建优化：manualChunks 分割 antd / vendor
+- [x] `npm run build` 成功，产出 dist/ 目录
 - [ ] 总 bundle size < 350KB (gzip)
-- [ ] Vitest 单元测试：themeValidator, themeExporter, themeDiff, extractThemeFromResponse
-- [ ] Playwright E2E：启动 → 选预设 → 切换主题 → 修改 Token → 导出
-- [ ] 响应式验证：desktop / tablet / mobile 三种 viewport
-- [ ] `npm run preview` 本地预览正常
+- [x] Vitest 单元测试：themeValidator, themeExporter, themeDiff, extractThemeFromResponse
+- [x] Playwright E2E：启动 → 选预设 → 切换主题 → 修改 Token → 导出
+- [x] 响应式验证：desktop / tablet / mobile 三种 viewport
+- [x] `npm run preview` 本地预览正常
 
 ## Dependencies
 

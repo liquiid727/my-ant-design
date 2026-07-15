@@ -6,13 +6,13 @@
 
 ## Acceptance Criteria
 
-- [ ] 创建 `src/components/about/AboutPage.tsx` 骨架组件（named export + default export）
-- [ ] 在 `App.tsx` 中新增 `/about` 路由，使用 `React.lazy()` + `.then()` 模式懒加载
-- [ ] `HeaderBar.tsx` Segmented 新增 `{ label: 'About', value: '/about' }` 选项
-- [ ] Segmented `value` 判断兼容 `/about` 路径高亮
-- [ ] 点击 About 导航项正确跳转到 `/about` 页面
-- [ ] Typecheck/lint passes
-- [ ] Verify in browser using dev-browser skill
+- [x] 创建 `src/components/about/AboutPage.tsx` 骨架组件（named export + default export）
+- [x] 在 `App.tsx` 中新增 `/about` 路由，使用 `React.lazy()` + `.then()` 模式懒加载
+- [x] `HeaderBar.tsx` Segmented 新增 `{ label: 'About', value: '/about' }` 选项
+- [x] Segmented `value` 判断兼容 `/about` 路径高亮
+- [x] 点击 About 导航项正确跳转到 `/about` 页面
+- [x] Typecheck/lint passes
+- [x] Verify in browser using dev-browser skill
 
 ## Dependencies
 

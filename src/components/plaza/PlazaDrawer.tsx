@@ -1,4 +1,4 @@
-import { AppstoreOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Button, Drawer, Empty, Input, Skeleton, Space, Tag, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import type { CommunityThemeMeta } from '../../services/community/types';
@@ -67,8 +67,7 @@ export function PlazaDrawer() {
 
         {/* Search & Filters */}
         <div className="plaza-search-area">
-          <Input
-            prefix={<SearchOutlined />}
+          <Input.Search
             placeholder="Search themes..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

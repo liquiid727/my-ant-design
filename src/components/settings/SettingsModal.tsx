@@ -31,6 +31,12 @@ const providerLabels: Record<LLMProvider, string> = {
   custom: 'Custom Provider',
 };
 
+const maskApiKey = (apiKey: string) => {
+  if (!apiKey) return 'Stored as sk-****xxxx after you save a key.';
+  const suffix = apiKey.slice(-4).padStart(4, '*');
+  return `Saved key displays as sk-****${suffix}.`;
+};
+
 export function SettingsModal() {
   const { message } = App.useApp();
   const [form] = Form.useForm<LLMConfig>();
@@ -43,6 +49,7 @@ export function SettingsModal() {
 
   const provider = Form.useWatch('provider', form) ?? llmConfig.provider;
   const locale = Form.useWatch('locale', form) ?? llmConfig.locale;
+  const apiKey = Form.useWatch('apiKey', form) ?? llmConfig.apiKey;
   const models = providerDefaults[provider].models;
 
   const promptPreview = useMemo(
@@ -142,6 +149,9 @@ export function SettingsModal() {
         <Form.Item label="API Key" name="apiKey" rules={[{ required: true }]}>
           <Input.Password prefix={<KeyOutlined style={{ color: 'rgba(0,0,0,0.25)' }} />} placeholder="sk-..." />
         </Form.Item>
+        <Typography.Text type="secondary" style={{ display: 'block', marginTop: -16, marginBottom: 16, fontSize: 12 }}>
+          {maskApiKey(apiKey)}
+        </Typography.Text>
         <Form.Item label="Model" name="model" rules={[{ required: true }]}>
           <AutoComplete
             options={models.map((model) => ({ label: model, value: model }))}

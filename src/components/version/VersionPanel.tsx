@@ -26,12 +26,13 @@ export function VersionPanel() {
           rowKey="id"
           expandable={{
             expandedRowRender: (record) => (
-              <pre className="diff-box">
-                {diffThemes(record.config, currentTheme)
-                  .slice(0, 30)
-                  .map((diff) => `${diff.type} ${diff.key}: ${String(diff.oldValue)} -> ${String(diff.newValue)}`)
-                  .join('\n') || 'No diff'}
-              </pre>
+              <div className="diff-box diff-viewer">
+                {diffThemes(record.config, currentTheme).length === 0 ? 'No diff' : diffThemes(record.config, currentTheme).slice(0, 30).map((diff) => (
+                  <div key={diff.key} className={`diff-line diff-line-${diff.type}`}>
+                    <strong>{diff.type}</strong> {diff.key}: {String(diff.oldValue ?? '∅')} → {String(diff.newValue ?? '∅')}
+                  </div>
+                ))}
+              </div>
             ),
           }}
           columns={[
@@ -58,4 +59,3 @@ export function VersionPanel() {
     </Card>
   );
 }
-

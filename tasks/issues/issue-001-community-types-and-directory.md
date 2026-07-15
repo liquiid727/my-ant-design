@@ -8,14 +8,14 @@
 
 ## Acceptance Criteria
 
-- [ ] 创建 `src/themes/community/` 目录
-- [ ] 创建 `src/services/community/types.ts`，定义 `CommunityThemeMeta` 和 `CommunityThemeIndex` 类型
-- [ ] `CommunityThemeMeta` 包含字段：`id`, `name`, `author`, `description`, `tags`, `preview`, `format`, `config`
-- [ ] `CommunityThemeIndex` 包含字段：`themes`, `fetchedAt`, `source`
-- [ ] 创建 `src/themes/community/community-theme.schema.json`，定义社区主题 JSON 文件的校验规则
-- [ ] JSON Schema 中 `id` 字段匹配 `^[a-z0-9]+(-[a-z0-9]+)*-[a-z0-9]{4}$` 格式
-- [ ] 扩展 `src/themes/types.ts` 中 `ThemePresetDefinition.group` 类型为 `'official' | 'custom' | 'community'`
-- [ ] Typecheck/lint passes
+- [x] 创建 `src/themes/community/` 目录
+- [x] 创建 `src/services/community/types.ts`，定义 `CommunityThemeMeta` 和 `CommunityThemeIndex` 类型
+- [x] `CommunityThemeMeta` 包含字段：`id`, `name`, `author`, `description`, `tags`, `preview`, `format`, `config`
+- [x] `CommunityThemeIndex` 包含字段：`themes`, `fetchedAt`, `source`
+- [x] 创建 `src/themes/community/community-theme.schema.json`，定义社区主题 JSON 文件的校验规则
+- [x] JSON Schema 中 `id` 字段匹配 `^[a-z0-9]+(-[a-z0-9]+)*-[a-z0-9]{4}$` 格式
+- [x] 扩展 `src/themes/types.ts` 中 `ThemePresetDefinition.group` 类型为 `'official' | 'custom' | 'community'`
+- [x] Typecheck/lint passes
 
 ## Dependencies
 

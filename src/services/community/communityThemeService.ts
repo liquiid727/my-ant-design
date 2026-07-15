@@ -1,5 +1,8 @@
 import { StorageService } from '../storage';
 import type { CommunityThemeIndex, CommunityThemeMeta } from './types';
+import { validateThemeConfig } from '../theme/themeValidator';
+import { defaultTheme } from '../theme/presets';
+import { communityThemeSnapshot } from '../../themes/communitySnapshot';
 
 const REPO_CONFIG = {
   owner: import.meta.env.VITE_COMMUNITY_REPO_OWNER || 'liquiid-labs',
@@ -11,6 +14,9 @@ const CACHE_KEY = 'community_themes';
 const CACHE_TTL = 30 * 60 * 1000;
 const COMMUNITY_PATH = 'src/themes/community';
 const MAX_CONCURRENT = 5;
+const GITHUB_PAGES_BASE =
+  import.meta.env.VITE_COMMUNITY_THEME_BASE_URL ||
+  `https://${REPO_CONFIG.owner}.github.io/${REPO_CONFIG.repo}/community-themes`;
 
 type GitHubContentItem = {
   name: string;
@@ -29,11 +35,50 @@ const decodeBase64 = (encoded: string): string => {
   return atob(cleaned);
 };
 
+const normalizeThemeMeta = (data: Partial<CommunityThemeMeta>, filename: string): CommunityThemeMeta | null => {
+  if (
+    !data.id ||
+    !data.name ||
+    !data.author ||
+    !data.description ||
+    !Array.isArray(data.tags) ||
+    !data.preview ||
+    !data.config?.token
+  ) {
+    console.warn(`[CommunityThemeService] Invalid theme metadata: ${filename}`);
+    return null;
+  }
+
+  const config = validateThemeConfig(
+    {
+      id: data.id,
+      name: data.name,
+      algorithm: data.config.algorithm,
+      token: data.config.token,
+      components: data.config.components,
+    },
+    defaultTheme,
+  );
+
+  return {
+    id: data.id,
+    name: data.name,
+    author: data.author,
+    description: data.description,
+    tags: data.tags,
+    preview: data.preview,
+    format: data.format ?? 'json',
+    config: {
+      algorithm: config.algorithm,
+      token: config.token as Record<string, unknown>,
+      components: (config.components ?? {}) as Record<string, Record<string, unknown>>,
+    },
+  };
+};
+
 const parseThemeMeta = (raw: string, filename: string): CommunityThemeMeta | null => {
   try {
-    const data = JSON.parse(raw) as CommunityThemeMeta;
-    if (!data.id || !data.name || !data.config?.token) return null;
-    return { ...data, format: data.format ?? 'json' };
+    return normalizeThemeMeta(JSON.parse(raw) as Partial<CommunityThemeMeta>, filename);
   } catch {
     console.warn(`[CommunityThemeService] Failed to parse ${filename}`);
     return null;
@@ -71,6 +116,7 @@ const fetchFileContent = async (path: string): Promise<string | null> => {
   const response = await fetch(apiUrl(path), {
     headers: { Accept: 'application/vnd.github.v3+json' },
   });
+  if (response.status === 403) throw new Error('RATE_LIMITED');
   if (!response.ok) return null;
   const data = (await response.json()) as GitHubContentItem;
   if (!data.content || data.encoding !== 'base64') return null;
@@ -83,7 +129,13 @@ const loadCachedIndex = (): CommunityThemeIndex | null =>
 const loadFallback = (): CommunityThemeIndex => {
   const cached = loadCachedIndex();
   if (cached) return { ...cached, source: 'cache' };
-  return { themes: [], fetchedAt: 0, source: 'fallback' };
+  return { themes: communityThemeSnapshot, fetchedAt: 0, source: 'fallback' };
+};
+
+export type AdvancedCommunityThemeModule = {
+  default?: unknown;
+  config?: unknown;
+  [exportName: string]: unknown;
 };
 
 export const CommunityThemeService = {
@@ -130,10 +182,23 @@ export const CommunityThemeService = {
   },
 
   getPreviewUrl(filename: string): string {
+    if (/^https?:\/\//.test(filename)) return filename;
     return `https://raw.githubusercontent.com/${REPO_CONFIG.owner}/${REPO_CONFIG.repo}/${REPO_CONFIG.branch}/${COMMUNITY_PATH}/${filename}`;
   },
 
+  async loadAdvancedTheme(themeId: string): Promise<AdvancedCommunityThemeModule> {
+    try {
+      return (await import(/* @vite-ignore */ `${GITHUB_PAGES_BASE}/${themeId}.js`)) as AdvancedCommunityThemeModule;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? `该高级主题加载失败：${error.message}`
+          : '该高级主题加载失败',
+      );
+    }
+  },
+
   getRepoConfig() {
-    return REPO_CONFIG;
+    return { ...REPO_CONFIG, pagesBaseUrl: GITHUB_PAGES_BASE };
   },
 };

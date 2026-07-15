@@ -6,12 +6,12 @@
 
 ## Acceptance Criteria
 
-- [ ] Tab 切换组件：Components / Dashboard，默认选中 Components
-- [ ] Dashboard 布局：antd Layout（Sider + Header + Content）
-- [ ] Sider：Logo + 垂直 Menu（多级菜单）
-- [ ] Content：Stats Cards Row（3-4 个统计卡片）+ 图表占位区 + antd Table
-- [ ] Dashboard 同样受 ConfigProvider 主题控制
-- [ ] Tab 切换流畅，无重新渲染闪烁
+- [x] Tab 切换组件：Components / Dashboard，默认选中 Components
+- [x] Dashboard 布局：antd Layout（Sider + Header + Content）
+- [x] Sider：Logo + 垂直 Menu（多级菜单）
+- [x] Content：Stats Cards Row（3-4 个统计卡片）+ 图表占位区 + antd Table
+- [x] Dashboard 同样受 ConfigProvider 主题控制
+- [x] Tab 切换流畅，无重新渲染闪烁
 
 ## Dependencies
 

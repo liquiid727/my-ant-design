@@ -6,11 +6,11 @@
 
 ## Acceptance Criteria
 
-- [ ] 左列：Input, Select Tags, ColorPicker + Dropdown + DatePicker, Checkbox + Radio + Switch + Spin, Steps, Progress (蓝/红), Badge 状态点, QRCode + Rate, Tags, Popconfirm, Segmented ×2
-- [ ] 中列：Avatar Group (+5), Verify Account Card (OTP), Button 四种变体 (Primary/Danger/Outlined/Round), Social Profile Card, Alert
-- [ ] 右列：Create Account Card (注册表单 + OAuth), Notification Card
-- [ ] 三列响应式布局，在小屏上折叠为单列
-- [ ] 所有组件包裹在 `ConfigProvider` 中，切换主题时实时更新
+- [x] 左列：Input, Select Tags, ColorPicker + Dropdown + DatePicker, Checkbox + Radio + Switch + Spin, Steps, Progress (蓝/红), Badge 状态点, QRCode + Rate, Tags, Popconfirm, Segmented ×2
+- [x] 中列：Avatar Group (+5), Verify Account Card (OTP), Button 四种变体 (Primary/Danger/Outlined/Round), Social Profile Card, Alert
+- [x] 右列：Create Account Card (注册表单 + OAuth), Notification Card
+- [x] 三列响应式布局，在小屏上折叠为单列
+- [x] 所有组件包裹在 `ConfigProvider` 中，切换主题时实时更新
 
 ## Dependencies
 

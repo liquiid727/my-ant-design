@@ -9,6 +9,7 @@ coverage/
 # Test artifacts
 test-results/
 playwright-report/
+.loop-state.json
 
 # TypeScript
 *.tsbuildinfo

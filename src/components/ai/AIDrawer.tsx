@@ -1,5 +1,5 @@
-import { ClearOutlined, RobotOutlined, SendOutlined, SettingOutlined, ThunderboltOutlined } from '@ant-design/icons';
-import { App, Button, Drawer, Input, Space, Tooltip, Typography } from 'antd';
+import { ClearOutlined, InfoCircleOutlined, RobotOutlined, SendOutlined, SettingOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { App, Button, Collapse, Drawer, Input, Space, Tooltip, Typography } from 'antd';
 import { useMemo, useRef, useState, useEffect } from 'react';
 import { LLMClient } from '../../services/ai/LLMClient';
 import { extractThemeFromResponse } from '../../services/ai/responseParser';
@@ -22,6 +22,7 @@ export function AIDrawer() {
   const { message } = App.useApp();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [drawerWidth, setDrawerWidth] = useState(400);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isOpen = useUIStore((state) => state.isAIDrawerOpen);
   const closeAI = useUIStore((state) => state.closeAI);
@@ -47,6 +48,13 @@ export function AIDrawer() {
   }, [currentTheme, messages]);
 
   const diffs = lastTheme ? diffThemes(currentTheme, lastTheme) : [];
+  const latestAssistantContent = useMemo(() => {
+    for (const item of [...messages].reverse()) {
+      if (item.role === 'assistant' && item.content.trim()) return item.content;
+    }
+    return '';
+  }, [messages]);
+  const showNoThemeNotice = Boolean(latestAssistantContent && !isLoading && !lastTheme);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -67,7 +75,7 @@ export function AIDrawer() {
 
     try {
       const client = new LLMClient(llmConfig);
-      const themeContext = serializeThemeContext(activePresetId, overrides);
+      const themeContext = serializeThemeContext(activePresetId, overrides, currentTheme);
       let content = '';
       for await (const chunk of client.chat({
         messages: [...messages, userMessage],
@@ -92,12 +100,31 @@ export function AIDrawer() {
       onClose={closeAI}
       closable={false}
       className="ai-drawer"
-      size="large"
+      width={drawerWidth}
       styles={{
         body: { display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' },
         header: { display: 'none' },
       }}
     >
+      <div
+        className="ai-drawer-resize-handle"
+        role="separator"
+        aria-label="Resize AI drawer"
+        onMouseDown={(event) => {
+          event.preventDefault();
+          const startX = event.clientX;
+          const startWidth = drawerWidth;
+          const onMove = (moveEvent: MouseEvent) => {
+            setDrawerWidth(Math.min(560, Math.max(360, startWidth + startX - moveEvent.clientX)));
+          };
+          const onUp = () => {
+            window.removeEventListener('mousemove', onMove);
+            window.removeEventListener('mouseup', onUp);
+          };
+          window.addEventListener('mousemove', onMove);
+          window.addEventListener('mouseup', onUp);
+        }}
+      />
       {/* Header */}
       <div className="ai-drawer-header">
         <div className="ai-drawer-title">
@@ -154,9 +181,9 @@ export function AIDrawer() {
 
         {messages.map((item) => (
           <div key={item.id} className={`ai-chat-bubble ${item.role}`}>
-            {item.role === 'assistant' && (
+            {item.role !== 'user' && (
               <div className="ai-chat-avatar">
-                <ThunderboltOutlined />
+                {item.role === 'system' ? <InfoCircleOutlined /> : <ThunderboltOutlined />}
               </div>
             )}
             <div className={`ai-chat-content ${item.role}`}>
@@ -170,6 +197,15 @@ export function AIDrawer() {
         ))}
         <div ref={messagesEndRef} />
 
+        {showNoThemeNotice && (
+          <div className="ai-json-warning">
+            <InfoCircleOutlined />
+            <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+              未识别到可应用的 ThemeConfig JSON，请让 AI 重新输出 JSON。
+            </Typography.Text>
+          </div>
+        )}
+
         {/* Theme diff */}
         {lastTheme && (
           <div className="ai-diff-card">
@@ -179,23 +215,37 @@ export function AIDrawer() {
                 {diffs.length} token{diffs.length !== 1 ? 's' : ''} modified
               </Typography.Text>
             </div>
-            <div className="ai-diff-list">
-              {diffs.slice(0, 8).map((diff) => (
-                <div key={diff.key} className="ai-diff-row">
-                  <span className="ai-diff-key">{diff.key}</span>
-                  <span className="ai-diff-arrow">→</span>
-                  <span className="ai-diff-value">{String(diff.newValue)}</span>
-                </div>
-              ))}
-              {diffs.length > 8 && (
-                <Typography.Text type="secondary" style={{ fontSize: 11, paddingInlineStart: 8 }}>
-                  +{diffs.length - 8} more changes
-                </Typography.Text>
-              )}
-              {diffs.length === 0 && (
-                <Typography.Text type="secondary" style={{ fontSize: 12 }}>No token changes detected</Typography.Text>
-              )}
-            </div>
+            <Collapse
+              size="small"
+              ghost
+              defaultActiveKey={['diff']}
+              items={[
+                {
+                  key: 'diff',
+                  label: 'Preview before / after',
+                  children: (
+                    <div className="ai-diff-list">
+                      {diffs.slice(0, 12).map((diff) => (
+                        <div key={diff.key} className={`ai-diff-row ai-diff-row-${diff.type}`}>
+                          <span className="ai-diff-key">{diff.key}</span>
+                          <span className="ai-diff-old">{String(diff.oldValue ?? '∅')}</span>
+                          <span className="ai-diff-arrow">→</span>
+                          <span className="ai-diff-value">{String(diff.newValue ?? '∅')}</span>
+                        </div>
+                      ))}
+                      {diffs.length > 12 && (
+                        <Typography.Text type="secondary" style={{ fontSize: 11, paddingInlineStart: 8 }}>
+                          +{diffs.length - 12} more changes
+                        </Typography.Text>
+                      )}
+                      {diffs.length === 0 && (
+                        <Typography.Text type="secondary" style={{ fontSize: 12 }}>No token changes detected</Typography.Text>
+                      )}
+                    </div>
+                  ),
+                },
+              ]}
+            />
             <Button
               type="primary"
               block

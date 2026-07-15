@@ -6,14 +6,14 @@
 
 ## Acceptance Criteria
 
-- [ ] AI Chat Toggle Button（Header 右侧）→ 打开/关闭右侧 Drawer
-- [ ] Drawer 不遮挡主预览区，可拖拽调整宽度（默认 400px）
-- [ ] 消息气泡：用户消息（右侧）+ AI 消息（左侧）+ 系统消息
-- [ ] 流式渲染：AI 回复逐 token 显示，打字机效果
-- [ ] System Prompt：包含 antd Design Token schema + 输出格式约束（JSON）+ few-shot 示例
-- [ ] 快捷 Prompt 建议："生成苹果风格主题" / "把主色调成红色" / "调整圆角为圆润风格"
-- [ ] 消息历史：上下文携带最近 10 条消息
-- [ ] 未配置 LLM 时显示引导卡片 + [打开设置] 按钮
+- [x] AI Chat Toggle Button（Header 右侧）→ 打开/关闭右侧 Drawer
+- [x] Drawer 不遮挡主预览区，可拖拽调整宽度（默认 400px）
+- [x] 消息气泡：用户消息（右侧）+ AI 消息（左侧）+ 系统消息
+- [x] 流式渲染：AI 回复逐 token 显示，打字机效果
+- [x] System Prompt：包含 antd Design Token schema + 输出格式约束（JSON）+ few-shot 示例
+- [x] 快捷 Prompt 建议："生成苹果风格主题" / "把主色调成红色" / "调整圆角为圆润风格"
+- [x] 消息历史：上下文携带最近 10 条消息
+- [x] 未配置 LLM 时显示引导卡片 + [打开设置] 按钮
 
 ## Dependencies
 

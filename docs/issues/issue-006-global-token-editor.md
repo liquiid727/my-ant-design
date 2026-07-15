@@ -6,13 +6,13 @@
 
 ## Acceptance Criteria
 
-- [ ] 颜色编辑：colorPrimary, colorSuccess, colorWarning, colorError, colorInfo, colorBgBase, colorTextBase — 使用 antd ColorPicker
-- [ ] 圆角编辑：borderRadius, borderRadiusSM, borderRadiusLG, borderRadiusXS — 使用 Slider + InputNumber
-- [ ] 字号编辑：fontSize, fontSizeSM, fontSizeLG — 使用 Slider + InputNumber
-- [ ] 间距编辑：padding, paddingSM, paddingLG, margin, marginSM, marginLG — 使用 Slider + InputNumber
-- [ ] 编辑面板布局：分组折叠（Colors / Border / Typography / Spacing）
-- [ ] 修改 Token → themeStore 更新 → ConfigProvider 实时生效（debounce 300ms）
-- [ ] 支持 Reset 按钮回到当前预设的默认值
+- [x] 颜色编辑：colorPrimary, colorSuccess, colorWarning, colorError, colorInfo, colorBgBase, colorTextBase — 使用 antd ColorPicker
+- [x] 圆角编辑：borderRadius, borderRadiusSM, borderRadiusLG, borderRadiusXS — 使用 Slider + InputNumber
+- [x] 字号编辑：fontSize, fontSizeSM, fontSizeLG — 使用 Slider + InputNumber
+- [x] 间距编辑：padding, paddingSM, paddingLG, margin, marginSM, marginLG — 使用 Slider + InputNumber
+- [x] 编辑面板布局：分组折叠（Colors / Border / Typography / Spacing）
+- [x] 修改 Token → themeStore 更新 → ConfigProvider 实时生效（debounce 300ms）
+- [x] 支持 Reset 按钮回到当前预设的默认值
 
 ## Dependencies
 

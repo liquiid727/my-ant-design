@@ -31,6 +31,9 @@
       "type": "string",
       "pattern": "\\.png$"
     },
+    "format": {
+      "enum": ["json", "advanced"]
+    },
     "config": {
       "type": "object",
       "required": ["algorithm", "token"],

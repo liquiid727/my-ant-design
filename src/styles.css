@@ -359,15 +359,21 @@ body {
 
 /* ===== AI Drawer ===== */
 
-.ant-drawer-content-wrapper:has(.ai-drawer) {
-  width: 420px !important;
-}
-
 .ai-drawer .ant-drawer-body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
   padding: 0;
+}
+
+.ai-drawer-resize-handle {
+  bottom: 0;
+  cursor: col-resize;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 6px;
+  z-index: 2;
 }
 
 .ai-drawer-header {
@@ -472,6 +478,23 @@ body {
   color: rgba(0, 0, 0, 0.88);
 }
 
+.ai-chat-content.system {
+  background: #fffbe6;
+  border: 1px solid #ffe58f;
+  color: rgba(0, 0, 0, 0.72);
+}
+
+.ai-json-warning {
+  align-items: center;
+  background: #fffbe6;
+  border: 1px solid #ffe58f;
+  border-radius: 8px;
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 12px;
+  padding: 8px 10px;
+}
+
 .ai-chat-typing {
   align-items: center;
   display: inline-flex;
@@ -531,6 +554,21 @@ body {
   padding: 3px 8px;
 }
 
+.ai-diff-row-added {
+  background: #f6ffed;
+  border-left: 3px solid #52c41a;
+}
+
+.ai-diff-row-removed {
+  background: #fff2f0;
+  border-left: 3px solid #ff4d4f;
+}
+
+.ai-diff-row-changed {
+  background: #fffbe6;
+  border-left: 3px solid #faad14;
+}
+
 .ai-diff-key {
   color: rgba(0, 0, 0, 0.55);
   flex-shrink: 0;
@@ -542,6 +580,13 @@ body {
 
 .ai-diff-arrow {
   color: rgba(0, 0, 0, 0.25);
+}
+
+.ai-diff-old {
+  color: rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ai-diff-value {
@@ -603,6 +648,49 @@ body {
 .library-panel {
   margin: 24px;
   padding: 20px;
+}
+
+.code-block.language-json,
+.code-block.language-design-token {
+  border-left: 4px solid #52c41a;
+}
+
+.code-block.language-ts,
+.code-block.language-tailwind {
+  border-left: 4px solid #1677ff;
+}
+
+.code-block.language-css {
+  border-left: 4px solid #722ed1;
+}
+
+.diff-viewer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  white-space: normal;
+}
+
+.diff-line {
+  border-radius: 4px;
+  font-family: "SF Mono", "Consolas", monospace;
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+.diff-line-added {
+  background: #f6ffed;
+  color: #237804;
+}
+
+.diff-line-removed {
+  background: #fff2f0;
+  color: #a8071a;
+}
+
+.diff-line-changed {
+  background: #fffbe6;
+  color: #ad6800;
 }
 
 /* ===== About Page ===== */
@@ -904,6 +992,13 @@ body {
 
 .plaza-preview-components {
   border: 1px solid rgba(5, 5, 5, 0.06);
+  border-radius: 8px;
+  max-height: 520px;
+  overflow: auto;
+}
+
+.plaza-preview-components-inner {
+  padding: 16px;
 }
 
 .plaza-preview-diff {
