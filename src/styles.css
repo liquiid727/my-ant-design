@@ -871,6 +871,19 @@ body {
   margin: 12px 0 0 !important;
 }
 
+.about-tooling-section,
+.about-tooling-picker,
+.about-tooling-picker .ant-card-body,
+.about-tooling-picker .ant-segmented {
+  min-width: 0;
+}
+
+.about-config-path-tag {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
 .about-flow-item {
   background: #fafafa;
   border: 1px solid rgba(5, 5, 5, 0.06);
