@@ -825,6 +825,41 @@ body {
   white-space: pre;
 }
 
+.about-artifact-card,
+.about-artifact-card .ant-card-head,
+.about-artifact-card .ant-card-head-wrapper,
+.about-artifact-card .ant-card-body {
+  min-width: 0;
+}
+
+.about-artifact-card .ant-card-head-wrapper {
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.about-artifact-card .ant-card-extra {
+  margin-inline-start: auto;
+}
+
+.about-artifact-meta {
+  margin-bottom: 12px;
+}
+
+.about-artifact-preview {
+  background: #111827;
+  border-radius: 8px;
+  color: #e5e7eb;
+  font-family: "SF Mono", "Consolas", "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+  max-height: 560px;
+  max-width: 100%;
+  overflow: auto;
+  padding: 16px;
+  white-space: pre;
+}
+
 .about-flow-item {
   background: #fafafa;
   border: 1px solid rgba(5, 5, 5, 0.06);
@@ -1131,6 +1166,19 @@ body {
   }
 
   .about-code-block {
+    font-size: 11px;
+  }
+
+  .about-artifact-card .ant-card-head-wrapper {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .about-artifact-card .ant-card-extra {
+    margin-inline-start: 0;
+  }
+
+  .about-artifact-preview {
     font-size: 11px;
   }
 }

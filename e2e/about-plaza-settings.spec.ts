@@ -62,6 +62,21 @@ test('Ant Design guide covers install, theme imports, ConfigProvider, and compon
   await expect(page.locator('body')).not.toContainText('npm create vite');
 });
 
+test('design document can be previewed, copied, and downloaded', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/about#design');
+  const preview = page.getByLabel('design.md 完整预览');
+  await expect(preview).toContainText('# Default Design System');
+  await expect(preview).toContainText('## Interaction states');
+  await page.getByRole('button', { name: '复制' }).click();
+  await expect(page.getByText('design.md 已复制')).toBeVisible();
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: '下载' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe('design.md');
+});
+
 test('settings language changes prompt preview', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /Settings/ }).click();
