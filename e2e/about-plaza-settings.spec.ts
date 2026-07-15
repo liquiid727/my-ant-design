@@ -101,6 +101,28 @@ test('UI Agent module switches and exports platform-correct files without leavin
   expect((await codexDownload).suggestedFilename()).toBe('AGENTS.md');
 });
 
+test('CLI and MCP guide shows verified real client configuration', async ({ page }) => {
+  await page.goto('/about#tooling');
+  await expect(page.getByText('claude mcp add --transport stdio', { exact: false })).toBeVisible();
+  await expect(page.getByText('claude mcp list', { exact: true })).toBeVisible();
+  await expect(page.getByText('claude mcp get context7', { exact: true })).toBeVisible();
+  await expect(page.getByText('/mcp', { exact: true })).toBeVisible();
+  await expect(page.getByText('.mcp.json (project scope)', { exact: true })).toBeVisible();
+
+  await page.getByText('Codex', { exact: true }).click();
+  await expect(page.getByText('codex mcp add context7', { exact: false })).toBeVisible();
+  await expect(page.getByText('codex mcp list', { exact: true })).toBeVisible();
+  await expect(page.getByText('~/.codex/config.toml or .codex/config.toml (trusted projects)', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('Codex CLI / MCP 配置示例')).toContainText('[mcp_servers.context7]');
+  await expect(page.getByText('lastVerifiedAt: 2026-07-15', { exact: true })).toBeVisible();
+  await expect(page.locator('.about-code-copy .ant-typography-copy')).toHaveCount(5);
+  await expect(page.locator('body')).not.toContainText('<theme-studio-mcp-command>');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect.poll(() => page.evaluate(
+    () => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
+  )).toBe(true);
+});
+
 test('settings language changes prompt preview', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /Settings/ }).click();
