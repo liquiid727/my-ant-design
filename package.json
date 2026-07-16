@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run verify:tooling && tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "verify:tooling": "vitest run src/services/docs/toolingGuideRegistry.test.ts",
     "test:watch": "vitest",
     "e2e": "playwright test",
     "test:visual": "VISUAL_REGRESSION=1 playwright test e2e/theme-visual.spec.ts",

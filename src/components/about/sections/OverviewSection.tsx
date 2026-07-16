@@ -1,5 +1,11 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
-import { Card, Col, Row, Space, Steps, Tag, Typography } from 'antd';
+import { Alert, Card, Col, Row, Space, Steps, Tag, Typography } from 'antd';
+import {
+  ABOUT_CONTENT_METADATA,
+  getToolingVerificationSummary,
+  TOOLING_VERIFICATION_MAX_AGE_DAYS,
+  toolingGuideRegistry,
+} from '../../../services/docs/toolingGuideRegistry';
 
 const workflow = [
   '安装 Ant Design',
@@ -10,16 +16,42 @@ const workflow = [
 ];
 
 export function OverviewSection() {
+  const verificationSummary = getToolingVerificationSummary(toolingGuideRegistry);
+  const staleGuides = toolingGuideRegistry.filter((guide) => verificationSummary.staleGuideIds.includes(guide.id));
+
   return (
     <Space orientation="vertical" size={16} className="about-section-stack">
       <Card className="about-section-card">
         <Space orientation="vertical" size={8}>
           <Tag icon={<CheckCircleOutlined />} color="success">面向已有前端项目</Tag>
           <Space wrap>
-            <Tag color="blue">内容版本 0709</Tag>
-            <Tag>最近更新 2026-07-15</Tag>
-            <Tag>CLI/MCP 最近核验 2026-07-15</Tag>
+            <Tag color="blue">内容版本 {ABOUT_CONTENT_METADATA.version}</Tag>
+            <Tag>最近更新 {ABOUT_CONTENT_METADATA.updatedAt}</Tag>
+            <Tag color={verificationSummary.isStale ? 'warning' : undefined}>
+              CLI/MCP 最近核验 {verificationSummary.oldestVerifiedAt ?? '未核验'}
+            </Tag>
           </Space>
+          {verificationSummary.isStale && (
+            <Alert
+              showIcon
+              type="warning"
+              title="CLI/MCP 核验已过期"
+              description={(
+                <Space orientation="vertical" size={4}>
+                  <Typography.Text>
+                    存在超过 {TOOLING_VERIFICATION_MAX_AGE_DAYS} 天未复核的客户端指南，请在使用前核对官方文档。
+                  </Typography.Text>
+                  <Space wrap>
+                    {staleGuides.map((guide) => (
+                      <a key={guide.id} href={guide.officialUrl} target="_blank" rel="noreferrer">
+                        {guide.title} 官方文档
+                      </a>
+                    ))}
+                  </Space>
+                </Space>
+              )}
+            />
+          )}
           <Typography.Title level={3}>五步完成一致的 Agent UI 工作流</Typography.Title>
           <Typography.Paragraph type="secondary">
             将当前主题变成开发者和 Agent 都能读取的工程约束，减少组件选择、Token 使用和响应式实现之间的偏差。

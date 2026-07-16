@@ -1,12 +1,18 @@
 import { CheckCircleOutlined, LinkOutlined, ToolOutlined, WarningOutlined } from '@ant-design/icons';
 import { Alert, Card, List, Segmented, Space, Tag, Typography } from 'antd';
 import { useState } from 'react';
-import { toolingGuideRegistry, type ToolingGuide } from '../../../services/docs/toolingGuideRegistry';
+import {
+  getToolingVerificationStatus,
+  TOOLING_VERIFICATION_MAX_AGE_DAYS,
+  toolingGuideRegistry,
+  type ToolingGuide,
+} from '../../../services/docs/toolingGuideRegistry';
 import { CopyableCodeBlock } from '../components/CopyableCodeBlock';
 
 export function ToolingSection() {
   const [client, setClient] = useState<ToolingGuide['client']>('claude-code');
   const guide = toolingGuideRegistry.find((item) => item.client === client)!;
+  const verificationStatus = getToolingVerificationStatus(guide.lastVerifiedAt);
 
   return (
     <Space orientation="vertical" size={16} className="about-section-stack about-tooling-section">
@@ -43,8 +49,30 @@ export function ToolingSection() {
         extra={<a href={guide.officialUrl} target="_blank" rel="noreferrer"><LinkOutlined /> 官方文档</a>}
       >
         <Typography.Paragraph type="secondary">{guide.description}</Typography.Paragraph>
-        <Space wrap><Tag>lastVerifiedAt: {guide.lastVerifiedAt}</Tag><Tag className="about-config-path-tag">{guide.configPath}</Tag></Space>
+        <Space wrap>
+          <Tag color={verificationStatus === 'fresh' ? undefined : 'warning'}>lastVerifiedAt: {guide.lastVerifiedAt}</Tag>
+          <Tag>clientVersion: {guide.verifiedClientVersion}</Tag>
+          <Tag className="about-config-path-tag">{guide.configPath}</Tag>
+        </Space>
       </Card>
+      {verificationStatus !== 'fresh' && (
+        <Alert
+          showIcon
+          type="warning"
+          icon={<WarningOutlined />}
+          title="CLI/MCP 核验已过期"
+          description={(
+            <Space wrap>
+              <span>
+                {verificationStatus === 'invalid'
+                  ? '核验日期无效，请在使用命令前重新核验。'
+                  : `该客户端指南已超过 ${TOOLING_VERIFICATION_MAX_AGE_DAYS} 天未复核。`}
+              </span>
+              <a href={guide.officialUrl} target="_blank" rel="noreferrer">查看官方文档</a>
+            </Space>
+          )}
+        />
+      )}
       <Card className="about-section-card" title="CLI 命令">
         <Space orientation="vertical" size={16} className="about-section-stack">
           {guide.commands.map((command) => (

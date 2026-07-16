@@ -10,9 +10,68 @@ export type ToolingGuide = {
   troubleshooting: string[];
   officialUrl: string;
   lastVerifiedAt: string;
+  verifiedClientVersion: string;
+  reviewCommands: string[];
 };
 
-const lastVerifiedAt = '2026-07-15';
+export const ABOUT_CONTENT_METADATA = {
+  version: '0709',
+  updatedAt: '2026-07-16',
+} as const;
+
+export const TOOLING_VERIFICATION_MAX_AGE_DAYS = 90;
+
+export type ToolingVerificationStatus = 'fresh' | 'stale' | 'invalid';
+
+export type ToolingVerificationSummary = {
+  oldestVerifiedAt: string | null;
+  staleGuideIds: string[];
+  isStale: boolean;
+};
+
+const DAY_IN_MS = 24 * 60 * 60 * 1000;
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+const parseUtcDate = (value: string): number | null => {
+  if (!ISO_DATE_PATTERN.test(value)) return null;
+  const timestamp = Date.parse(`${value}T00:00:00.000Z`);
+  if (!Number.isFinite(timestamp)) return null;
+  return new Date(timestamp).toISOString().slice(0, 10) === value ? timestamp : null;
+};
+
+export const getToolingVerificationStatus = (
+  lastVerifiedAt: string,
+  now = new Date(Date.now()),
+  maxAgeDays = TOOLING_VERIFICATION_MAX_AGE_DAYS,
+): ToolingVerificationStatus => {
+  const verifiedAt = parseUtcDate(lastVerifiedAt);
+  if (verifiedAt === null || !Number.isFinite(now.getTime()) || maxAgeDays < 0) return 'invalid';
+
+  const currentUtcDay = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const ageInDays = Math.floor((currentUtcDay - verifiedAt) / DAY_IN_MS);
+  if (ageInDays < 0) return 'invalid';
+  return ageInDays > maxAgeDays ? 'stale' : 'fresh';
+};
+
+export const getToolingVerificationSummary = (
+  guides: ToolingGuide[],
+  now = new Date(Date.now()),
+  maxAgeDays = TOOLING_VERIFICATION_MAX_AGE_DAYS,
+): ToolingVerificationSummary => {
+  const sortedDates = guides
+    .map((guide) => guide.lastVerifiedAt)
+    .filter((date) => parseUtcDate(date) !== null)
+    .sort();
+  const staleGuideIds = guides
+    .filter((guide) => getToolingVerificationStatus(guide.lastVerifiedAt, now, maxAgeDays) !== 'fresh')
+    .map((guide) => guide.id);
+
+  return {
+    oldestVerifiedAt: sortedDates[0] ?? null,
+    staleGuideIds,
+    isStale: staleGuideIds.length > 0,
+  };
+};
 
 export const toolingGuideRegistry: ToolingGuide[] = [
   {
@@ -48,10 +107,17 @@ export const toolingGuideRegistry: ToolingGuide[] = [
       '找不到 npx：先确认 Node.js 与 npm 已安装并位于 PATH。',
       '项目成员看不到配置：确认使用 project scope，并提交仓库根目录的 .mcp.json。',
       '配置冲突：检查 local、project、user 同名 server；local 优先级最高。',
+      '项目配置显示 Pending approval：运行 claude mcp list，审批 .mcp.json 中的 server 后再检查连接状态。',
       'server 未连接：运行 claude mcp get context7 并在 /mcp 中查看错误。',
     ],
     officialUrl: 'https://code.claude.com/docs/en/mcp',
-    lastVerifiedAt,
+    lastVerifiedAt: '2026-07-16',
+    verifiedClientVersion: '2.1.211',
+    reviewCommands: [
+      'claude --version',
+      'claude mcp add --help',
+      'claude mcp list --help',
+    ],
   },
   {
     id: 'codex-mcp',
@@ -81,6 +147,12 @@ args = ["-y", "@upstash/context7-mcp"]`,
       'TUI 中不可见：重启 Codex，使更新后的 MCP 配置重新加载。',
     ],
     officialUrl: 'https://learn.chatgpt.com/docs/extend/mcp',
-    lastVerifiedAt,
+    lastVerifiedAt: '2026-07-16',
+    verifiedClientVersion: '0.144.3',
+    reviewCommands: [
+      'codex --version',
+      'codex mcp add --help',
+      'codex mcp list --help',
+    ],
   },
 ];

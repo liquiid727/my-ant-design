@@ -13,3 +13,7 @@ https://ant.design/index-cn
 - 增设about
 - 介绍如何快速的接入ant-desing + 接入LLM key帮我们设计自己喜欢的主题 + 在claude/codex快速配置agent，接入cli和mcp，然后能够快速根据我们这个UI设计框架来进行前端的构建和开发；
 -
+0709（7月的文章内容）
+- 补充design.md 以及前端的agent
+在前面以及配置好了ant-design之后、cli、mcp之后如何配置一个专业agent来负责UI的处理
+可以保证页面的协调和设计；

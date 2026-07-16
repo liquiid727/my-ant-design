@@ -1,4 +1,10 @@
 import { expect, test } from '@playwright/test';
+import {
+  ABOUT_CONTENT_METADATA,
+  getToolingVerificationSummary,
+  TOOLING_VERIFICATION_MAX_AGE_DAYS,
+  toolingGuideRegistry,
+} from '../src/services/docs/toolingGuideRegistry';
 
 const tabs = [
   ['产品介绍', 'overview', '五步完成一致的 Agent UI 工作流'],
@@ -14,17 +20,33 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('0709 release metadata and all canonical tabs are accessible', async ({ page }) => {
+  const verificationSummary = getToolingVerificationSummary(toolingGuideRegistry);
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/about#overview');
-  await expect(page.getByText('内容版本 0709', { exact: true })).toBeVisible();
-  await expect(page.getByText('最近更新 2026-07-15', { exact: true })).toBeVisible();
-  await expect(page.getByText('CLI/MCP 最近核验 2026-07-15', { exact: true })).toBeVisible();
+  await expect(page.getByText(`内容版本 ${ABOUT_CONTENT_METADATA.version}`, { exact: true })).toBeVisible();
+  await expect(page.getByText(`最近更新 ${ABOUT_CONTENT_METADATA.updatedAt}`, { exact: true })).toBeVisible();
+  await expect(page.getByText(`CLI/MCP 最近核验 ${verificationSummary.oldestVerifiedAt}`, { exact: true })).toBeVisible();
 
   for (const [label, hash, heading] of tabs) {
     await page.getByRole('tab', { name: label }).click();
     await expect(page).toHaveURL(new RegExp(`/about#${hash}$`));
     await expect(page.getByRole('heading', { name: heading })).toBeVisible();
   }
+});
+
+test('stale CLI/MCP metadata shows a user-facing warning', async ({ page }) => {
+  const verifiedAt = new Date(`${toolingGuideRegistry[0].lastVerifiedAt}T00:00:00.000Z`);
+  verifiedAt.setUTCDate(verifiedAt.getUTCDate() + TOOLING_VERIFICATION_MAX_AGE_DAYS + 1);
+  await page.addInitScript((now) => {
+    Date.now = () => now;
+  }, verifiedAt.getTime());
+
+  await page.goto('/about#overview');
+  await expect(page.getByLabel('产品介绍').getByText('CLI/MCP 核验已过期', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('产品介绍').getByRole('link', { name: 'Claude Code CLI / MCP 官方文档' })).toBeVisible();
+  await page.goto('/about#tooling');
+  await expect(page.getByLabel('CLI / MCP', { exact: true }).getByText('CLI/MCP 核验已过期', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('CLI / MCP', { exact: true }).getByRole('link', { name: '查看官方文档' })).toBeVisible();
 });
 
 test('legacy hashes resolve to canonical onboarding content', async ({ page }) => {
