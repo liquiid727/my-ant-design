@@ -44,7 +44,7 @@ const formatStaleGuideMessage = (now: Date): string => {
   const details = toolingGuideRegistry
     .filter((guide) => summary.staleGuideIds.includes(guide.id))
     .map((guide) => [
-      `${guide.title} last verified at ${guide.lastVerifiedAt} against ${guide.verifiedClientVersion}.`,
+      `${guide.title} last verified at ${guide.lastVerifiedAt} against ${guide.verifiedToolVersion}.`,
       `Official docs: ${guide.officialUrl}`,
       `Review commands: ${guide.reviewCommands.join(', ')}`,
     ].join('\n'))
@@ -93,7 +93,7 @@ describe('tooling guide registry metadata', () => {
 
     toolingGuideRegistry.forEach((guide) => {
       expect(guide.id.trim()).not.toBe('');
-      expect(guide.verifiedClientVersion.trim()).not.toBe('');
+      expect(guide.verifiedToolVersion.trim()).not.toBe('');
       expect(guide.reviewCommands.length).toBeGreaterThan(0);
       expect(guide.reviewCommands.every((command) => command.trim().length > 0)).toBe(true);
       expect(new URL(guide.officialUrl).protocol).toBe('https:');
@@ -101,6 +101,18 @@ describe('tooling guide registry metadata', () => {
         guide.lastVerifiedAt,
         new Date(`${guide.lastVerifiedAt}T00:00:00.000Z`),
       )).toBe('fresh');
+    });
+  });
+
+  it('keeps the official Ant Design CLI and MCP boundary explicit', () => {
+    toolingGuideRegistry.forEach((guide) => {
+      const serialized = JSON.stringify(guide);
+      expect(serialized).toContain('@ant-design/cli');
+      expect(serialized).toContain('antd setup --client');
+      expect(serialized).toContain('npx -y @ant-design/cli mcp');
+      expect(serialized).not.toContain('@upstash/context7-mcp');
+      expect(serialized).not.toContain('claude mcp add');
+      expect(serialized).not.toContain('codex mcp add');
     });
   });
 

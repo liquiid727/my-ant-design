@@ -17,6 +17,11 @@ describe('generateAgentArtifact', () => {
     for (const artifact of [generateAgentArtifact('claude-md'), generateAgentArtifact('codex-agents-md')]) {
       for (const rule of sharedUiAgentRules) expect(artifact.content).toContain(rule);
       expect(artifact.content).toContain('./src/theme.ts');
+      expect(artifact.content).toContain('@ant-design/cli');
+      expect(artifact.content).toContain('antd_info');
+      expect(artifact.content).toContain('antd_token');
+      expect(artifact.content).toContain('antd lint');
+      expect(artifact.content).toContain('does not override');
       expect(artifact.content).toContain('Implement a new page');
       expect(artifact.content).toContain('Refactor an existing page');
       expect(artifact.content).toContain('UI review');

@@ -8,14 +8,30 @@ export type AgentArtifactOptions = {
 
 export const sharedUiAgentRules = [
   'Read the design document, theme file, and existing component structure before changing UI.',
+  'Check the installed Ant Design version in package.json before selecting component APIs.',
   'Prefer Ant Design components and existing shared components over custom replacements.',
   'Use global Theme Tokens and component Tokens for visual values.',
+  'Use Ant Design CLI or MCP to verify component APIs, demos, Tokens, semantic structure, and version changes instead of guessing from model memory.',
+  'Treat design.md and the project theme file as project design facts; Ant Design CLI/MCP provides library knowledge and does not override them.',
   'Do not hard-code colors, radii, shadows, or spacing without documenting the reason.',
   'Cover loading, empty, error, disabled, hover, active, and focus-visible states.',
   'Validate desktop, tablet, and mobile layouts without page-level horizontal overflow.',
-  'Run typecheck, build, and relevant UI tests before handoff.',
+  'Run antd lint or antd doctor when available, plus typecheck, build, and relevant UI tests before handoff.',
   'Report every newly introduced hard-coded visual value and its justification.',
 ] as const;
+
+const toolingWorkflow = `## Ant Design knowledge and verification workflow
+
+Use the official \`@ant-design/cli\` installation and its MCP tools when they are available:
+
+- \`antd_info\` / \`antd_doc\`: confirm component APIs and behavior.
+- \`antd_demo\`: retrieve a version-appropriate implementation example.
+- \`antd_token\`: confirm global and component Token names.
+- \`antd_semantic\`: inspect semantic DOM, classNames, and styles hooks.
+- \`antd_changelog\`: check version differences and deprecated APIs.
+- \`antd lint\` / \`antd doctor\`: validate the finished project.
+
+If the tools are unavailable, say which checks could not be performed and consult the official Ant Design documentation instead of inventing an API.`;
 
 const examples = `## Example tasks
 
@@ -61,6 +77,8 @@ ${loadingInstructions}
 ## Shared UI development rules
 
 ${renderRules()}
+
+${toolingWorkflow}
 
 ## Delivery checklist
 

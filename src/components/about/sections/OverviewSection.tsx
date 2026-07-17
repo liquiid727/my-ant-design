@@ -11,6 +11,7 @@ const workflow = [
   '安装 Ant Design',
   '接入 Theme Studio 主题',
   '导出 design.md',
+  '接入 Ant Design CLI / MCP',
   '配置 UI Agent',
   '开发并验证页面',
 ];
@@ -52,7 +53,7 @@ export function OverviewSection() {
               )}
             />
           )}
-          <Typography.Title level={3}>五步完成一致的 Agent UI 工作流</Typography.Title>
+          <Typography.Title level={3}>六步完成一致的 Agent UI 工作流</Typography.Title>
           <Typography.Paragraph type="secondary">
             将当前主题变成开发者和 Agent 都能读取的工程约束，减少组件选择、Token 使用和响应式实现之间的偏差。
           </Typography.Paragraph>
@@ -65,7 +66,8 @@ export function OverviewSection() {
         {[
           ['主题接入', '将导出的 ThemeConfig 应用到 Ant Design ConfigProvider。'],
           ['机器可读规范', '从当前主题确定性生成 design.md，供团队与 Agent 共用。'],
-          ['双 Agent 配置', '在同一模块中分别生成 Claude Code 与 Codex 指令文件。'],
+          ['官方工具链', '用 Ant Design CLI/MCP 查询组件、Token、示例并执行项目诊断。'],
+          ['双 Agent 配置', '为 Claude Code 与 Codex 生成共享同一设计约束的指令文件。'],
         ].map(([title, description]) => (
           <Col key={title} xs={24} md={8}>
             <Card className="about-feature-card" title={title}>
