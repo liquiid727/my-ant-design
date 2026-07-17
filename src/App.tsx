@@ -11,7 +11,7 @@ const SettingsModal = lazy(() =>
   import('./components/settings/SettingsModal').then((module) => ({ default: module.SettingsModal })),
 );
 const AIDrawer = lazy(() => import('./components/ai/AIDrawer').then((module) => ({ default: module.AIDrawer })));
-const PlazaDrawer = lazy(() => import('./components/plaza/PlazaDrawer').then((module) => ({ default: module.PlazaDrawer })));
+const SquarePage = lazy(() => import('./components/plaza/SquarePage').then((module) => ({ default: module.SquarePage })));
 
 export default function App() {
   return (
@@ -39,6 +39,7 @@ function StudioApp() {
           <Routes>
             <Route path="/" element={<PlaygroundPage />} />
             <Route path="/library" element={<LibraryPage />} />
+            <Route path="/square" element={<SquarePage />} />
             <Route path="/about" element={<AboutPage />} />
           </Routes>
         </Suspense>
@@ -46,7 +47,6 @@ function StudioApp() {
       <Suspense fallback={null}>
         <SettingsModal />
         <AIDrawer />
-        <PlazaDrawer />
       </Suspense>
     </div>
   );

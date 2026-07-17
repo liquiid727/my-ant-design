@@ -5,8 +5,8 @@ import { defaultTheme } from '../theme/presets';
 import { communityThemeSnapshot } from '../../themes/communitySnapshot';
 
 const REPO_CONFIG = {
-  owner: import.meta.env.VITE_COMMUNITY_REPO_OWNER || 'liquiid-labs',
-  repo: import.meta.env.VITE_COMMUNITY_REPO_NAME || 'theme',
+  owner: import.meta.env.VITE_COMMUNITY_REPO_OWNER || 'liquiid727',
+  repo: import.meta.env.VITE_COMMUNITY_REPO_NAME || 'my-ant-design',
   branch: 'main',
 };
 
@@ -199,6 +199,10 @@ export const CommunityThemeService = {
   },
 
   getRepoConfig() {
-    return { ...REPO_CONFIG, pagesBaseUrl: GITHUB_PAGES_BASE };
+    return {
+      ...REPO_CONFIG,
+      pagesBaseUrl: GITHUB_PAGES_BASE,
+      repositoryUrl: `https://github.com/${REPO_CONFIG.owner}/${REPO_CONFIG.repo}`,
+    };
   },
 };

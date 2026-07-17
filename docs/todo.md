@@ -16,4 +16,5 @@ https://ant.design/index-cn
 0709（7月的文章内容）
 - 补充design.md 以及前端的agent
 在前面以及配置好了ant-design之后、cli、mcp之后如何配置一个专业agent来负责UI的处理
+- 介绍如何接入ant-design的cli以及配置对应的agent、skill、知识库 快速的使用这个agent来生成统一、协调的UI
 可以保证页面的协调和设计；

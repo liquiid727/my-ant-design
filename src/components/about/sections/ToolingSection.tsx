@@ -18,10 +18,10 @@ export function ToolingSection() {
     <Space orientation="vertical" size={16} className="about-section-stack about-tooling-section">
       <Card className="about-section-card">
         <Space orientation="vertical" size={8}>
-          <Tag icon={<ToolOutlined />} color="cyan">CLI / MCP</Tag>
-          <Typography.Title level={3}>真实客户端接入指南</Typography.Title>
+          <Tag icon={<ToolOutlined />} color="cyan">Ant Design CLI / MCP</Tag>
+          <Typography.Title level={3}>Ant Design 工具链与 Agent 接入</Typography.Title>
           <Typography.Paragraph type="secondary">
-            CLI 负责配置和检查客户端；MCP 为 Agent 连接公开工具。Theme Studio 的设计上下文来自项目内主题文件与 design.md。
+            @ant-design/cli 提供组件知识、设计 Token 和项目诊断；官方 MCP 将这些能力接入 Claude Code 或 Codex。客户端负责承载 Agent，不等于 Ant Design 工具链本身。
           </Typography.Paragraph>
         </Space>
       </Card>
@@ -29,8 +29,8 @@ export function ToolingSection() {
         showIcon
         type="warning"
         icon={<WarningOutlined />}
-        title="能力边界"
-        description="本项目不提供 Theme Studio CLI 或 Theme Studio MCP Server；以下示例连接真实公开的 Context7 MCP。"
+        title="职责边界"
+        description="项目 design.md 与 ThemeConfig 描述当前产品的设计事实；Ant Design CLI/MCP 提供官方组件、Token、示例和版本知识；Claude Code 与 Codex 是使用这些资料和工具的 Agent 客户端。Context7 等第三方 MCP 仅可作为补充。"
       />
       <Card className="about-section-card about-tooling-picker" title="选择客户端">
         <Segmented<ToolingGuide['client']>
@@ -51,7 +51,7 @@ export function ToolingSection() {
         <Typography.Paragraph type="secondary">{guide.description}</Typography.Paragraph>
         <Space wrap>
           <Tag color={verificationStatus === 'fresh' ? undefined : 'warning'}>lastVerifiedAt: {guide.lastVerifiedAt}</Tag>
-          <Tag>clientVersion: {guide.verifiedClientVersion}</Tag>
+          <Tag>toolVersion: {guide.verifiedToolVersion}</Tag>
           <Tag className="about-config-path-tag">{guide.configPath}</Tag>
         </Space>
       </Card>

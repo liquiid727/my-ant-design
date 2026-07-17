@@ -7,8 +7,9 @@
 1. 在现有项目中安装 Ant Design。
 2. 将 Theme Studio 导出的主题配置接入 Ant Design。
 3. 根据当前主题生成并导出 `design.md`。
-4. 配置 Claude Code 或 Codex 专业前端 Agent。
-5. 通过现有 CLI、MCP 和 `design.md` 约束 Agent 按统一设计语言开发页面。
+4. 安装官方 `@ant-design/cli`，并将 Ant Design MCP 接入 Claude Code 或 Codex。
+5. 配置 Claude Code 或 Codex 专业前端 Agent。
+6. 通过 Ant Design CLI/MCP、`design.md` 和主题文件约束 Agent 按统一设计语言开发页面。
 
 本期不负责创建 React、TypeScript 或 Vite 项目，不提供本地 LLM Key 配置教程，也不建设新的 AI 主题生成入口。本文档对应 0709（7 月）内容版本。
 
@@ -18,7 +19,7 @@
 - 说明如何将 Theme Studio 导出的主题应用到 `ConfigProvider`。
 - 提供可直接预览、复制或下载的 `design.md`。
 - 分别提供 Claude Code 与 Codex 的专业 UI Agent 配置模板。
-- 说明现有 CLI、MCP 与 Agent 的真实连接方式。
+- 说明 Ant Design 官方 CLI/MCP 与 Claude Code、Codex Agent 客户端之间的连接方式。
 - 约束 Agent 使用 Ant Design 与主题 Token，减少页面间的视觉偏差。
 - 保留现有 About 页面路由并升级其内容，不重复建设页面。
 
@@ -31,7 +32,7 @@
 **Acceptance Criteria:**
 
 - [ ] `/about` 页面包含：产品介绍、Ant Design 接入、设计规范、CLI/MCP、Agent 配置五个导航区块。
-- [ ] 页面首屏展示完整流程：安装 Ant Design → 接入主题 → 导出规范 → 配置 Agent → 开发页面。
+- [ ] 页面首屏展示完整流程：安装 Ant Design → 接入主题 → 导出规范 → 接入 Ant Design CLI/MCP → 配置 Agent → 开发页面。
 - [ ] URL hash 与当前区块同步。
 - [ ] 旧的 `/about#intro`、`#antd`、`#ai`、`#agent` 链接仍可访问并映射到有效内容。
 - [ ] 桌面端、平板端和移动端无横向溢出。
@@ -92,10 +93,11 @@
 
 **Acceptance Criteria:**
 
-- [ ] 页面分别解释 CLI 与 MCP 的职责。
-- [ ] 提供 Claude Code 和 Codex 各自的配置位置与真实示例。
-- [ ] 不展示不存在的 Theme Studio CLI 或 MCP Server。
-- [ ] 配置示例说明如何让 Agent 读取主题文件和 `design.md`。
+- [ ] 页面解释 `@ant-design/cli`、Ant Design MCP 与 Agent 客户端各自的职责。
+- [ ] 展示 `npm install -g @ant-design/cli`、`antd setup --client claude` 和 `antd setup --client codex`。
+- [ ] 展示 `npx -y @ant-design/cli mcp` 的官方 MCP 配置。
+- [ ] 明确项目 `design.md` 与 ThemeConfig 是项目设计事实，CLI/MCP 提供 Ant Design 组件知识和诊断能力。
+- [ ] Context7 等第三方 MCP 只能作为补充，不能替代 Ant Design 官方工具链。
 - [ ] 提供配置验证命令或验证步骤。
 - [ ] 配置错误时提供排查清单。
 - [ ] Verify in browser using dev-browser skill.
@@ -123,9 +125,9 @@
 - FR-6: 系统必须从当前主题生成 `design.md`。
 - FR-7: 系统必须支持预览、复制和下载 `design.md`。
 - FR-8: 系统必须在统一的 UI Agent 配置模块中提供 Claude Code 和 Codex 两套配置模板。
-- FR-9: 系统必须提供现有 Claude Code 和 Codex CLI 的配置说明。
-- FR-10: 系统必须提供现有 MCP 客户端配置说明。
-- FR-11: 系统必须明确区分真实可用能力和未实现能力。
+- FR-9: 系统必须提供 Ant Design 官方 `@ant-design/cli` 的安装、查询和项目诊断说明。
+- FR-10: 系统必须提供 Ant Design 官方 MCP 接入 Claude Code 与 Codex 的配置说明。
+- FR-11: 系统必须明确区分 Ant Design 工具链、Agent 客户端与项目设计事实。
 - FR-12: 系统必须在移动端提供可用的内容导航和代码阅读体验。
 
 ## 5. Non-Goals
@@ -133,7 +135,7 @@
 - 不创建 React、TypeScript、Vite、Next.js 或其他项目脚手架。
 - 不提供本地 LLM API Key 的录入、保存、清除或安全教程。
 - 不建设新的 AI 主题生成入口或候选主题预览流程。
-- 不开发 Theme Studio CLI 或 Theme Studio MCP Server。
+- 不开发 Theme Studio 自有 CLI 或 Theme Studio MCP Server；使用 Ant Design 官方 `@ant-design/cli`。
 - 不提供 LLM 用量计费或额度管理。
 - 不在本期开发通用 IDE 插件。
 - 不允许 Agent 从 About 页面直接获得无限制系统权限。
@@ -156,7 +158,7 @@
 - 复用现有主题 Store、主题 Registry、Token Registry 和主题导出能力。
 - `design.md` 应由结构化数据确定性生成，不依赖 LLM。
 - Agent 模板应作为独立资源维护，避免继续堆积在单一 TSX 文件中。
-- CLI/MCP 内容必须基于 Claude Code 和 Codex 当前官方配置。
+- CLI/MCP 内容必须基于 Ant Design 官方文档与 `@ant-design/cli`，并分别说明 Claude Code、Codex 的客户端接入。
 - 不修改现有 Settings Modal、Settings Store 或 LLM Client。
 
 ## 8. Success Metrics

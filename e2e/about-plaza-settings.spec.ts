@@ -15,7 +15,7 @@ test('about route opens and tab hash sync works', async ({ page }, testInfo) => 
     ['产品介绍', '#overview'],
     ['Ant Design 接入', '#antd'],
     ['design.md', '#design'],
-    ['CLI / MCP', '#tooling'],
+    ['Ant Design CLI / MCP', '#tooling'],
     ['UI Agent', '#agents'],
   ] as const) {
     const tab = page.getByRole('tab', { name: label });
@@ -31,10 +31,10 @@ test('about route opens and tab hash sync works', async ({ page }, testInfo) => 
 
 test('about legacy and unknown hashes normalize without adding history entries', async ({ page }) => {
   for (const [legacy, canonical, heading] of [
-    ['intro', 'overview', '五步完成一致的 Agent UI 工作流'],
+    ['intro', 'overview', '六步完成一致的 Agent UI 工作流'],
     ['ai', 'design', '当前主题的 design.md'],
     ['agent', 'agents', 'Claude Code / Codex UI Agent'],
-    ['unknown', 'overview', '五步完成一致的 Agent UI 工作流'],
+    ['unknown', 'overview', '六步完成一致的 Agent UI 工作流'],
   ] as const) {
     await page.goto('/?history=marker');
     await page.goto(`/about#${legacy}`);
@@ -83,6 +83,7 @@ test('UI Agent module switches and exports platform-correct files without leavin
   await page.goto('/about#agents');
   await expect(page.getByText('共享设计约束')).toBeVisible();
   await expect(page.getByLabel('CLAUDE.md 完整预览')).toContainText('@design.md');
+  await expect(page.getByLabel('CLAUDE.md 完整预览')).toContainText('antd_token');
 
   const claudeDownload = page.waitForEvent('download');
   await page.getByRole('button', { name: '下载' }).click();
@@ -102,24 +103,24 @@ test('UI Agent module switches and exports platform-correct files without leavin
   expect((await codexDownload).suggestedFilename()).toBe('AGENTS.md');
 });
 
-test('CLI and MCP guide shows verified real client configuration', async ({ page }) => {
+test('Ant Design CLI and MCP guide configures the official tools for both clients', async ({ page }) => {
   const codexGuide = toolingGuideRegistry.find((guide) => guide.client === 'codex')!;
   await page.goto('/about#tooling');
-  await expect(page.getByText('claude mcp add --transport stdio', { exact: false })).toBeVisible();
-  await expect(page.getByText('claude mcp list', { exact: true })).toBeVisible();
-  await expect(page.getByText('claude mcp get context7', { exact: true })).toBeVisible();
-  await expect(page.getByText('/mcp', { exact: true })).toBeVisible();
-  await expect(page.getByText('.mcp.json (project scope)', { exact: true })).toBeVisible();
+  await expect(page.getByText('npm install -g @ant-design/cli', { exact: true })).toBeVisible();
+  await expect(page.getByText('antd setup --client claude', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('预览并检查配置')).toContainText('antd setup --client claude --dry-run');
+  await expect(page.getByText('npx -y @ant-design/cli mcp', { exact: true })).toBeVisible();
+  await expect(page.getByText('由 antd setup --client claude 自动配置', { exact: true })).toBeVisible();
 
   await page.getByText('Codex', { exact: true }).click();
-  await expect(page.getByText('codex mcp add context7', { exact: false })).toBeVisible();
-  await expect(page.getByText('codex mcp list', { exact: true })).toBeVisible();
-  await expect(page.getByText('~/.codex/config.toml or .codex/config.toml (trusted projects)', { exact: true })).toBeVisible();
-  await expect(page.getByLabel('Codex CLI / MCP 配置示例')).toContainText('[mcp_servers.context7]');
+  await expect(page.getByText('antd setup --client codex', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('检查项目并执行规范诊断')).toContainText('antd doctor');
+  await expect(page.getByText('由 antd setup --client codex 自动配置', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('Ant Design CLI / MCP · Codex 配置示例')).toContainText('@ant-design/cli');
   await expect(page.getByText(`lastVerifiedAt: ${codexGuide.lastVerifiedAt}`, { exact: true })).toBeVisible();
-  await expect(page.getByText(`clientVersion: ${codexGuide.verifiedClientVersion}`, { exact: true })).toBeVisible();
-  await expect(page.locator('.about-code-copy .ant-typography-copy')).toHaveCount(5);
-  await expect(page.locator('body')).not.toContainText('<theme-studio-mcp-command>');
+  await expect(page.getByText(`toolVersion: ${codexGuide.verifiedToolVersion}`, { exact: true })).toBeVisible();
+  await expect(page.locator('.about-code-copy .ant-typography-copy')).toHaveCount(6);
+  await expect(page.locator('body')).not.toContainText('@upstash/context7-mcp');
   await page.setViewportSize({ width: 390, height: 844 });
   await expect.poll(() => page.evaluate(
     () => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
@@ -146,12 +147,15 @@ test('settings language changes prompt preview', async ({ page }) => {
   expect(await preview.innerText()).not.toBe(zhText);
 });
 
-test('plaza search, tag filtering, apply, snapshot rollback work with fallback data', async ({ page }) => {
+test('square search, filtering, copy, apply, and rollback work with fallback data', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/?view=components');
   const primary = page.getByRole('button', { name: 'Primary button' });
   const initialColor = await primary.evaluate((element) => getComputedStyle(element).backgroundColor);
 
-  await page.getByRole('button', { name: /Plaza/ }).click();
+  await page.getByText('Square', { exact: true }).click();
+  await expect(page).toHaveURL(/\/square$/);
+  await expect(page.getByRole('heading', { name: 'Theme Square' })).toBeVisible();
   await expect(page.getByText('Forest Green')).toBeVisible();
   await page.getByPlaceholder('Search themes...').fill('sakura');
   await expect(page.getByText('Sakura Pink')).toBeVisible();
@@ -161,15 +165,26 @@ test('plaza search, tag filtering, apply, snapshot rollback work with fallback d
   await expect(page.getByText('Forest Green')).toBeVisible();
 
   await page.getByRole('button', { name: /Forest Green/ }).click();
-  await page.getByRole('button', { name: 'Apply Theme' }).click();
-  await expect.poll(() => primary.evaluate((element) => getComputedStyle(element).backgroundColor)).not.toBe(initialColor);
-  await page.locator('.plaza-drawer-header button').last().click();
-  await expect(page.locator('.plaza-drawer')).toBeHidden();
+  await page.getByRole('button', { name: 'Copy Theme' }).click();
+  const copiedTheme = await page.evaluate(async () => JSON.parse(await navigator.clipboard.readText()));
+  expect(copiedTheme).toMatchObject({
+    name: 'Forest Green',
+    algorithm: expect.any(String),
+    token: expect.any(Object),
+    components: expect.any(Object),
+  });
 
-  await page.getByText('Library').click();
+  await page.getByRole('button', { name: 'Apply Theme' }).click();
+  await page.locator('.ant-segmented-item').filter({ hasText: 'Playground' }).click();
+  await expect(page).toHaveURL(/\?view=components$/);
+  const themedPrimary = page.getByRole('button', { name: 'Primary button' });
+  await expect.poll(() => themedPrimary.evaluate((element) => getComputedStyle(element).backgroundColor)).not.toBe(initialColor);
+
+  await page.getByText('Library', { exact: true }).click();
   await page.getByRole('button', { name: 'Rollback' }).click({ force: true });
   await page.goto('/?view=components');
-  await expect.poll(() => primary.evaluate((element) => getComputedStyle(element).backgroundColor)).toBe(initialColor);
+  const restoredPrimary = page.getByRole('button', { name: 'Primary button' });
+  await expect.poll(() => restoredPrimary.evaluate((element) => getComputedStyle(element).backgroundColor)).toBe(initialColor);
 });
 
 test('desktop tablet and mobile routes render', async ({ page }) => {
@@ -181,5 +196,9 @@ test('desktop tablet and mobile routes render', async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.goto('/about');
     await expect(page.getByRole('heading', { name: 'Ant Design Theme Studio' })).toBeVisible();
+    await page.goto('/square');
+    await expect(page.getByRole('heading', { name: 'Theme Square' })).toBeVisible();
+    await expect(page.getByText('Forest Green')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
   }
 });

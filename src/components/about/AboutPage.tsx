@@ -61,7 +61,7 @@ export function AboutPage() {
             { key: 'overview', label: '产品介绍', children: <OverviewSection /> },
             { key: 'antd', label: 'Ant Design 接入', children: <AntdIntegrationSection /> },
             { key: 'design', label: 'design.md', children: <DesignDocumentSection /> },
-            { key: 'tooling', label: 'CLI / MCP', children: <ToolingSection /> },
+            { key: 'tooling', label: 'Ant Design CLI / MCP', children: <ToolingSection /> },
             { key: 'agents', label: 'UI Agent', children: <UIAgentSection /> },
           ]}
         />

@@ -19,6 +19,20 @@ describe('CommunityThemeService', () => {
     vi.restoreAllMocks();
   });
 
+  it('uses the canonical repository for API, preview, pages, and contribution links', () => {
+    const config = CommunityThemeService.getRepoConfig();
+    expect(config).toMatchObject({
+      owner: 'liquiid727',
+      repo: 'my-ant-design',
+      branch: 'main',
+      repositoryUrl: 'https://github.com/liquiid727/my-ant-design',
+      pagesBaseUrl: 'https://liquiid727.github.io/my-ant-design/community-themes',
+    });
+    expect(CommunityThemeService.getPreviewUrl('sample-preview.png')).toBe(
+      'https://raw.githubusercontent.com/liquiid727/my-ant-design/main/src/themes/community/sample-preview.png',
+    );
+  });
+
   it('returns fresh cache without hitting GitHub', async () => {
     StorageService.set('community_themes', { themes: [theme], fetchedAt: Date.now(), source: 'api' });
     const fetch = vi.fn();

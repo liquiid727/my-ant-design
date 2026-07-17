@@ -10,13 +10,13 @@ export type ToolingGuide = {
   troubleshooting: string[];
   officialUrl: string;
   lastVerifiedAt: string;
-  verifiedClientVersion: string;
+  verifiedToolVersion: string;
   reviewCommands: string[];
 };
 
 export const ABOUT_CONTENT_METADATA = {
   version: '0709',
-  updatedAt: '2026-07-16',
+  updatedAt: '2026-07-17',
 } as const;
 
 export const TOOLING_VERIFICATION_MAX_AGE_DAYS = 90;
@@ -75,84 +75,91 @@ export const getToolingVerificationSummary = (
 
 export const toolingGuideRegistry: ToolingGuide[] = [
   {
-    id: 'claude-code-mcp',
+    id: 'antd-cli-claude-code',
     client: 'claude-code',
-    title: 'Claude Code CLI / MCP',
-    description: 'local scope 仅用于当前项目且保持私有；project scope 写入可共享的 .mcp.json；user scope 跨项目生效。',
-    configPath: '.mcp.json (project scope)',
+    title: 'Ant Design CLI / MCP · Claude Code',
+    description: 'Ant Design CLI 提供组件、示例、Token、设计语言和项目诊断；官方 MCP 将这些能力作为结构化工具接入 Claude Code。',
+    configPath: '由 antd setup --client claude 自动配置',
     commands: [
-      { label: '添加公开 Context7 MCP（project scope）', code: 'claude mcp add --transport stdio --scope project context7 -- npx -y @upstash/context7-mcp' },
-      { label: '列出 MCP servers', code: 'claude mcp list' },
-      { label: '查看单个 server', code: 'claude mcp get context7' },
-      { label: '在 Claude Code 会话中检查状态', code: '/mcp' },
+      { label: '安装 Ant Design CLI', code: 'npm install -g @ant-design/cli' },
+      { label: '验证 CLI 并查询组件', code: 'antd -V\nantd info Button\nantd token Button' },
+      { label: '自动配置 Claude Code', code: 'antd setup --client claude' },
+      { label: '预览并检查配置', code: 'antd setup --client claude --dry-run\nantd setup --client claude --check' },
+      { label: '手动启动官方 MCP Server', code: 'npx -y @ant-design/cli mcp' },
     ],
     configExample: `{
   "mcpServers": {
-    "context7": {
-      "type": "stdio",
+    "antd": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp"],
-      "env": {}
+      "args": ["-y", "@ant-design/cli", "mcp"]
     }
   }
 }`,
     verification: [
-      '运行 claude mcp list，确认 context7 出现在列表中。',
-      '运行 claude mcp get context7，核对 transport、command 与 scope。',
-      '按用途选择 scope：local=当前项目私有，project=.mcp.json 团队共享，user=个人跨项目。',
-      '启动 Claude Code 后输入 /mcp，确认 server 已连接并可见。',
-      '让 Agent 先读取项目中的 ./design.md 与主题文件；MCP 不替代这些项目文件。',
+      '运行 antd -V，确认已安装 @ant-design/cli 且 Node.js 版本不低于 20。',
+      '运行 antd info Button 和 antd token Button，确认可以读取组件 API 与设计 Token。',
+      '运行 antd setup --client claude --check，确认 Claude Code 的 Skill/MCP 配置有效。',
+      '让 Agent 调用 antd_info、antd_doc 或 antd_token，而不是依赖模型记忆猜测 Ant Design API。',
+      '让 Agent 同时读取项目 ./design.md 与主题文件；官方 MCP 提供 Ant Design 知识，不替代项目设计事实。',
     ],
     troubleshooting: [
-      '找不到 npx：先确认 Node.js 与 npm 已安装并位于 PATH。',
-      '项目成员看不到配置：确认使用 project scope，并提交仓库根目录的 .mcp.json。',
-      '配置冲突：检查 local、project、user 同名 server；local 优先级最高。',
-      '项目配置显示 Pending approval：运行 claude mcp list，审批 .mcp.json 中的 server 后再检查连接状态。',
-      'server 未连接：运行 claude mcp get context7 并在 /mcp 中查看错误。',
+      '找不到 antd 或 npx：确认 Node.js 20+ 与 npm 已安装并位于 PATH，然后重新安装 @ant-design/cli。',
+      '自动配置失败：先运行 antd setup --client claude --dry-run 查看将要修改的配置。',
+      'MCP 未连接：手动运行 npx -y @ant-design/cli mcp，检查启动错误后再执行 --check。',
+      '组件信息与项目不符：先确认 package.json 中的 antd 主版本，再使用 CLI 的版本参数或迁移命令核对差异。',
+      'Context7 等第三方文档 MCP 可作为补充，但不能代替 Ant Design 官方 CLI/MCP。',
     ],
-    officialUrl: 'https://code.claude.com/docs/en/mcp',
-    lastVerifiedAt: '2026-07-16',
-    verifiedClientVersion: '2.1.211',
+    officialUrl: 'https://ant.design/docs/react/mcp',
+    lastVerifiedAt: '2026-07-17',
+    verifiedToolVersion: '@ant-design/cli 6.5.1',
     reviewCommands: [
-      'claude --version',
-      'claude mcp add --help',
-      'claude mcp list --help',
+      'antd -V',
+      'antd setup --client claude --dry-run',
+      'antd setup --client claude --check',
     ],
   },
   {
-    id: 'codex-mcp',
+    id: 'antd-cli-codex',
     client: 'codex',
-    title: 'Codex CLI / MCP',
-    description: '用户默认配置位于 ~/.codex/config.toml；可信项目可使用 .codex/config.toml。',
-    configPath: '~/.codex/config.toml or .codex/config.toml (trusted projects)',
+    title: 'Ant Design CLI / MCP · Codex',
+    description: '同一个 Ant Design 官方 CLI/MCP 可以接入 Codex；Codex 只是 Agent 客户端，组件知识和诊断能力来自 @ant-design/cli。',
+    configPath: '由 antd setup --client codex 自动配置',
     commands: [
-      { label: '添加公开 Context7 MCP', code: 'codex mcp add context7 -- npx -y @upstash/context7-mcp' },
-      { label: '列出 MCP servers', code: 'codex mcp list' },
-      { label: '查看可用 MCP 子命令', code: 'codex mcp --help' },
-      { label: '在 Codex TUI 中检查状态', code: '/mcp' },
+      { label: '安装 Ant Design CLI', code: 'npm install -g @ant-design/cli' },
+      { label: '验证 CLI 并查询设计语言', code: 'antd -V\nantd design.md\nantd demo Button' },
+      { label: '自动配置 Codex', code: 'antd setup --client codex' },
+      { label: '检查项目并执行规范诊断', code: 'antd doctor\nantd usage\nantd lint' },
+      { label: '手动启动官方 MCP Server', code: 'npx -y @ant-design/cli mcp' },
     ],
-    configExample: `[mcp_servers.context7]
-command = "npx"
-args = ["-y", "@upstash/context7-mcp"]`,
+    configExample: `{
+  "mcpServers": {
+    "antd": {
+      "command": "npx",
+      "args": ["-y", "@ant-design/cli", "mcp"]
+    }
+  }
+}`,
     verification: [
-      '运行 codex mcp list，确认 context7 已配置。',
-      '启动 codex TUI 后输入 /mcp，确认 server 与工具可见。',
-      '项目级 .codex/config.toml 只有在信任该项目后才会加载。',
-      'AGENTS.md 应要求 Agent 读取 ./design.md、主题文件和现有组件结构。',
+      '运行 antd -V，确认 CLI 可用且 Node.js 版本不低于 20。',
+      '运行 antd design.md 或 antd demo Button，确认官方设计语言与示例数据可读取。',
+      '执行 antd setup --client codex 后，在 Codex 中确认 antd MCP 工具可见。',
+      '让 Agent 使用 antd_info、antd_demo、antd_semantic 和 antd_changelog 核对实现与版本差异。',
+      'AGENTS.md 应要求 Agent 读取 ./design.md、主题文件和现有组件结构，再调用 Ant Design 工具。',
     ],
     troubleshooting: [
-      '项目配置未生效：确认项目已标记为 trusted，并检查更近目录的 .codex/config.toml 覆盖。',
-      'server 启动失败：运行 codex mcp --help 和 codex mcp list，并手动执行 npx 命令检查依赖。',
-      '配置位置错误：个人默认放 ~/.codex/config.toml，共享项目配置放仓库的 .codex/config.toml。',
-      'TUI 中不可见：重启 Codex，使更新后的 MCP 配置重新加载。',
+      'Codex 中看不到工具：重启客户端，并检查自动配置生成的 MCP server 名称是否为 antd。',
+      'server 启动失败：手动执行 npx -y @ant-design/cli mcp，确认 npm registry 与 Node.js 环境正常。',
+      '项目诊断结果异常：在项目根目录运行 antd env 和 antd doctor，确认依赖版本与工作目录。',
+      '迁移跨主版本时，使用 antd changelog 和 antd migrate <from> <to>，不要直接套用旧 API。',
+      '第三方 MCP 只能补充资料；Ant Design 组件、Token 和版本知识以官方 CLI/MCP 为准。',
     ],
-    officialUrl: 'https://learn.chatgpt.com/docs/extend/mcp',
-    lastVerifiedAt: '2026-07-16',
-    verifiedClientVersion: '0.144.3',
+    officialUrl: 'https://ant.design/docs/react/cli',
+    lastVerifiedAt: '2026-07-17',
+    verifiedToolVersion: '@ant-design/cli 6.5.1',
     reviewCommands: [
-      'codex --version',
-      'codex mcp add --help',
-      'codex mcp list --help',
+      'antd -V',
+      'antd setup --client codex',
+      'npx -y @ant-design/cli mcp',
     ],
   },
 ];

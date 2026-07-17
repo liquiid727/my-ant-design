@@ -13,7 +13,18 @@ export function ThemeCard({ theme, onClick }: ThemeCardProps) {
   const primaryColor = (theme.config.token.colorPrimary as string) ?? '#1677FF';
 
   return (
-    <div className="plaza-theme-card" onClick={onClick} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onClick()}>
+    <div
+      className="plaza-theme-card"
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onClick();
+        }
+      }}
+    >
       <div className="plaza-card-preview">
         {theme.preview && !imgError ? (
           <img

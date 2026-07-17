@@ -1,15 +1,13 @@
 import { AppstoreOutlined, ReloadOutlined } from '@ant-design/icons';
-import { Button, Drawer, Empty, Input, Skeleton, Space, Tag, Typography } from 'antd';
+import { Button, Empty, Input, Skeleton, Tag, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import type { CommunityThemeMeta } from '../../services/community/types';
+import { CommunityThemeService } from '../../services/community/communityThemeService';
 import { useCommunityStore } from '../../stores/communityStore';
-import { useUIStore } from '../../stores/uiStore';
 import { ThemeCard } from './ThemeCard';
 import { ThemePreviewModal } from './ThemePreviewModal';
 
-export function PlazaDrawer() {
-  const isOpen = useUIStore((state) => state.isPlazaDrawerOpen);
-  const closePlaza = useUIStore((state) => state.closePlaza);
+export function SquarePage() {
   const loading = useCommunityStore((state) => state.loading);
   const error = useCommunityStore((state) => state.error);
   const index = useCommunityStore((state) => state.index);
@@ -22,55 +20,41 @@ export function PlazaDrawer() {
   const availableTags = useCommunityStore((state) => state.availableTags);
 
   const [previewTheme, setPreviewTheme] = useState<CommunityThemeMeta | null>(null);
+  const repositoryUrl = CommunityThemeService.getRepoConfig().repositoryUrl;
 
   useEffect(() => {
-    if (isOpen) fetchThemes();
-  }, [isOpen, fetchThemes]);
+    fetchThemes();
+  }, [fetchThemes]);
 
   const themes = filteredThemes();
   const tags = availableTags();
   const isCached = index?.source === 'cache';
 
   return (
-    <>
-      <Drawer
-        title={null}
-        open={isOpen}
-        onClose={closePlaza}
-        closable={false}
-        className="plaza-drawer"
-        size="large"
-        styles={{
-          body: { display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' },
-          header: { display: 'none' },
-        }}
-      >
-        {/* Header */}
-        <div className="plaza-drawer-header">
-          <div className="plaza-drawer-title">
-            <div className="plaza-drawer-title-icon">
-              <AppstoreOutlined />
+    <section className="square-page">
+      <div className="square-page-shell">
+        <div className="square-page-header">
+          <div>
+            <div className="square-page-title">
+              <div className="square-page-title-icon">
+                <AppstoreOutlined />
+              </div>
+              <Typography.Title level={2}>Theme Square</Typography.Title>
             </div>
-            <span>Theme Plaza</span>
+            <Typography.Paragraph type="secondary" className="square-page-description">
+              Discover, preview, and copy themes contributed by the community.
+            </Typography.Paragraph>
           </div>
-          <Space size={4}>
-            <Button
-              type="text"
-              size="small"
-              icon={<ReloadOutlined />}
-              onClick={() => fetchThemes(true)}
-              loading={loading}
-            />
-            <Button type="text" size="small" onClick={closePlaza} style={{ fontSize: 18, lineHeight: 1 }}>×</Button>
-          </Space>
+          <Button icon={<ReloadOutlined />} onClick={() => fetchThemes(true)} loading={loading}>
+            Refresh
+          </Button>
         </div>
 
-        {/* Search & Filters */}
         <div className="plaza-search-area">
           <Input.Search
             placeholder="Search themes..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(event) => setSearchQuery(event.target.value)}
             allowClear
             className="plaza-search-input"
           />
@@ -89,7 +73,6 @@ export function PlazaDrawer() {
           )}
         </div>
 
-        {/* Status banner */}
         {isCached && !loading && (
           <div className="plaza-cache-banner">
             <Typography.Text type="secondary" style={{ fontSize: 12 }}>
@@ -105,12 +88,11 @@ export function PlazaDrawer() {
           </div>
         )}
 
-        {/* Theme Grid */}
         <div className="plaza-theme-grid">
           {loading && !index && (
             <>
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="plaza-theme-card plaza-skeleton-card">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <div key={index} className="plaza-theme-card plaza-skeleton-card">
                   <Skeleton.Image active className="plaza-skeleton-image" />
                   <Skeleton active paragraph={{ rows: 1 }} title={{ width: '60%' }} className="plaza-skeleton-text" />
                 </div>
@@ -121,18 +103,15 @@ export function PlazaDrawer() {
           {!loading && themes.length === 0 && index && (
             <div className="plaza-empty-state">
               <Empty
-                description={
+                description={(
                   <span>
                     No community themes yet.
                     <br />
-                    <Typography.Link
-                      href={`https://github.com/${useCommunityStore.getState().index ? 'liquiid-labs/theme' : ''}`}
-                      target="_blank"
-                    >
+                    <Typography.Link href={repositoryUrl} target="_blank" rel="noreferrer">
                       Be the first contributor!
                     </Typography.Link>
                   </span>
-                }
+                )}
               />
             </div>
           )}
@@ -141,13 +120,13 @@ export function PlazaDrawer() {
             <ThemeCard key={theme.id} theme={theme} onClick={() => setPreviewTheme(theme)} />
           ))}
         </div>
-      </Drawer>
+      </div>
 
       <ThemePreviewModal
         theme={previewTheme}
         open={!!previewTheme}
         onClose={() => setPreviewTheme(null)}
       />
-    </>
+    </section>
   );
 }

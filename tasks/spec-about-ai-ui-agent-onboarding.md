@@ -370,39 +370,36 @@ Codex 官方文档说明 Codex 从项目根目录向当前目录发现并组合 
 - 将旧页面重构为 Ant Design + Token 驱动。
 - 审查页面协调性、响应式和硬编码样式。
 
-### 5.5 CLI and MCP Guides
+### 5.5 Ant Design CLI and MCP Guides
 
-本期只介绍 Claude Code 和 Codex 的现有能力。
+本期以 Ant Design 官方 `@ant-design/cli` 为工具和知识来源，并分别说明如何接入 Claude Code 与 Codex。三层职责必须清楚区分：
 
-Claude Code 至少覆盖：
+- 项目 `design.md` 与 ThemeConfig：当前项目的设计事实。
+- Ant Design CLI/MCP：组件 API、示例、Token、语义结构、版本差异和项目诊断。
+- Claude Code / Codex：读取项目上下文并调用工具的 Agent 客户端。
 
-- `claude mcp add`
-- `claude mcp list`
-- `claude mcp get <name>`
-- 交互界面的 `/mcp`
-- 项目共享配置 `.mcp.json`
-- local/project/user scope 的区别
+CLI 至少覆盖：
 
-官方文档：<https://code.claude.com/docs/en/mcp>
+- `npm install -g @ant-design/cli`
+- `antd -V`
+- `antd info <Component>` / `antd doc <Component>`
+- `antd demo <Component>` / `antd token [Component]`
+- `antd design.md` / `antd semantic <Component>` / `antd changelog`
+- `antd doctor` / `antd usage` / `antd lint` / `antd migrate <from> <to>`
 
-Codex 至少覆盖：
+官方文档：<https://ant.design/docs/react/cli>
 
-- `codex mcp add`
-- `codex mcp list`
-- TUI 中的 `/mcp`
-- 用户级 `~/.codex/config.toml`
-- 可信项目的 `.codex/config.toml`
-- `[mcp_servers.<name>]` 配置格式
+MCP 至少覆盖：
 
-官方文档：<https://learn.chatgpt.com/docs/extend/mcp>
+- `npx -y @ant-design/cli mcp`
+- `antd setup --client claude`
+- `antd setup --client codex`
+- Claude 的 `--dry-run` 与 `--check` 验证路径
+- MCP 工具 `antd_info`、`antd_doc`、`antd_demo`、`antd_token`、`antd_design_md`、`antd_semantic`、`antd_changelog`
 
-允许展示的示例必须对应真实公开 MCP，例如 Playwright、Figma、GitHub 或官方文档服务。不得继续展示：
+官方文档：<https://ant.design/docs/react/mcp>
 
-```text
-<theme-studio-mcp-command>
-```
-
-也不得将 Theme Studio 描述为已经提供 CLI 或 MCP Server。
+Context7 等第三方文档 MCP 可以作为补充说明，但不得作为 Ant Design MCP 的替代实现，也不得将 Claude/Codex 客户端自身的 CLI/MCP 命令描述成 Ant Design 工具链。
 
 ### 5.6 Content Versioning
 
@@ -475,6 +472,7 @@ About 页面展示：
 
 - `designMdGenerator` 不得导入 Settings Store、Chat Store 或 Storage Service。
 - Agent Artifact 不得包含 API Key、Base URL、模型、聊天内容或绝对用户目录。
+- Tooling Guide 只能展示官方 `@ant-design/cli` 命令和公开配置，不得包含凭据。
 - 单元测试使用哨兵字符串检查导出内容不存在敏感信息。
 - 本期不修改或读取本地 LLM Key。
 
@@ -524,7 +522,7 @@ About 页面展示：
 - Claude Artifact 文件名为 `CLAUDE.md`。
 - Codex Artifact 文件名为 `AGENTS.md`。
 - 两个 Artifact 均要求读取 `design.md`。
-- 两个 Artifact 均包含 Ant Design、Token、响应式和验证要求。
+- 两个 Artifact 均包含 Ant Design、Token、CLI/MCP 查询、响应式和验证要求。
 - Claude Artifact 使用 Claude 适用的导入说明。
 - Codex Artifact 不错误使用 Claude 专属语法。
 - 两个 Artifact 均包含新建、重构、Review 三类任务示例。
@@ -550,7 +548,8 @@ About 页面展示：
 - UI Agent 模块可以切换 Claude Code 与 Codex。
 - Claude 下载文件名为 `CLAUDE.md`。
 - Codex 下载文件名为 `AGENTS.md`。
-- Tooling 区块不存在 Theme Studio MCP 占位命令。
+- Tooling 区块包含 `@ant-design/cli`、Claude/Codex setup 与官方 MCP 启动命令。
+- Tooling 区块不把 Context7 或 Claude/Codex 客户端命令描述为 Ant Design 工具链。
 - 页面不包含 LLM API Key 配置教程。
 - 390px、834px、1440px 三种 viewport 无横向溢出。
 
@@ -604,8 +603,8 @@ npx playwright test e2e/about-onboarding.spec.ts
 
 1. 实现一个 UI Agent 模块和 Claude/Codex 两个子选项。
 2. 提供 `CLAUDE.md`、`AGENTS.md` 预览与下载。
-3. 写入经过核验的 CLI/MCP 配置。
-4. 删除虚假的 Theme Studio MCP 占位模板。
+3. 写入经过核验的 Ant Design CLI/MCP 配置，并分别说明 Claude/Codex 客户端接入。
+4. 删除以 Context7 或客户端自身 MCP 命令替代 Ant Design 官方工具链的旧内容。
 
 #### Phase 5: Verification
 
@@ -640,13 +639,13 @@ npx playwright test e2e/about-onboarding.spec.ts
 ### 11.1 Unresolved Questions
 
 - 0709 当前按 About 内容版本处理，不新增博客路由。
-- 如果未来新增 Theme Studio CLI/MCP，应单独建立 PRD/SPEC，不在本方案中预留虚假命令。
+- 如果未来开发 Theme Studio 自有 CLI/MCP，应单独建立 PRD/SPEC；当前使用 Ant Design 官方 `@ant-design/cli`。
 
 ### 11.2 Technical Risks
 
 | Risk | Impact | Mitigation |
 |---|---|---|
-| Claude/Codex 配置格式变化 | 用户复制后无法使用 | 保存 `lastVerifiedAt` 并链接官方文档 |
+| Ant Design CLI/MCP 配置格式变化 | 用户复制后无法使用 | 保存 `lastVerifiedAt`、工具版本并链接 Ant Design 官方文档 |
 | `design.md` 输出过长 | Agent 上下文浪费 | 仅输出登记和实际存在的 Token |
 | Claude/Codex 模板混用语法 | Agent 无法加载指令 | 共享规则、平台 wrapper 分离并单测 |
 | Clipboard 权限被拒绝 | 一键复制失败 | 保留文本预览和下载入口 |
@@ -658,6 +657,6 @@ npx playwright test e2e/about-onboarding.spec.ts
 
 - 用户已经拥有可运行的前端项目。
 - `design.md` 基于当前解析后的完整 Theme 生成，不只输出 overrides。
-- Agent 通过项目文件读取 Theme 和 `design.md`，不通过 Theme Studio MCP 获取数据。
+- Agent 通过项目文件读取项目 Theme 和 `design.md`，通过 Ant Design MCP 获取组件库知识和诊断能力。
 - 当前项目继续使用 Ant Design 6。
 - CLI/MCP 内容在实际实施或发布当天需要再次对照官方文档核验。

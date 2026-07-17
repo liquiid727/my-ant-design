@@ -344,9 +344,9 @@ css variables（可选）
 
 接入：
 
-Ant Design CLI。
+Ant Design 官方 CLI。
 
-利用 CLI：
+使用 `@ant-design/cli`：
 
 查询：
 
@@ -374,9 +374,9 @@ AI：
 
 接入：
 
-Ant Design MCP。
+由 `@ant-design/cli` 提供的 Ant Design 官方 MCP Server。
 
-AI：
+Claude Code/Codex Agent：
 
 生成 Theme 前：
 
@@ -441,15 +441,15 @@ LLM
 
 ↓
 
-Ant Design MCP
+Ant Design CLI/MCP
+
+↓
+
+Claude Code / Codex Agent
 
 ↓
 
 Theme JSON
-
-↓
-
-Validation
 
 ↓
 

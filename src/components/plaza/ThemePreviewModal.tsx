@@ -1,8 +1,11 @@
+import { CopyOutlined } from '@ant-design/icons';
 import { App, Button, Modal, Typography, theme as antdTheme } from 'antd';
 import { useState } from 'react';
+import { copyToClipboard } from '../../services/clipboard';
 import type { CommunityThemeMeta } from '../../services/community/types';
 import { CommunityThemeService } from '../../services/community/communityThemeService';
 import { diffThemes } from '../../services/theme/themeDiff';
+import { exportTheme } from '../../services/theme/themeExporter';
 import { validateThemeConfig } from '../../services/theme/themeValidator';
 import { useThemeStore } from '../../stores/themeStore';
 import { useVersionStore } from '../../stores/versionStore';
@@ -19,6 +22,7 @@ export function ThemePreviewModal({ theme, open, onClose }: ThemePreviewModalPro
   const { message } = App.useApp();
   const [advancedError, setAdvancedError] = useState<string | null>(null);
   const [applying, setApplying] = useState(false);
+  const [copying, setCopying] = useState(false);
   const currentTheme = useThemeStore((state) => state.currentTheme);
   const setTheme = useThemeStore((state) => state.setTheme);
   const createVersion = useVersionStore((state) => state.createVersion);
@@ -38,6 +42,18 @@ export function ThemePreviewModal({ theme, open, onClose }: ThemePreviewModalPro
 
   const diffs = diffThemes(defaultTheme, previewConfig);
   const isDark = theme.config.algorithm === 'dark' || theme.config.algorithm === 'darkCompact';
+
+  const handleCopy = async () => {
+    setCopying(true);
+    try {
+      await copyToClipboard(exportTheme(previewConfig, 'json'));
+      message.success('Theme configuration copied');
+    } catch {
+      message.error('Unable to copy theme configuration');
+    } finally {
+      setCopying(false);
+    }
+  };
 
   const handleApply = async () => {
     setAdvancedError(null);
@@ -125,6 +141,7 @@ export function ThemePreviewModal({ theme, open, onClose }: ThemePreviewModalPro
 
       <div className="plaza-preview-actions">
         <Button onClick={onClose}>Cancel</Button>
+        <Button icon={<CopyOutlined />} onClick={handleCopy} loading={copying}>Copy Theme</Button>
         <Button type="primary" onClick={handleApply} loading={applying}>Apply Theme</Button>
       </div>
     </Modal>
