@@ -787,33 +787,31 @@ const theme: ThemeConfig = {
 export default theme;
 ```
 
-### 5.7 CLI Integration
+### 5.7 Ant Design CLI Integration
 
-通过 AI Agent 间接调用 Ant Design CLI 能力：
+使用官方 `@ant-design/cli` 提供可核验的组件库知识与项目诊断：
 
-1. 在 systemPrompt 中嵌入完整的 Ant Design Token 注册表（`tokenRegistry.ts`）
-2. AI 生成主题时受限于注册表中的合法 Token
-3. 导出时生成的代码可直接被 `antd-cli` 识别
+1. `antd info` / `antd doc` 查询组件 API 与完整文档
+2. `antd demo` / `antd token` 查询示例和设计 Token
+3. `antd design.md` / `antd semantic` 获取设计语言与语义结构
+4. `antd changelog` / `antd migrate` 核对跨版本差异
+5. `antd doctor` / `antd usage` / `antd lint` 验证项目实现
 
-Token 注册表来源：从 antd 源码的 `components/*/style/index.ts` 中提取全部合法 Component Token，静态写入 `tokenRegistry.ts`。
+`tokenRegistry.ts` 仍是 Theme Studio 运行时生成和校验主题的静态事实来源；CLI 用于 Agent 工作流中的查询与工程检查，两者不互相模拟。
 
-### 5.8 MCP Integration
+### 5.8 Ant Design MCP Integration
 
-MVP 阶段通过以下方式模拟 MCP 集成：
+官方 MCP Server 由同一个 CLI 包提供：
 
-1. `tokenRegistry.ts` 中硬编码所有官方 Token（Global + Component）
-2. AI System Prompt 中注入 Token 注册表
-3. `themeValidator.ts` 中校验生成的 Token 是否在注册表内
-
-未来可接入真正的 Ant Design MCP Server：
-```typescript
-// 未来扩展点
-interface MCPClient {
-  queryComponentTokens(component: string): Promise<TokenDefinition[]>;
-  queryGlobalTokens(): Promise<TokenDefinition[]>;
-  getComponentDemo(component: string): Promise<string>;
-}
+```bash
+npx -y @ant-design/cli mcp
+antd setup --client claude
+antd setup --client codex
 ```
+
+MCP 将 `antd_info`、`antd_doc`、`antd_demo`、`antd_token`、`antd_design_md`、`antd_semantic` 和 `antd_changelog` 暴露给 Agent 客户端。项目 `design.md` 和 ThemeConfig 继续描述当前项目的设计事实；MCP 提供 Ant Design 组件库知识，不覆盖项目约束。
+
+Claude Code 与 Codex 是使用这些工具的客户端，Context7 等第三方文档 MCP 只能作为补充，不能替代 Ant Design 官方 CLI/MCP。
 
 ### 5.9 Project Migration
 
@@ -1110,6 +1108,14 @@ Phase 7: Advanced Features (高级功能)
 2. Vercel 自动检测 Vite 项目，执行 `npm run build`
 3. 输出 `dist/` 目录作为静态站点
 4. 自动分配 `*.vercel.app` 域名 + HTTPS
+
+**Theme Square 构建变量（可选）：**
+
+- `VITE_COMMUNITY_REPO_OWNER`：社区主题仓库 owner，默认 `liquiid727`
+- `VITE_COMMUNITY_REPO_NAME`：社区主题仓库名，默认 `my-ant-design`
+- `VITE_COMMUNITY_THEME_BASE_URL`：高级主题 bundle 的公开基地址；未设置时使用仓库对应的 GitHub Pages 地址
+
+这些 `VITE_` 变量会公开写入前端构建产物，只能保存公开仓库位置，禁止放置 Token、API Key 或私有仓库凭据。
 
 **Vite 构建配置：**
 ```typescript
