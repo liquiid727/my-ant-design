@@ -4,14 +4,17 @@ on:
   push:
     branches: [main]
     paths:
-      - 'src/themes/community/*/theme.ts'
-      - 'src/themes/community/*/meta.json'
+      - 'ant-design/src/themes/community/*/theme.ts'
+      - 'ant-design/src/themes/community/*/meta.json'
 
 jobs:
   compile:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    defaults:
+      run:
+        working-directory: ant-design
 
     steps:
       - uses: actions/checkout@v4
@@ -20,6 +23,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: ant-design/package-lock.json
 
       - run: npm ci
 
@@ -51,10 +55,10 @@ jobs:
           done <<< "${{ steps.find.outputs.dirs }}"
 
       - name: Deploy to GitHub Pages
-        if: hashFiles('dist/community-themes/*.js') != ''
+        if: hashFiles('ant-design/dist/community-themes/*.js') != ''
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist/community-themes
+          publish_dir: ./ant-design/dist/community-themes
           destination_dir: community-themes
           keep_files: true

@@ -12,12 +12,16 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ant-design
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: ant-design/package-lock.json
       - run: npm ci
       - run: npm run verify:tooling
         env:
