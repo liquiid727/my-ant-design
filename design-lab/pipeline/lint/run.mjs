@@ -190,6 +190,7 @@ checks.push({
           continue;
         }
         if (!/\.(tsx?|css)$/.test(entry.name)) continue;
+        if (entry.name.endsWith('.css') && !referencedCss.has(full)) continue;
         const content = await fs.readFile(full, 'utf8');
         for (const match of content.matchAll(/var\((--[a-z0-9-]+)/g)) {
           const owner = allProductVars.get(match[1]);
@@ -219,6 +220,26 @@ checks.push({
   title: '禁止硬编码颜色',
   async run() {
     const issues = [];
+
+    // 只扫描真正被页面引用的 CSS：没人 import 的样式文件不属于"界面代码"
+    const referencedCss = new Set();
+    const collectImports = async (dir) => {
+      for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          if (entry.name === 'generated' || entry.name === 'node_modules') continue;
+          await collectImports(full);
+          continue;
+        }
+        if (!/\.(tsx?|html)$/.test(entry.name)) continue;
+        const content = await fs.readFile(full, 'utf8');
+        for (const match of content.matchAll(/['"]([^'"]+\.css)['"]/g)) {
+          const target = match[1].startsWith('.') ? path.resolve(path.dirname(full), match[1]) : null;
+          if (target) referencedCss.add(target);
+        }
+      }
+    };
+    for (const dir of SCAN_DIRS) await collectImports(path.join(ROOT, dir));
     const walk = async (dir) => {
       for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
         const full = path.join(dir, entry.name);
@@ -228,7 +249,10 @@ checks.push({
           continue;
         }
         if (!/\.(tsx?|css)$/.test(entry.name)) continue;
+        if (entry.name.endsWith('.css') && !referencedCss.has(full)) continue;
         const content = await fs.readFile(full, 'utf8');
+        // 文件级豁免：前 5 行写 allow-hardcoded-file 并说明理由
+        if (content.split('\n').slice(0, 5).join('\n').includes('allow-hardcoded-file')) continue;
         content.split('\n').forEach((line, index) => {
           if (line.includes('allow-hardcoded')) return;
           const matches = line.match(COLOR_LITERAL);

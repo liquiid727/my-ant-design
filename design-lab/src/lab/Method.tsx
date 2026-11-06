@@ -277,7 +277,9 @@ npm run visual`}
       </section>
 
       <footer className="method-foot">
-        <p>想先看结果？<a href="#/">回到首页看两个案例</a>，或直接阅读 <code>docs/adr</code> 里的七个取舍。</p>
+        <p>
+          想先跑一遍？<a href="#/workbench">去工作台，从一个品牌色生成一套 token</a>；或<a href="#/">回到首页看两个案例</a>。
+        </p>
         <p className="method-stat">
           {manifest.permutations} 套排列 · {manifest.artifacts.length} 个产物 · {manifest.contrast.pairs} 组对比度
         </p>

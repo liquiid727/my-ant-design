@@ -20,7 +20,8 @@ npm run tokens      # 编译：src/generated/*
 npm run lint:tokens # token 门禁
 npm run weapp       # 构建小程序包 + 校验 var() 覆盖
 npm run test        # @ds/core 单测
-npm run visual      # PR 级视觉回归（4 套排列 × 3 屏）
+npm run visual            # 案例页基线
+npm run visual:studio     # 配方渲染基线（示例配方 × 设备 × 明暗）      # PR 级视觉回归（4 套排列 × 3 屏）
 npm run proposal -- agents/examples/01-add-night-notice.json   # Token 提案预检
 npm run verify      # tokens + lint + weapp + 提案门禁契约测试
 npm run dev         # 实验台 http://localhost:4517
@@ -199,6 +200,10 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 
 ```
 #/                 首页：它是什么、解决什么、两个案例、怎么做到的摘要、三条命令
+#/studio           工作台：生成/导入参考图 → 抽出配色角色 → 归一成品牌包 → 重建 + 像素 diff
+                   → 自动映射页面配方 → 用配方渲染界面（可切品牌验证"只换变量"）
+                   （BYO key 调 OpenAI 兼容的 /images/generations 与 /chat/completions，
+                   图片只在浏览器里分析，产出 brand/dark token、visual-recipe、page-recipe）
 #/method           方法：五步流程 · 生成方式 · 交付物（切产品 + 本次编译改动）
 #/about            关于：为什么做、交付什么、不是什么、现在到哪了、时间线（git log · 按日期/里程碑 · 类型筛选 · 折叠）、谁做的
 #/case/ride        案例页：骑行

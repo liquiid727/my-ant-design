@@ -4,6 +4,7 @@ export type Route =
   | { name: 'home' }
   | { name: 'about'; filter?: string; groupBy?: string; search?: string; preset?: string; phase?: string }
   | { name: 'method'; focus?: string }
+  | { name: 'studio'; sample?: boolean }
   | { name: 'case'; app: string; tab?: string };
 
 export const parseRoute = (hash = window.location.hash): Route => {
@@ -23,6 +24,8 @@ export const parseRoute = (hash = window.location.hash): Route => {
       preset: params.get('preset') ?? undefined,
       phase: params.get('phase') ?? undefined,
     };
+
+  if (path === '/studio' || path === '/workbench') return { name: 'studio', sample: params.get('sample') === '1' };
 
   const method = path.match(/^\/method(?:\/([a-z-]+))?$/);
   if (method) return { name: 'method', focus: method[1] };

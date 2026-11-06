@@ -21,7 +21,9 @@
     "recipe": "node scripts/recipe.mjs",
     "check:recipes": "node scripts/check-recipes.mjs",
     "adr": "node scripts/adr-index.mjs",
-    "predev": "npm run tokens"
+    "predev": "npm run tokens",
+    "visual:studio": "node scripts/visual-studio.mjs",
+    "visual:studio:update": "node scripts/visual-studio.mjs --update"
   },
   "dependencies": {
     "react": "^19.3.1",

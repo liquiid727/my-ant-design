@@ -72,7 +72,7 @@ const CaseCard = ({ appId, theme }: { appId: string; theme: ThemeName }) => {
   );
 };
 
-export const Home = ({ theme }: { theme: ThemeName }) => {
+export const Home = ({ theme, onTheme }: { theme: ThemeName; onTheme?: (theme: ThemeName) => void }) => {
   const rideArtifacts = perAppArtifacts('ride');
   const rideBytes = rideArtifacts.reduce((sum, item) => sum + item.bytes, 0);
   const publicTokens = manifest.apps.reduce((sum, app) => sum + app.tokens.public, 0);
@@ -183,6 +183,10 @@ export const Home = ({ theme }: { theme: ThemeName }) => {
               </span>
             </li>
           </ol>
+          <p className="hero-panel-foot">
+            <span aria-hidden="true" />
+            npm run tokens · 本次编译通过
+          </p>
         </aside>
       </header>
 
@@ -222,12 +226,23 @@ export const Home = ({ theme }: { theme: ThemeName }) => {
       </section>
 
       <section className="home-section" id="cases">
-        <header className="home-head">
-          <p className="eyebrow">案例</p>
-          <h2 className="home-title">两个产品，同一套组件</h2>
-          <p className="home-note">
-            骑行与记账共用同一批组件与同一套语义层，只换产品语义与品牌包。点进去可以逐屏看：排列矩阵、真机尺寸、动效、审计、决策与完整 token 表。
-          </p>
+        <header className="home-head home-head-row">
+          <div>
+            <p className="eyebrow">案例</p>
+            <h2 className="home-title">两个产品，同一套组件</h2>
+            <p className="home-note">
+              骑行与记账共用同一批组件与同一套语义层，只换产品语义与品牌包。点进去可以逐屏看：排列矩阵、真机尺寸、动效、审计、决策与完整 token 表。
+            </p>
+          </div>
+          {onTheme ? (
+            <div className="segmented" role="group" aria-label="预览主题">
+              {(['light', 'dark'] as ThemeName[]).map((item) => (
+                <button key={item} type="button" className="segmented-item" data-active={theme === item} onClick={() => onTheme(item)}>
+                  {item === 'light' ? '浅色预览' : '深色预览'}
+                </button>
+              ))}
+            </div>
+          ) : null}
         </header>
         <div className="cases">
           {apps.map((app) => (
