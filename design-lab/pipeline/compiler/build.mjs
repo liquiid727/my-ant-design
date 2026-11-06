@@ -13,6 +13,7 @@ import { isPublic } from './format.mjs';
 import { runContrast } from './qa.mjs';
 import { emitCatalog, emitContext, emitCss, emitDtcg, emitManifest, emitQa, emitTs, emitWxss } from './emit.mjs';
 import { ROOT } from './paths.mjs';
+import { collectChanges } from './changes.mjs';
 
 const kb = (bytes) => `${(bytes / 1024).toFixed(1)} KB`;
 
@@ -83,6 +84,11 @@ const main = async () => {
     };
   });
 
+  // changes.json 是本地工作区视图（不入库），不算产物
+  const changes = await collectChanges();
+  await fs.mkdir(path.join(ROOT, OUTPUT_DIR), { recursive: true });
+  await fs.writeFile(path.join(ROOT, OUTPUT_DIR, 'changes.json'), `${JSON.stringify(changes, null, 2)}\n`, 'utf8');
+
   artifacts.push(
     await emitManifest({
       generatedBy: 'pipeline/compiler · design-lab',
@@ -126,6 +132,11 @@ const main = async () => {
     return;
   }
 
+  console.log(
+    changes.summary.changed
+      ? `  · 本次编译改动 ${changes.summary.changed} 个产物（+${changes.summary.added} / −${changes.summary.removed} 行）`
+      : '  · 本次编译没有产物变化',
+  );
   console.log(`  ✓ 对比度 ${pairTotal} 组配对全部达标`);
   console.log(`  ✓ 产物已写入 ${OUTPUT_DIR}/`);
   console.log(`  用时 ${Date.now() - started}ms`);

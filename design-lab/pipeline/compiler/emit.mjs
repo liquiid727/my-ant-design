@@ -271,6 +271,7 @@ export const emitCatalog = async (sets) => {
       generatedBy: 'pipeline/compiler',
       app: appId,
       appLabel: appSets[0].appLabel,
+      appLatin: appSets[0].appLatin,
       designWidth: DESIGN_WIDTH,
       privatePrefixes: PRIVATE_PREFIXES,
       brands: brands.map((brand) => {
@@ -386,6 +387,17 @@ const ARTIFACT_LABELS = (appId) => ({
   [`qa.${appId}.json`]: '门禁 · 对比度报告',
 });
 
+const APP_IDS = new Set(APPS.map((app) => app.id));
+
+/** 从文件名判断产物属于哪个产品（DTCG 是 app.brand.theme.tokens.json）。 */
+const appOf = (name) => {
+  const dtcg = name.match(/^([a-z0-9-]+)\.[a-z0-9-]+\.(?:light|dark)\.tokens\.json$/);
+  if (dtcg && APP_IDS.has(dtcg[1])) return dtcg[1];
+  const flat = name.match(/^(?:tokens|catalog|qa|design-context)\.([a-z0-9-]+)\./);
+  if (flat && APP_IDS.has(flat[1])) return flat[1];
+  return null;
+};
+
 export const emitManifest = async (payload) => {
   const artifacts = payload.artifacts.map((artifact) => {
     const name = path.basename(artifact.file);
@@ -396,6 +408,7 @@ export const emitManifest = async (payload) => {
     return {
       file: artifact.file,
       name,
+      app: appOf(name),
       bytes: artifact.bytes,
       kind: dtcg ? 'dtcg' : ext,
       label: labels[name] ?? (dtcg ? 'DTCG · 交换产物' : name),

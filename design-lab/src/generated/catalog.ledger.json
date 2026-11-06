@@ -2,6 +2,7 @@
   "generatedBy": "pipeline/compiler",
   "app": "ledger",
   "appLabel": "记账",
+  "appLatin": "Ledger",
   "designWidth": 375,
   "privatePrefixes": [
     "color.ramp",

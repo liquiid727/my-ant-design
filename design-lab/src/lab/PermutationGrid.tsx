@@ -2,6 +2,11 @@ import type { CSSProperties } from 'react';
 import { brandById, brandsOf, overriddenCount, themeNames, valueOf, type ThemeName } from './model';
 
 
+const COPY: Record<string, { title: string; metric: string; unit: string; primary: string; ghost: string }> = {
+  ride: { title: '西湖西溪绿道', metric: '23.4', unit: 'km', primary: '开始骑行', ghost: '收藏' },
+  ledger: { title: '本月支出', metric: '¥3,482.50', unit: '', primary: '记一笔', ghost: '看报表' },
+};
+
 const SWATCHES = [
   'color.surface.canvas',
   'color.surface.raised',
@@ -24,6 +29,7 @@ const PermutationCard = ({
   onPick: (brandId: string, theme: ThemeName) => void;
 }) => {
   const brand = brandById(app, brandId);
+  const copy = COPY[app] ?? COPY.ride;
   const vars = {
     '--perm-canvas': valueOf(app, brandId, 'color.surface.canvas', theme),
     '--perm-raised': valueOf(app, brandId, 'color.surface.raised', theme),
@@ -47,13 +53,14 @@ const PermutationCard = ({
       </span>
       <span className="perm-stage" style={vars}>
         <span className="perm-eyebrow">SURFACE / INK / ACTION</span>
-        <span className="perm-title">{theme === 'light' ? '西湖西溪绿道' : '把风留在纸上'}</span>
+        <span className="perm-title">{copy.title}</span>
         <span className="perm-metric">
-          23.4<span className="perm-unit">km</span>
+          {copy.metric}
+          <span className="perm-unit">{copy.unit}</span>
         </span>
         <span className="perm-actions">
-          <span className="perm-btn">开始骑行</span>
-          <span className="perm-btn-ghost">收藏</span>
+          <span className="perm-btn">{copy.primary}</span>
+          <span className="perm-btn-ghost">{copy.ghost}</span>
         </span>
       </span>
       <span className="perm-swatches">

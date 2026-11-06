@@ -119,6 +119,7 @@ export const resolveSet = async (app, brand, theme, patch) => {
   return {
     app: app.id,
     appLabel: app.label,
+    appLatin: app.latin,
     brand: brand.id,
     brandLabel: brand.label,
     latin: brand.latin,

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "ADR-0001",
+    "title": "源文件用\"友好格式\"，DTCG 作为产物",
+    "status": "已采纳（M1）",
+    "problem": "DTCG 2025.10 的 color 是对象： dimension 是 { \"value\": 18, \"unit\": \"px\" }，duration 同理。",
+    "decision": "源文件（tokens/**/*.tokens.json）允许写 \"#B7CE5E\"、\"18px\"、\"220ms\"、\"0 10px 28px rgba(…)\"。",
+    "file": "docs/adr/0001-friendly-source.md"
+  },
+  {
+    "id": "ADR-0002",
+    "title": "单份构建 + CSS 变量，运行时切换主题",
+    "status": "已采纳（M1）",
+    "problem": "小程序要做深色主题，有三条路： 编译两套主题包，按需加载； 编译两套 WXSS，用 page[data-theme] 切换； 一份产物 + CSS 自定义属性，在 page 上定义变量，深色块只覆盖差值。",
+    "decision": "选方案 3。",
+    "file": "docs/adr/0002-runtime-theming.md"
+  },
+  {
+    "id": "ADR-0003",
+    "title": "Style Dictionary 只做解析，输出格式自己写",
+    "status": "已采纳（M1）",
+    "problem": "编译器的四件事：schema 校验、别名解析、主题合成、单位换算。 其中\"别名解析\"包含链式引用、循环检测、类型继承、跨文件合并——这些是 Style Dictionary 的核心能力，自己写会反复踩坑。",
+    "decision": "只用 Style Dictionary 做解析：platforms: { raw: { transforms: [] } }， exportPlatform('raw') 拿到\"别名已解析、值仍是规范对象\"的树。",
+    "file": "docs/adr/0003-resolver-only.md"
+  },
+  {
+    "id": "ADR-0004",
+    "title": "第二个品牌包：白标，而不是第二个产品",
+    "status": "已采纳（M1 验收）",
+    "problem": "\"管线与骑行无关\"需要一个可执行的判据。",
+    "decision": "品牌包 = 视觉身份，只允许覆盖白名单：brand.palette / color.{brand,surface,ink,action,border} / radius.* / type.{display,title,metric}.* / elevation.* / motion.easing.*。",
+    "file": "docs/adr/0004-second-brand-pack.md"
+  },
+  {
+    "id": "ADR-0005",
+    "title": "app / brand / theme 三轴拆分",
+    "status": "已采纳（M2）",
+    "problem": "到 M1 结束，排列是 品牌 × 主题，产品语义（route.* / achievement.* / postcard.*）挂在品牌包里。",
+    "decision": "拆成三个正交维度： apps/<id>/tokens/product.tokens.json：产品语义； apps/<id>/contracts/*.json：页面可用的组件契约； brands/<id>/tokens/*.json：只允许覆盖品牌白名单； 产物按 app 拆分：tokens.ride.css / tokens.led",
+    "file": "docs/adr/0005-app-brand-theme.md"
+  },
+  {
+    "id": "ADR-0006",
+    "title": "布局作为 token，断点在编译期展开",
+    "status": "已采纳（M2）",
+    "problem": "到 M2 为止，页面只有一套手机布局：744 宽下还是单列，两侧大量留白。 需要引入\"布局层\"，但有两个陷阱： 断点不能是 CSS 变量。@media (min-width: var(--x)) 不合法，媒体查询在解析期就要确定值。",
+    "decision": "新增布局 token（与产品或品牌都无关）： layout.breakpoint.{tablet,wide} · layout.gutter.{phone,tablet} · layout.content.max-{phone,tablet} · layout.columns.{phone,tablet}。",
+    "file": "docs/adr/0006-layout-tokens.md"
+  },
+  {
+    "id": "ADR-0007",
+    "title": "小程序的响应式兜底与宽屏字号",
+    "status": "已采纳（M2）",
+    "problem": "ADR-0006 用容器查询解决了 Web 侧的布局档位，但微信小程序 WebView 不支持 @container，WXSS 里那段规则等于不存在。同时，宽屏下字号仍是手机尺寸——内容宽度变了， 阅读密度没变，平板上会显得又小又空。",
+    "decision": "1. 同一套断点，两种表达 两个 class 覆盖的变量完全一致（--layout-gutter、--layout-content-max、整套字号）， 所以\"同一屏在平板上长什么样\"在两端是同一份定义。",
+    "file": "docs/adr/0007-weapp-responsive.md"
+  }
+]

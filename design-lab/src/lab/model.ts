@@ -1,3 +1,4 @@
+import changesJson from '../generated/changes.json';
 import ledgerCatalogJson from '../generated/catalog.ledger.json';
 import rideCatalogJson from '../generated/catalog.ride.json';
 import manifestJson from '../generated/manifest.json';
@@ -32,6 +33,7 @@ export type CatalogBrand = {
 export type CatalogApp = {
   app: string;
   appLabel: string;
+  appLatin: string;
   designWidth: number;
   brands: CatalogBrand[];
 };
@@ -65,10 +67,32 @@ type Manifest = {
     darkOverrides: number;
   }[];
   contrast: { pairs: number; failing: number };
-  artifacts: { file: string; name: string; bytes: number; kind: string; label: string }[];
+  artifacts: { file: string; name: string; app: string | null; bytes: number; kind: string; label: string }[];
 };
 
 export const manifest = manifestJson as unknown as Manifest;
+
+export type ArtifactChange = {
+  name: string;
+  status: 'added' | 'modified' | 'deleted';
+  added: number | null;
+  removed: number | null;
+};
+
+type Changes = {
+  available: boolean;
+  files: ArtifactChange[];
+  summary: { changed: number; added: number; removed: number };
+};
+
+/** 本次编译相对 HEAD 改了哪些产物（提交后归零，属本地视图）。 */
+export const changes = changesJson as unknown as Changes;
+
+const baseName = (value: string) => value.split('/').pop() ?? value;
+
+/** 产物在 changes.json 里带相对目录（dtcg/…），这里按文件名匹配。 */
+export const changeOf = (name: string): ArtifactChange | undefined =>
+  changes.files.find((file) => file.name === name || baseName(file.name) === baseName(name));
 
 const catalogs = [rideCatalogJson, ledgerCatalogJson] as unknown as CatalogApp[];
 const qaByApp: Record<string, Qa> = {
@@ -79,6 +103,7 @@ const qaByApp: Record<string, Qa> = {
 export const apps = catalogs.map((catalog) => ({
   id: catalog.app,
   label: catalog.appLabel,
+  latin: catalog.appLatin,
   brands: catalog.brands,
 }));
 
@@ -117,10 +142,7 @@ export const overriddenCount = (appId: string, brandId: string): number =>
 
 export const bytes = (size: number) => (size < 1024 ? `${size} B` : `${(size / 1024).toFixed(1)} KB`);
 
-const appMatcher = (appId: string) => new RegExp(`(^|\\.)${appId}\\.`);
-
-export const perAppArtifacts = (appId: string) =>
-  manifest.artifacts.filter((artifact) => appMatcher(appId).test(artifact.name));
+export const perAppArtifacts = (appId: string) => manifest.artifacts.filter((artifact) => artifact.app === appId);
 
 
 export const LAYER_LABEL: Record<string, string> = {

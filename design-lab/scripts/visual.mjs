@@ -19,7 +19,7 @@ import { compareImage, writeDiff } from './lib/visual-compare.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BASELINE_DIR = path.join(ROOT, 'tests/visual/baselines');
 const DIFF_DIR = path.join(ROOT, 'tests/visual/diff');
-const PORT = 4519;
+const PORT = Number(process.env.VISUAL_PORT ?? 0);
 const THRESHOLD = 0.006; // 0.6% 像素差异
 const update = process.argv.includes('--update');
 
@@ -34,23 +34,29 @@ const PERMUTATIONS = [
 
 const main = async () => {
   await fs.mkdir(BASELINE_DIR, { recursive: true });
-  const server = await preview({ preview: { port: PORT, strictPort: true }, logLevel: 'silent' });
+  // port 0 = 让 vite 自己挑一个空闲端口，避免上一次运行残留的服务占端口
+  const server = await preview({ preview: { port: PORT, strictPort: false }, logLevel: 'silent' });
+  const baseUrl = server.resolvedUrls?.local?.[0] ?? `http://localhost:${PORT}/`;
 
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1440, height: 960 }, deviceScaleFactor: 1 });
-  await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'load' });
-  await page.waitForSelector('.screens');
+  await page.goto(baseUrl, { waitUntil: 'load' });
+  await page.waitForSelector('.home');
 
   const results = [];
 
   for (const permutation of PERMUTATIONS) {
+    if (process.env.VISUAL_DEBUG) console.error('· start', permutation.app, permutation.brand, permutation.theme, baseUrl);
+    // 案例页按 app 路由进入；带 query 强制真实导航（只改 hash 不会触发 load）
+    await page.goto(`${baseUrl}?case=${permutation.app}#/case/${permutation.app}`, { waitUntil: 'load' });
+    if (process.env.VISUAL_DEBUG) console.error('  navigated to', await page.evaluate(() => location.href));
+    await page.waitForSelector('.screens');
+    if (process.env.VISUAL_DEBUG) console.error('  screens found');
     await page.evaluate(
-      ({ app, brand, theme }) => {
-        document.documentElement.dataset.app = app;
+      ({ brand, theme }) => {
         document.documentElement.dataset.brand = brand;
         document.documentElement.dataset.theme = theme;
         document.documentElement.style.scrollBehavior = 'auto';
-        document.getElementById('instance').scrollIntoView({ block: 'start' });
       },
       permutation,
     );
@@ -81,7 +87,10 @@ const main = async () => {
   }
 
   await browser.close();
-  await new Promise((resolve) => server.httpServer.close(resolve));
+  await Promise.race([
+    new Promise((resolve) => server.httpServer.close(resolve)),
+    new Promise((resolve) => setTimeout(resolve, 3000)),
+  ]);
 
   const failing = results.filter((item) => item.ratio > THRESHOLD);
   console.log('');
