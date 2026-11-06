@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { ToastHost } from './components/toast';
 import { About } from './lab/About';
 import { CasePage } from './lab/CasePage';
 import { Home } from './lab/Home';
@@ -21,12 +22,23 @@ export default function App() {
     document.documentElement.dataset.brand = brand;
   }, [theme, app, brand]);
 
+  const lastPage = useRef('');
+
   useEffect(() => {
     if (route.name === 'case') {
       setApp(route.app);
       const brands = brandsOf(route.app);
       if (!brands.some((item) => item.id === brand)) setBrand(brands[0].id);
     }
+
+    // 只有"换页"才回到顶部；同一页内的参数变化（?type=、/method/output）不抢滚动
+    const page = route.name === 'case' ? `case:${route.app}` : route.name;
+    if (lastPage.current === page) return;
+    lastPage.current = page;
+
+    // 深链（方法页定位 / 关于页筛选）由页面自己滚动
+    const deepLink = (route.name === 'method' && route.focus) || (route.name === 'about' && (route.filter || route.groupBy));
+    if (deepLink) return;
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, [route, brand]);
 
@@ -69,12 +81,14 @@ export default function App() {
       {route.name === 'case' ? (
         <CasePage app={app} brand={brand} theme={theme} tab={route.tab} onBrand={setBrand} onTheme={setTheme} />
       ) : route.name === 'about' ? (
-        <About />
+        <About filter={route.filter} groupBy={route.groupBy} search={route.search} preset={route.preset} phase={route.phase} />
       ) : route.name === 'method' ? (
-        <Method />
+        <Method focus={route.focus} />
       ) : (
         <Home theme={theme} />
       )}
+
+      <ToastHost />
 
       <footer className="site-foot">
         <span className="site-foot-mark">Alro&apos;s studio</span>

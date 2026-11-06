@@ -2,16 +2,31 @@ import { useEffect, useState } from 'react';
 
 export type Route =
   | { name: 'home' }
-  | { name: 'about' }
-  | { name: 'method' }
+  | { name: 'about'; filter?: string; groupBy?: string; search?: string; preset?: string; phase?: string }
+  | { name: 'method'; focus?: string }
   | { name: 'case'; app: string; tab?: string };
 
 export const parseRoute = (hash = window.location.hash): Route => {
   const clean = hash.replace(/^#/, '');
-  const match = clean.match(/^\/case\/([a-z0-9-]+)(?:\/([a-z-]+))?/);
+  const [path, query = ''] = clean.split('?');
+  const params = new URLSearchParams(query);
+
+  const match = path.match(/^\/case\/([a-z0-9-]+)(?:\/([a-z-]+))?/);
   if (match) return { name: 'case', app: match[1], tab: match[2] };
-  if (clean === '/about') return { name: 'about' };
-  if (clean === '/method') return { name: 'method' };
+
+  if (path === '/about')
+    return {
+      name: 'about',
+      filter: params.get('type') ?? undefined,
+      groupBy: params.get('by') ?? undefined,
+      search: params.get('q') ?? undefined,
+      preset: params.get('preset') ?? undefined,
+      phase: params.get('phase') ?? undefined,
+    };
+
+  const method = path.match(/^\/method(?:\/([a-z-]+))?$/);
+  if (method) return { name: 'method', focus: method[1] };
+
   return { name: 'home' };
 };
 

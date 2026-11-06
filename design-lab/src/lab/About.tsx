@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import timelineJson from '../generated/timeline.json';
 import { navigate } from '../lib/router';
 import { apps, manifest } from './model';
 
@@ -35,7 +37,262 @@ const NOT = [
 
 const STACK = ['DTCG 2025.10', 'Style Dictionary', 'Vite + React', 'Playwright', '微信小程序 WXSS'];
 
-export const About = () => (
+type TimelineEntry = { hash: string; date: string; type: string; subject: string; milestone: string; milestoneDate: string | null };
+
+const TYPE_LABEL: Record<string, string> = {
+  feat: '功能',
+  fix: '修复',
+  refactor: '重构',
+  docs: '文档',
+  test: '测试',
+  other: '其他',
+};
+
+/** 每组默认显示这几条，其余折叠。 */
+const VISIBLE_PER_GROUP = 5;
+
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** 整词匹配：前后不能紧挨字母/数字（中文、空格、标点都算边界）。 */
+const WORD = '[A-Za-z0-9]';
+const termPattern = (term: string) => new RegExp(`(?<!${WORD})${escapeRegExp(term)}(?!${WORD})`, 'i');
+const matchesTerm = (haystack: string, term: string) => termPattern(term).test(haystack);
+
+/** 相关度：标题命中 2 分，hash / 阶段命中 1 分。 */
+const relevance = (entry: { subject: string; hash: string; milestone: string }, terms: string[]) =>
+  terms.reduce(
+    (score, term) =>
+      score +
+      (matchesTerm(entry.subject, term) ? 2 : 0) +
+      (matchesTerm(entry.hash, term) || matchesTerm(entry.milestone, term) ? 1 : 0),
+    0,
+  );
+
+/** 把命中的关键词包成 mark，支持多词。 */
+const highlight = (text: string, terms: string[]) => {
+  if (!terms.length) return text;
+  const pattern = new RegExp(`(?<!${WORD})(${terms.map(escapeRegExp).join('|')})(?!${WORD})`, 'gi');
+  const lower = new Set(terms.map((term) => term.toLowerCase()));
+  return text.split(pattern).map((part, index) =>
+    lower.has(part.toLowerCase()) ? (
+      <mark className="timeline-mark" key={`${part}-${index}`}>
+        {part}
+      </mark>
+    ) : (
+      <span key={`${part}-${index}`}>{part}</span>
+    ),
+  );
+};
+
+type Preset = { id: string; label: string; type?: string; by?: string; q?: string; phase?: string; locked?: boolean };
+
+const PRESET_KEY = 'design-lab:timeline-presets';
+
+const BUILTIN_PRESETS: Preset[] = [
+  { id: 'builtin-fix', label: '只看修复', type: 'fix' },
+  { id: 'builtin-feat-milestone', label: '功能 · 按阶段', type: 'feat', by: 'milestone' },
+];
+
+const readPresets = (): Preset[] => {
+  try {
+    const raw = window.localStorage.getItem(PRESET_KEY);
+    return raw ? (JSON.parse(raw) as Preset[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+const writePresets = (presets: Preset[]) => {
+  try {
+    window.localStorage.setItem(PRESET_KEY, JSON.stringify(presets));
+  } catch {
+    // 隐私模式下写不进去就算了，不影响主流程
+  }
+};
+
+const presetHash = (preset: Preset) => {
+  const params = new URLSearchParams();
+  if (preset.type) params.set('type', preset.type);
+  if (preset.by) params.set('by', preset.by);
+  if (preset.q) params.set('q', preset.q);
+  if (preset.phase) params.set('phase', preset.phase);
+  return params.toString() ? `/about?${params.toString()}` : '/about';
+};
+const TIMELINE = timelineJson as unknown as { available: boolean; source: string; entries: TimelineEntry[] };
+
+/** 同一天的提交合成一组，日期只显示一次。 */
+const groupByDate = (entries: TimelineEntry[]) => {
+  const groups: { key: string; items: TimelineEntry[] }[] = [];
+  for (const entry of entries) {
+    const last = groups[groups.length - 1];
+    if (last && last.key === entry.date) last.items.push(entry);
+    else groups.push({ key: entry.date, items: [entry] });
+  }
+  return groups;
+};
+
+export const About = ({
+  filter,
+  groupBy,
+  search,
+  preset,
+  phase,
+}: {
+  filter?: string;
+  groupBy?: string;
+  search?: string;
+  preset?: string;
+  phase?: string;
+}) => {
+  const mode: 'date' | 'milestone' = groupBy === 'milestone' ? 'milestone' : 'date';
+  const [expanded, setExpanded] = useState<string[]>([]);
+  const setMode = (next: 'date' | 'milestone') => {
+    const params = new URLSearchParams();
+    if (filter && filter !== 'all') params.set('type', filter);
+    if (next === 'milestone') params.set('by', 'milestone');
+    const query = params.toString();
+    navigate(query ? `/about?${query}` : '/about');
+  };
+
+  const types = ['all', ...new Set(TIMELINE.entries.map((entry) => entry.type))];
+  const requested = filter ?? 'all';
+  const invalidType = requested !== 'all' && !types.includes(requested);
+  const newestMilestone = TIMELINE.entries[0]?.milestone;
+  const currentLabel = TIMELINE.source === 'tag' && newestMilestone && newestMilestone !== '未打标签' ? '当前' : '未发布';
+  const active = invalidType ? 'all' : requested;
+  const currentMilestone = TIMELINE.entries[0]?.milestone ?? '';
+  const effectivePhase = phase === 'current' ? currentMilestone : phase;
+
+  const [query, setQuery] = useState(search ?? '');
+  const [bindCurrent, setBindCurrent] = useState(false);
+  const [presets, setPresets] = useState<Preset[]>([]);
+  useEffect(() => setPresets(readPresets()), []);
+
+  // 预设切换会改 URL：搜索框跟着 URL 走，避免"应用了预设但旧关键词还在"
+  useEffect(() => setQuery(search ?? ''), [search]);
+
+  const hasFilters = active !== 'all' || mode === 'milestone' || query.trim().length > 0;
+
+  const savePreset = () => {
+    const label = [
+      active === 'all' ? '全部' : (TYPE_LABEL[active] ?? active),
+      mode === 'milestone' ? '按阶段' : '',
+      query.trim() ? `“${query.trim()}”` : '',
+    ]
+      .filter(Boolean)
+      .join(' · ');
+    const next = [
+      ...presets,
+      {
+        id: `preset-${Date.now()}`,
+        label: bindCurrent ? `${label} · 跟随当前阶段` : label,
+        type: active === 'all' ? undefined : active,
+        by: mode === 'milestone' ? 'milestone' : undefined,
+        q: query.trim() || undefined,
+        phase: bindCurrent ? 'current' : undefined,
+      },
+    ];
+    setPresets(next);
+    writePresets(next);
+  };
+
+  // ?preset=id：解析成具体参数再落到 URL，方便把预设分享给没存过的人
+  useEffect(() => {
+    if (!preset) return;
+    const found = [...BUILTIN_PRESETS, ...readPresets()].find((item) => item.id === preset);
+    if (found) {
+      window.history.replaceState(null, '', `#${presetHash(found)}`);
+      setQuery(found.q ?? '');
+    }
+  }, [preset]);
+
+  const applyPreset = (preset: Preset) => {
+    setQuery(preset.q ?? '');
+    navigate(presetHash(preset));
+  };
+
+  const toggleLock = (id: string) => {
+    const next = presets.map((item) => (item.id === id ? { ...item, locked: !item.locked } : item));
+    setPresets(next);
+    writePresets(next);
+  };
+
+  const renamePreset = (id: string) => {
+    const current = presets.find((item) => item.id === id);
+    if (!current || current.locked) return;
+    const label = window.prompt('预设名称', current.label)?.trim();
+    if (!label) return;
+    const next = presets.map((item) => (item.id === id ? { ...item, label } : item));
+    setPresets(next);
+    writePresets(next);
+  };
+
+  const movePreset = (id: string, direction: -1 | 1) => {
+    const index = presets.findIndex((item) => item.id === id);
+    const target = index + direction;
+    if (index < 0 || target < 0 || target >= presets.length) return;
+    const next = [...presets];
+    [next[index], next[target]] = [next[target], next[index]];
+    setPresets(next);
+    writePresets(next);
+  };
+
+  const removePreset = (id: string) => {
+    if (presets.find((preset) => preset.id === id)?.locked) return;
+    const next = presets.filter((preset) => preset.id !== id);
+    setPresets(next);
+    writePresets(next);
+  };
+  const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const entries = TIMELINE.entries.filter((entry) => {
+    if (active !== 'all' && entry.type !== active) return false;
+    if (effectivePhase && entry.milestone !== effectivePhase) return false;
+    if (!terms.length) return true;
+    const haystack = `${entry.subject} ${entry.hash} ${entry.milestone}`;
+    return terms.every((term) => matchesTerm(haystack, term));
+  });
+
+  const syncUrl = (next: { type?: string; by?: 'milestone'; q?: string }) => {
+    const params = new URLSearchParams();
+    const type = next.type ?? (active === 'all' ? '' : active);
+    const by = next.by ?? (mode === 'milestone' ? 'milestone' : '');
+    const q = next.q ?? query.trim();
+    if (type) params.set('type', type);
+    if (by) params.set('by', by);
+    if (q) params.set('q', q);
+    const hash = params.toString() ? `#/about?${params.toString()}` : '#/about';
+    window.history.replaceState(null, '', hash);
+  };
+
+  type Group = { key: string; date: string | null; current?: boolean; items: TimelineEntry[] };
+
+  const searching = terms.length > 0;
+  const ranked = [...entries].sort((a, b) => relevance(b, terms) - relevance(a, terms));
+
+  const groups: Group[] = searching
+    ? [{ key: `搜索结果 · ${ranked.length} 条（按相关度）`, date: null, items: ranked }]
+    : mode === 'date'
+      ? groupByDate(entries).map((group) => ({ ...group, date: null }))
+      : entries
+          .reduce<Group[]>((acc, entry) => {
+            const last = acc[acc.length - 1];
+            if (last && last.key === entry.milestone) last.items.push(entry);
+            else acc.push({ key: entry.milestone, date: entry.milestoneDate, items: [entry] });
+            return acc;
+          }, [])
+          // 最新的一段标成"未发布 / 当前"，和已发布的阶段区分开
+          .map((group) => ({ ...group, current: group.key === TIMELINE.entries[0]?.milestone }));
+
+  // 带 ?type= / ?by= 的分享链接直接落在时间线
+  useEffect(() => {
+    if (!filter && !groupBy) return;
+    document.getElementById('timeline')?.scrollIntoView({ block: 'start' });
+  }, [filter, groupBy]);
+
+  const toggleGroup = (key: string) =>
+    setExpanded((current) => (current.includes(key) ? current.filter((item) => item !== key) : [...current, key]));
+
+  return (
   <div className="about">
     <header className="page-head">
       <p className="eyebrow">关于 · About</p>
@@ -128,6 +385,164 @@ export const About = () => (
       </div>
     </section>
 
+    <section className="about-section" id="timeline">
+      <header className="home-head">
+        <p className="eyebrow">怎么走到这里</p>
+        <h2 className="home-title">一条从 token 到站点的线</h2>
+        <p className="home-note">
+          直接由 <code>git log</code> 生成，每次编译同步；每组默认显示 {VISIBLE_PER_GROUP} 条，其余可展开。
+        </p>
+        <div className="timeline-filter" role="group" aria-label="按提交类型筛选">
+          {types.map((type) => (
+            <button
+              key={type}
+              type="button"
+              className="timeline-chip"
+              data-active={active === type}
+              onClick={() => {
+                const params = new URLSearchParams();
+                if (type !== 'all') params.set('type', type);
+                if (mode === 'milestone') params.set('by', 'milestone');
+                const query = params.toString();
+                navigate(query ? `/about?${query}` : '/about');
+              }}
+            >
+              {type === 'all' ? '全部' : (TYPE_LABEL[type] ?? type)}
+              <span>{type === 'all' ? TIMELINE.entries.length : TIMELINE.entries.filter((entry) => entry.type === type).length}</span>
+            </button>
+          ))}
+        </div>
+        <div className="timeline-presets" role="group" aria-label="筛选预设">
+          <span className="timeline-presets-label">预设</span>
+          {[...BUILTIN_PRESETS, ...presets]
+            .filter((preset) => !preset.type || types.includes(preset.type))
+            .map((preset) => {
+            const custom = !preset.id.startsWith('builtin-');
+            return (
+              <span className="timeline-preset" key={preset.id}>
+                <button type="button" className="timeline-preset-apply" onClick={() => applyPreset(preset)}>
+                  {preset.label}
+                </button>
+                {custom ? (
+                  <span className="timeline-preset-tools">
+                    <button type="button" aria-label={`上移 ${preset.label}`} onClick={() => movePreset(preset.id, -1)}>
+                      ↑
+                    </button>
+                    <button type="button" aria-label={`下移 ${preset.label}`} onClick={() => movePreset(preset.id, 1)}>
+                      ↓
+                    </button>
+                    <button type="button" aria-label={`${preset.locked ? '解锁' : '锁定'} ${preset.label}`} onClick={() => toggleLock(preset.id)}>
+                      {preset.locked ? '🔒' : '🔓'}
+                    </button>
+                    {preset.locked ? null : (
+                      <button type="button" aria-label={`重命名 ${preset.label}`} onClick={() => renamePreset(preset.id)}>
+                        ✎
+                      </button>
+                    )}
+                    {preset.locked ? null : (
+                      <button type="button" aria-label={`删除预设 ${preset.label}`} onClick={() => removePreset(preset.id)}>
+                        ×
+                      </button>
+                    )}
+                  </span>
+                ) : null}
+              </span>
+            );
+          })}
+          <button type="button" className="timeline-preset-save" onClick={savePreset} disabled={!hasFilters}>
+            存为预设
+          </button>
+          <label className="timeline-bind">
+            <input type="checkbox" checked={bindCurrent} onChange={(event) => setBindCurrent(event.target.checked)} />
+            跟随当前阶段
+          </label>
+        </div>
+
+        <label className="timeline-search">
+          <span>搜索</span>
+          <input
+            type="search"
+            value={query}
+            placeholder="提交信息或 hash"
+            onChange={(event) => {
+              setQuery(event.target.value);
+              syncUrl({ q: event.target.value });
+            }}
+          />
+        </label>
+        <div className="timeline-mode" role="group" aria-label="分组方式">
+          <button type="button" className="timeline-mode-btn" data-active={mode === 'date'} onClick={() => setMode('date')}>
+            按日期
+          </button>
+          <button type="button" className="timeline-mode-btn" data-active={mode === 'milestone'} onClick={() => setMode('milestone')}>
+            按里程碑
+          </button>
+        </div>
+      </header>
+      {effectivePhase ? (
+        <p className="timeline-hint">
+          只显示阶段「{effectivePhase}」
+          {phase === 'current' ? '（当前阶段，随提交自动前移）' : ''}
+          <button type="button" className="timeline-more" onClick={() => navigate('/about')}>
+            清除阶段筛选
+          </button>
+        </p>
+      ) : null}
+      {preset && ![...BUILTIN_PRESETS, ...presets].some((item) => item.id === preset) ? (
+        <p className="timeline-hint">
+          链接里的预设「{preset}」在这台设备上没有保存过，已显示全部提交。
+        </p>
+      ) : null}
+      {invalidType ? (
+        <p className="timeline-hint">链接里的类型「{requested}」不存在，已显示全部提交。</p>
+      ) : null}
+      {mode === 'milestone' && TIMELINE.source === 'builtin' ? (
+        <p className="timeline-hint">仓库里还没有 git tag，先按内置阶段分组；打标签后会自动切换成标签阶段。</p>
+      ) : null}
+      {entries.length === 0 ? (
+        <p className="timeline-hint">
+          这个类型下没有提交。
+          <button type="button" className="timeline-more" onClick={() => navigate('/about')}>
+            回到全部
+          </button>
+        </p>
+      ) : null}
+      <ol className="timeline">
+        {groups.map((group) => {
+          const open = expanded.includes(group.key);
+          const visible = open ? group.items : group.items.slice(0, VISIBLE_PER_GROUP);
+          const rest = group.items.length - visible.length;
+          return (
+            <li className="timeline-item" key={group.key} data-current={'current' in group && group.current ? 'true' : undefined}>
+              <span className="timeline-when">
+                {group.key}
+                {mode === 'milestone' && group.date ? <small>{group.date}</small> : null}
+                {'current' in group && group.current ? <span className="timeline-current">{currentLabel}</span> : null}
+              </span>
+              <ul className="timeline-body">
+                {visible.map((entry) => (
+                  <li key={entry.hash}>
+                    <span className="timeline-subject">
+                      {entry.type !== 'feat' ? <span className="timeline-type">{TYPE_LABEL[entry.type] ?? entry.type}</span> : null}
+                      {highlight(entry.subject, terms)}
+                    </span>
+                    <code className="timeline-hash">{entry.hash}</code>
+                  </li>
+                ))}
+                {rest > 0 || open ? (
+                  <li className="timeline-more-row">
+                    <button type="button" className="timeline-more" onClick={() => toggleGroup(group.key)}>
+                      {open ? '收起' : `展开剩余 ${rest} 条`}
+                    </button>
+                  </li>
+                ) : null}
+              </ul>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+
     <section className="about-section" id="who">
       <header className="home-head">
         <p className="eyebrow">谁做的 · Studio</p>
@@ -168,4 +583,5 @@ export const About = () => (
     </section>
 
   </div>
-);
+  );
+};

@@ -1,4 +1,5 @@
 import { screensOf } from '../apps';
+import { CopyButton } from '../components/code';
 import { navigate } from '../lib/router';
 import { apps, brandsOf, bytes, manifest, perAppArtifacts, type ThemeName } from './model';
 
@@ -77,9 +78,32 @@ export const Home = ({ theme }: { theme: ThemeName }) => {
   const publicTokens = manifest.apps.reduce((sum, app) => sum + app.tokens.public, 0);
 
   const VALUES_METRIC = [
-    { value: String(manifest.artifacts.length), label: '个产物 / 一次编译' },
-    { value: String(manifest.permutations), label: '套排列 / 同一批组件' },
-    { value: '7', label: '道门禁 / 硬编码零容忍' },
+    {
+      value: String(manifest.artifacts.length),
+      label: '个产物 / 一次编译',
+      calc: [
+        { text: 'tokens.css / wxss / ts：各 1 个', to: '/method/output' },
+        { text: 'dtcg：4 个（2 品牌 × 2 主题）', to: '/method/output' },
+        { text: 'catalog / qa / design-context：3 个', to: '/method/output' },
+        { text: '单个产品 10 个 × 2 个产品 = 20', to: '/method/output' },
+      ],
+    },
+    {
+      value: String(manifest.permutations),
+      label: '套排列 / 同一批组件',
+      calc: [
+        { text: '2 个产品 × 2 个品牌 × 2 个主题', to: '/case/ride' },
+        { text: '组件只有一份，排列只影响变量', to: '/method/process' },
+      ],
+    },
+    {
+      value: '7',
+      label: '道门禁 / 硬编码零容忍',
+      calc: [
+        { text: '主题完整性 · 品牌白名单 · 分层方向 · 对比度', to: '/method/process' },
+        { text: '契约可解析 · 禁止硬编码颜色 · 产品语义不越界', to: '/method/process' },
+      ],
+    },
   ];
 
   return (
@@ -179,6 +203,19 @@ export const Home = ({ theme }: { theme: ThemeName }) => {
               <h3 className="value-title">{value.title}</h3>
               <p className="value-body">{value.body}</p>
               <code className="value-note">{value.note}</code>
+              <details className="value-calc">
+                <summary>怎么算的</summary>
+                <ul>
+                  {VALUES_METRIC[index].calc.map((line) => (
+                    <li key={line.text}>
+                      <button type="button" className="calc-link" onClick={() => navigate(line.to)}>
+                        {line.text}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+
             </li>
           ))}
         </ol>
@@ -250,17 +287,26 @@ export const Home = ({ theme }: { theme: ThemeName }) => {
         <ol className="start-steps">
           <li>
             <span className="start-index">01</span>
-            <code>git clone git@github.com:liquiid727/my-ant-design.git</code>
+            <span className="start-cmd">
+              <code>git clone git@github.com:liquiid727/my-ant-design.git</code>
+              <CopyButton text="git clone git@github.com:liquiid727/my-ant-design.git" className="start-copy" />
+            </span>
             <small>公开仓库，只有 main 一条线</small>
           </li>
           <li>
             <span className="start-index">02</span>
-            <code>cd design-lab && npm install</code>
+            <span className="start-cmd">
+              <code>cd design-lab &amp;&amp; npm install</code>
+              <CopyButton text="cd design-lab && npm install" className="start-copy" />
+            </span>
             <small>只装一次；不需要额外的设计工具</small>
           </li>
           <li>
             <span className="start-index">03</span>
-            <code>npm run dev</code>
+            <span className="start-cmd">
+              <code>npm run dev</code>
+              <CopyButton text="npm run dev" className="start-copy" />
+            </span>
             <small>localhost:4517 · 改 token 会即时重编译</small>
           </li>
         </ol>

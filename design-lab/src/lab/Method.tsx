@@ -1,4 +1,5 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import { CodeBlock } from '../components/code';
 import { apps, bytes, changeOf, changes, manifest, perAppArtifacts } from './model';
 
 const STEPS = [
@@ -54,9 +55,17 @@ const ChangeBadge = ({ name, count }: { name: string; count: number }) => {
   );
 };
 
-export const Method = () => {
+export const Method = ({ focus }: { focus?: string }) => {
   const [outputApp, setOutputApp] = useState(apps[0].id);
   const [showDtcg, setShowDtcg] = useState(false);
+
+  useEffect(() => {
+    if (!focus) return;
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(focus)?.scrollIntoView({ block: 'start' });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [focus]);
 
   const artifacts = perAppArtifacts(outputApp);
   const totalBytes = artifacts.reduce((sum, item) => sum + item.bytes, 0);
@@ -152,8 +161,8 @@ export const Method = () => {
             </p>
           </div>
 
-          <pre className="code">
-            <code>{`# 1. 想改 token：先交提案，预检通过才落盘
+          <CodeBlock
+            code={`# 1. 想改 token：先交提案，预检通过才落盘
 npm run proposal -- agents/examples/01-add-night-notice.json
 
 # 2. 想拼页面：先写配方，组件与 props 必须落在契约内
@@ -161,8 +170,8 @@ npm run recipe   -- agents/examples/04-ride-home.recipe.json
 
 # 3. 落盘之后：七道门禁 + 视觉基线
 npm run verify
-npm run visual`}</code>
-          </pre>
+npm run visual`}
+          />
         </div>
       </section>
 

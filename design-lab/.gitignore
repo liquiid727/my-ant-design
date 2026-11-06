@@ -7,3 +7,4 @@ dist/
 packages/ds-weapp/dist/
 tests/visual/diff/
 src/generated/changes.json
+src/generated/timeline.json

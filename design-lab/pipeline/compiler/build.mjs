@@ -14,6 +14,7 @@ import { runContrast } from './qa.mjs';
 import { emitCatalog, emitContext, emitCss, emitDtcg, emitManifest, emitQa, emitTs, emitWxss } from './emit.mjs';
 import { ROOT } from './paths.mjs';
 import { collectChanges } from './changes.mjs';
+import { collectTimeline } from './timeline.mjs';
 
 const kb = (bytes) => `${(bytes / 1024).toFixed(1)} KB`;
 
@@ -84,10 +85,12 @@ const main = async () => {
     };
   });
 
-  // changes.json 是本地工作区视图（不入库），不算产物
+  // changes.json / timeline.json 都是本地工作区视图（不入库），不算产物
   const changes = await collectChanges();
+  const timeline = await collectTimeline();
   await fs.mkdir(path.join(ROOT, OUTPUT_DIR), { recursive: true });
   await fs.writeFile(path.join(ROOT, OUTPUT_DIR, 'changes.json'), `${JSON.stringify(changes, null, 2)}\n`, 'utf8');
+  await fs.writeFile(path.join(ROOT, OUTPUT_DIR, 'timeline.json'), `${JSON.stringify(timeline, null, 2)}\n`, 'utf8');
 
   artifacts.push(
     await emitManifest({

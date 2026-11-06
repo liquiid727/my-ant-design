@@ -124,6 +124,7 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 | `design-context.json` | 给 AI 的设计上下文：可引用 token、组件契约、硬规则、深色差值 |
 | `manifest.json` | 产物清单与体积，产出表直接渲染 |
 | `changes.json` | 本次编译相对 HEAD 改了哪些产物（对照 git，**不入库**） |
+| `timeline.json` | 关于页的时间线，直接来自 `git log`（**不入库**） |
 
 ## 门禁
 
@@ -199,7 +200,7 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 ```
 #/                 首页：它是什么、解决什么、两个案例、怎么做到的摘要、三条命令
 #/method           方法：五步流程 · 生成方式 · 交付物（切产品 + 本次编译改动）
-#/about            关于：为什么做、交付什么、不是什么、现在到哪了、谁做的（收尾带仓库链接）
+#/about            关于：为什么做、交付什么、不是什么、现在到哪了、时间线（git log · 按日期/里程碑 · 类型筛选 · 折叠）、谁做的
 #/case/ride        案例页：骑行
 #/case/ledger      案例页：记账
                    概览 / 现实界面 / 动效 / 审计 / Token 表 / 设计决策
