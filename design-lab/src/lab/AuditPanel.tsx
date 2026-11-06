@@ -1,4 +1,4 @@
-import { manifest, qaFor, valueOf } from './model';
+import { qaFor, valueOf } from './model';
 
 const rowsFor = (app: string, brand: string) => {
   const qa = qaFor(app);
@@ -28,7 +28,7 @@ export const AuditPanel = ({ app, brand }: { app: string; brand: string }) => {
     <div className="audit">
       <div className="audit-facts">
         <div className="audit-fact">
-          <p className="audit-fact-value">{manifest.contrast.pairs}</p>
+          <p className="audit-fact-value">{rows.length}</p>
           <p className="audit-fact-label">对比度配对</p>
           <p className="audit-fact-note">浅色 + 深色各跑一遍</p>
         </div>

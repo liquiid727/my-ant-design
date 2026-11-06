@@ -18,7 +18,7 @@ npm run visual         # 对比基线
 npm run visual:update  # 改完设计后重写基线
 ```
 
-- 覆盖 4 套排列（2 品牌 × 2 主题）× 骑行三屏；
+- 从 `#/matrix` 截取 4 套排列（2 品牌 × 2 主题）× 骑行三屏；
 - 基线在 `tests/visual/baselines/`，**提交入库**；
 - 超过阈值时差异图写到 `tests/visual/diff/`（gitignore）；
 - 已验证有效：把 `color.action.primary` 从柠檬绿换成玫红，`cycling-light` 报 3.71%，

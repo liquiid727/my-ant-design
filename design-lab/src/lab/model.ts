@@ -25,6 +25,8 @@ export type CatalogBrand = {
   id: string;
   label: string;
   latin: string;
+  /** 首页示例默认展示的品牌（当前是 Noir）。 */
+  featured?: boolean;
   themes: string[];
   counts: { total: number; public: number; byLayer: Record<string, number> };
   tokens: CatalogToken[];

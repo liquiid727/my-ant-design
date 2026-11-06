@@ -123,6 +123,7 @@ export const resolveSet = async (app, brand, theme, patch) => {
     brand: brand.id,
     brandLabel: brand.label,
     latin: brand.latin,
+    featured: Boolean(brand.featured),
     theme,
     tokens,
     byPath: new Map(tokens.map((token) => [token.path, token])),

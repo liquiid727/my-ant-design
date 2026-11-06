@@ -1,0 +1,217 @@
+/* ── 站内控件：全部读组件 token，禁止浏览器默认外观 ── */
+
+.ctl-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--button-gap);
+  height: var(--button-height);
+  padding-inline: var(--button-padding-inline);
+  border: 0;
+  border-radius: var(--button-radius);
+  background: var(--button-bg);
+  color: var(--button-fg);
+  font-family: var(--type-label-family);
+  font-size: var(--type-caption-size);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background var(--motion-duration-fast) var(--motion-easing-standard),
+    transform var(--motion-duration-fast) var(--motion-easing-standard),
+    border-color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.ctl-button[data-size='sm'] {
+  height: calc(var(--button-height) - 8px);
+  padding-inline: var(--space-12);
+  font-size: var(--type-data-size, 11px);
+}
+
+.ctl-button[data-block] {
+  width: 100%;
+}
+
+.ctl-button[data-variant='secondary'] {
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-fg);
+}
+
+.ctl-button[data-variant='ghost'] {
+  background: transparent;
+  color: var(--color-ink-secondary);
+  border: var(--hairline);
+  border-color: var(--button-ghost-border);
+}
+
+.ctl-button[data-variant='quiet'] {
+  background: transparent;
+  color: var(--color-ink-tertiary);
+  padding-inline: var(--space-8);
+}
+
+.ctl-button:hover:not(:disabled) {
+  background: var(--color-action-primary-hover);
+}
+
+.ctl-button[data-variant='secondary']:hover:not(:disabled),
+.ctl-button[data-variant='ghost']:hover:not(:disabled) {
+  background: var(--color-surface-sunken);
+  color: var(--color-ink-primary);
+}
+
+.ctl-button[data-variant='quiet']:hover:not(:disabled) {
+  color: var(--color-ink-primary);
+}
+
+.ctl-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.ctl-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ctl-button:focus-visible,
+.ctl-segment:focus-visible,
+.ctl-chip:focus-visible,
+.ctl-input:focus-visible,
+.ctl-checkbox input:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* 分段 */
+.ctl-segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: var(--hairline);
+  border-radius: var(--chip-radius);
+  background: var(--chip-bg);
+  width: fit-content;
+}
+
+.ctl-segment {
+  height: calc(var(--chip-height) - 8px);
+  padding-inline: var(--chip-padding-inline);
+  border: 0;
+  border-radius: var(--chip-radius);
+  background: transparent;
+  color: var(--chip-fg);
+  font-family: var(--type-label-family);
+  font-size: var(--type-caption-size);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.ctl-segment[data-active='true'] {
+  background: var(--chip-active-bg);
+  color: var(--chip-active-fg);
+}
+
+.ctl-segment:hover:not([data-active='true']) {
+  color: var(--chip-active-fg);
+}
+
+/* 输入 */
+.ctl-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ctl-label {
+  font-family: var(--type-label-family);
+  font-size: var(--type-data-size, 10px);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  color: var(--field-label);
+}
+
+.ctl-input {
+  height: var(--field-height);
+  padding-inline: var(--field-padding-inline);
+  border: var(--hairline);
+  border-color: var(--field-border);
+  border-radius: var(--field-radius);
+  background: var(--field-bg);
+  color: var(--color-ink-primary);
+  font-family: var(--type-body-family);
+  font-size: var(--type-caption-size);
+  outline: none;
+  transition: border-color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.ctl-input::placeholder {
+  color: var(--field-placeholder);
+}
+
+.ctl-input:focus {
+  border-color: var(--field-border-focus);
+}
+
+.ctl-field[data-invalid='true'] .ctl-input {
+  border-color: var(--color-status-danger);
+}
+
+.ctl-textarea {
+  height: auto;
+  padding-block: 10px;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.ctl-hint {
+  font-size: var(--type-data-size, 11px);
+  color: var(--color-ink-tertiary);
+}
+
+.ctl-error {
+  font-size: var(--type-data-size, 11px);
+  color: var(--color-status-danger);
+}
+
+/* 复选与标签 */
+.ctl-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--type-data-size, 11px);
+  color: var(--color-ink-secondary);
+  cursor: pointer;
+}
+
+.ctl-checkbox input {
+  accent-color: var(--color-action-primary);
+  width: 14px;
+  height: 14px;
+}
+
+.ctl-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: calc(var(--chip-height) - 10px);
+  padding-inline: var(--chip-padding-inline);
+  border: var(--hairline);
+  border-color: var(--chip-border);
+  border-radius: var(--chip-radius);
+  background: transparent;
+  color: var(--chip-fg);
+  font-size: var(--type-data-size, 11px);
+  cursor: pointer;
+}
+
+.ctl-chip[data-active='true'] {
+  background: var(--chip-active-bg);
+  color: var(--chip-active-fg);
+  border-color: var(--color-border-focus);
+}
+
+/* ── 旧类名接到同一套组件 token 上（渐进替换，不再各自写死） ── */
+
+

@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { CodeBlock } from '../components/code';
+import { Segmented } from '../components/controls';
 import { apps, bytes, changeOf, changes, manifest, perAppArtifacts } from './model';
 
 const STEPS = [
@@ -182,23 +183,16 @@ npm run visual`}
               <p className="eyebrow">交付物 · Artifacts</p>
               <h2 className="home-title">可以直接取用的产物</h2>
             </div>
-            <div className="segmented" role="group" aria-label="查看哪个产品的产物">
-              {apps.map((app) => (
-                <button
-                  key={app.id}
-                  type="button"
-                  className="segmented-item"
-                  data-active={outputApp === app.id}
-                  onClick={() => setOutputApp(app.id)}
-                >
-                  {app.label}
-                </button>
-              ))}
-            </div>
+            <Segmented
+              label="查看哪个产品的产物"
+              value={outputApp}
+              options={apps.map((app) => ({ id: app.id, label: app.label }))}
+              onChange={setOutputApp}
+            />
           </div>
           <p className="home-note">
             文件都在 <code>src/generated</code> 下，Web、小程序、外部工具、AI 各取所需，按产品分开。
-            想看某个 token 的值，去案例页的 Token 表；想看这次编译改了什么，看最右一列。
+            想看某个 token 的值，去示例页的 Token 表；想看这次编译改了什么，看最右一列。
           </p>
           <p className="output-change">
             {changes.available && changes.summary.changed > 0 ? (
@@ -278,7 +272,7 @@ npm run visual`}
 
       <footer className="method-foot">
         <p>
-          想先跑一遍？<a href="#/workbench">去工作台，从一个品牌色生成一套 token</a>；或<a href="#/">回到首页看两个案例</a>。
+          想先跑一遍？<a href="#/workbench">去工作台，从一个品牌色生成一套 token</a>；或<a href="#/">回到首页看三个示例</a>。
         </p>
         <p className="method-stat">
           {manifest.permutations} 套排列 · {manifest.artifacts.length} 个产物 · {manifest.contrast.pairs} 组对比度

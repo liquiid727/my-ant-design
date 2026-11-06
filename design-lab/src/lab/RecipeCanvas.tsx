@@ -57,22 +57,32 @@ const RENDERERS: Record<string, (props: Props) => ReactElement> = {
 
 export const SUPPORTED = Object.keys(RENDERERS);
 
-export const RecipeCanvas = ({ recipe }: { recipe: PageRecipe }) => (
-  <div className="recipe-canvas">
-    {recipe.sections.map((section, index) => {
-      const render = RENDERERS[section.component];
-      if (!render) {
-        return (
-          <p className="recipe-missing" key={`${section.component}-${index}`}>
-            {section.component} 目前只有契约、没有实现，渲染跳过。
-          </p>
-        );
-      }
-      return (
-        <div className="recipe-section" key={`${section.component}-${index}`}>
-          {render((section.props ?? {}) as Props)}
-        </div>
-      );
-    })}
-  </div>
-);
+const renderSection = (section: PageRecipe['sections'][number], index: number) => {
+  const render = RENDERERS[section.component];
+  if (!render) {
+    return (
+      <p className="recipe-missing" key={`${section.component}-${index}`}>
+        {section.component} 目前只有契约、没有实现，渲染跳过。
+      </p>
+    );
+  }
+  return (
+    <div className="recipe-section" key={`${section.component}-${index}`}>
+      {render((section.props ?? {}) as Props)}
+    </div>
+  );
+};
+
+/**
+ * 手机上是一条流；宽屏时第一个区块成为侧栏，其余进主区。
+ * 侧栏/主区在窄屏用 display: contents 摊平，不给小屏添一层无意义容器。
+ */
+export const RecipeCanvas = ({ recipe }: { recipe: PageRecipe }) => {
+  const [first, ...rest] = recipe.sections;
+  return (
+    <div className="recipe-canvas">
+      {first ? <div className="recipe-side">{renderSection(first, 0)}</div> : null}
+      <div className="recipe-main">{rest.map((section, index) => renderSection(section, index + 1))}</div>
+    </div>
+  );
+};

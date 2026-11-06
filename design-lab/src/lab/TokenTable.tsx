@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { brandById, LAYER_LABEL, type ThemeName } from './model';
+import { Segmented } from '../components/controls';
 
 type Scope = 'public' | 'private' | 'all';
 
@@ -9,7 +10,17 @@ const SCOPES: { id: Scope; label: string }[] = [
   { id: 'all', label: '全部' },
 ];
 
-export const TokenTable = ({ app, brand: brandId, theme }: { app: string; brand: string; theme: ThemeName }) => {
+export const TokenTable = ({
+  app,
+  brand: brandId,
+  theme,
+  excludeProduct = false,
+}: {
+  app: string;
+  brand: string;
+  theme: ThemeName;
+  excludeProduct?: boolean;
+}) => {
   const brand = brandById(app, brandId);
   const [query, setQuery] = useState('');
   const [scope, setScope] = useState<Scope>('public');
@@ -17,12 +28,15 @@ export const TokenTable = ({ app, brand: brandId, theme }: { app: string; brand:
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return brand.tokens
+      .filter((token) => !excludeProduct || token.layer !== 'product')
       .filter((token) => (scope === 'all' ? true : scope === 'public' ? token.public : !token.public))
       .filter((token) => (needle ? token.path.toLowerCase().includes(needle) || token.type.includes(needle) : true))
       .slice(0, 220);
-  }, [query, scope]);
+  }, [excludeProduct, query, scope]);
 
-  const total = brand.tokens.filter((token) => (scope === 'all' ? true : scope === 'public' ? token.public : !token.public)).length;
+  const total = brand.tokens
+    .filter((token) => !excludeProduct || token.layer !== 'product')
+    .filter((token) => (scope === 'all' ? true : scope === 'public' ? token.public : !token.public)).length;
 
   return (
     <div className="tokens">
@@ -36,19 +50,12 @@ export const TokenTable = ({ app, brand: brandId, theme }: { app: string; brand:
             spellCheck={false}
           />
         </label>
-        <div className="segmented" role="group" aria-label="范围">
-          {SCOPES.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className="segmented-item"
-              data-active={scope === item.id}
-              onClick={() => setScope(item.id)}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
+        <Segmented
+          label="范围"
+          value={scope}
+          options={SCOPES.map((item) => ({ id: item.id, label: item.label }))}
+          onChange={setScope}
+        />
         <p className="tokens-count">
           {rows.length} / {total}
         </p>

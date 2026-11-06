@@ -241,6 +241,94 @@
       }
     }
   },
+  "chip": {
+    "active-bg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.11764705882352941,
+          0.12941176470588237,
+          0.08627450980392157
+        ],
+        "alpha": 1,
+        "hex": "#1E2116"
+      }
+    },
+    "active-fg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9803921568627451,
+          0.9725490196078431,
+          0.9450980392156862
+        ],
+        "alpha": 1,
+        "hex": "#FAF8F1"
+      }
+    },
+    "bg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.07058823529411765,
+          0.0784313725490196,
+          0.043137254901960784
+        ],
+        "alpha": 1,
+        "hex": "#12140B"
+      }
+    },
+    "border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.14901960784313725,
+          0.15294117647058825,
+          0.12156862745098039
+        ],
+        "alpha": 1,
+        "hex": "#26271F"
+      }
+    },
+    "fg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8156862745098039,
+          0.803921568627451,
+          0.7490196078431373
+        ],
+        "alpha": 1,
+        "hex": "#D0CDBF"
+      }
+    },
+    "height": {
+      "$type": "dimension",
+      "$value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "padding-inline": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": {
+        "value": 999,
+        "unit": "px"
+      }
+    }
+  },
   "color": {
     "achievement": {
       "bronze": {
@@ -953,6 +1041,94 @@
           "value": 0,
           "unit": "px"
         }
+      }
+    }
+  },
+  "field": {
+    "bg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.11764705882352941,
+          0.12941176470588237,
+          0.08627450980392157
+        ],
+        "alpha": 1,
+        "hex": "#1E2116"
+      }
+    },
+    "border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.14901960784313725,
+          0.15294117647058825,
+          0.12156862745098039
+        ],
+        "alpha": 1,
+        "hex": "#26271F"
+      }
+    },
+    "border-focus": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6627450980392157,
+          0.7529411764705882,
+          0.5490196078431373
+        ],
+        "alpha": 1,
+        "hex": "#A9C08C"
+      }
+    },
+    "height": {
+      "$type": "dimension",
+      "$value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "label": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6509803921568628,
+          0.6431372549019608,
+          0.592156862745098
+        ],
+        "alpha": 1,
+        "hex": "#A6A497"
+      }
+    },
+    "padding-inline": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "placeholder": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6509803921568628,
+          0.6431372549019608,
+          0.592156862745098
+        ],
+        "alpha": 1,
+        "hex": "#A6A497"
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": {
+        "value": 14,
+        "unit": "px"
       }
     }
   },

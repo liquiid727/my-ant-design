@@ -48,9 +48,9 @@ const main = async () => {
   for (const permutation of PERMUTATIONS) {
     if (process.env.VISUAL_DEBUG) console.error('· start', permutation.app, permutation.brand, permutation.theme, baseUrl);
     // 案例页按 app 路由进入；带 query 强制真实导航（只改 hash 不会触发 load）
-    await page.goto(`${baseUrl}?case=${permutation.app}#/case/${permutation.app}`, { waitUntil: 'load' });
+    await page.goto(`${baseUrl}?matrix=${permutation.app}#/matrix?app=${permutation.app}`, { waitUntil: 'load' });
     if (process.env.VISUAL_DEBUG) console.error('  navigated to', await page.evaluate(() => location.href));
-    await page.waitForSelector('.screens');
+    await page.waitForSelector('.matrix .screens');
     if (process.env.VISUAL_DEBUG) console.error('  screens found');
     await page.evaluate(
       ({ brand, theme }) => {

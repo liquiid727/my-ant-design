@@ -1,0 +1,101 @@
+{
+  "$description": "第三个品牌包：黑白灰、玻璃面、大圆角、等宽数据。把站点外壳的界面语言写成 token：canvas 用冷白，主操作用深色，卡片与按钮比前两个品牌更圆。",
+  "brand": {
+    "palette": {
+      "$type": "color",
+      "canvas": { "$value": "#F5F5F7" },
+      "raised": { "$value": "#FFFFFF" },
+      "ink": { "$value": "#0A0A0C" },
+      "ink-soft": { "$value": "#4B4B52" },
+      "ink-mute": { "$value": "#63636A" },
+      "line": { "$value": "#E2E2E8" },
+      "line-strong": { "$value": "#C9C9D1" },
+      "mark": { "$value": "#6E6E73" },
+      "quiet": { "$value": "#E7E7EC" },
+      "sunken": { "$value": "#ECECF0" },
+      "accent": { "$value": "#0A0A0C" },
+      "accent-hover": { "$value": "#26262B" },
+      "accent-pressed": { "$value": "#000000" },
+      "on-accent": { "$value": "#FFFFFF" }
+    }
+  },
+  "color": {
+    "surface": {
+      "$type": "color",
+      "canvas": { "$value": "{brand.palette.canvas}" },
+      "raised": { "$value": "{brand.palette.raised}" },
+      "sunken": { "$value": "#ECECF0" },
+      "inverse": { "$value": "{brand.palette.ink}" },
+      "accent-soft": { "$value": "#EDEDF1" }
+    },
+    "ink": {
+      "$type": "color",
+      "primary": { "$value": "{brand.palette.ink}" },
+      "secondary": { "$value": "{brand.palette.ink-soft}" },
+      "tertiary": { "$value": "{brand.palette.ink-mute}" },
+      "inverse": { "$value": "#F7F7FA" },
+      "on-accent": { "$value": "{brand.palette.ink}" }
+    },
+    "action": {
+      "$type": "color",
+      "primary": { "$value": "{brand.palette.accent}" },
+      "primary-hover": { "$value": "{brand.palette.accent-hover}" },
+      "primary-pressed": { "$value": "{brand.palette.accent-pressed}" },
+      "on-primary": { "$value": "{brand.palette.on-accent}" },
+      "secondary": { "$value": "{brand.palette.quiet}" },
+      "on-secondary": { "$value": "{brand.palette.ink}" },
+      "ghost-border": { "$value": "{brand.palette.line-strong}" }
+    },
+    "border": {
+      "$type": "color",
+      "subtle": { "$value": "{brand.palette.line}" },
+      "strong": { "$value": "{brand.palette.line-strong}" },
+      "focus": { "$value": "{brand.palette.ink}" }
+    },
+    "brand": {
+      "$type": "color",
+      "mark": { "$value": "{brand.palette.mark}" },
+      "halo": { "$value": "#DCDCE3" }
+    }
+  },
+  "radius": {
+    "$type": "dimension",
+    "control": { "$value": "22px" },
+    "card": { "$value": "26px" },
+    "sheet": { "$value": "34px" }
+  },
+  "type": {
+    "display": {
+      "family": { "$type": "fontFamily", "$value": "{font.family.sans}" },
+      "size": { "$type": "dimension", "$value": "{font.size.32}" },
+      "line": { "$type": "dimension", "$value": "{font.line.38}" },
+      "weight": { "$type": "fontWeight", "$value": "{font.weight.semibold}" },
+      "tracking": { "$type": "dimension", "$value": "-0.8px" }
+    },
+    "title": {
+      "family": { "$type": "fontFamily", "$value": "{font.family.sans}" },
+      "size": { "$type": "dimension", "$value": "{font.size.22}" },
+      "line": { "$type": "dimension", "$value": "{font.line.28}" },
+      "weight": { "$type": "fontWeight", "$value": "{font.weight.semibold}" },
+      "tracking": { "$type": "dimension", "$value": "-0.4px" }
+    },
+    "metric": {
+      "family": { "$type": "fontFamily", "$value": "{font.family.mono}" },
+      "size": { "$type": "dimension", "$value": "{font.size.40}" },
+      "line": { "$type": "dimension", "$value": "{font.line.44}" },
+      "weight": { "$type": "fontWeight", "$value": "{font.weight.medium}" },
+      "tracking": { "$type": "dimension", "$value": "-1.2px" }
+    }
+  },
+  "elevation": {
+    "$type": "shadow",
+    "subtle": { "$value": "0 1px 2px rgba(10,10,12,0.06)" },
+    "raised": { "$value": "0 14px 34px rgba(10,10,12,0.10)" }
+  },
+  "motion": {
+    "easing": {
+      "$type": "cubicBezier",
+      "spring": { "$value": [0.22, 1, 0.36, 1] }
+    }
+  }
+}

@@ -1,46 +1,46 @@
 {
   "generatedBy": "pipeline/compiler · design-lab",
-  "permutations": 8,
+  "permutations": 12,
   "apps": [
     {
       "id": "ride",
       "label": "骑行",
-      "brands": 2,
+      "brands": 3,
       "themes": 2,
       "tokens": {
-        "total": 309,
-        "public": 170,
+        "total": 335,
+        "public": 186,
         "byLayer": {
           "primitive": 135,
-          "brand": 22,
-          "semantic": 85,
+          "brand": 57,
+          "semantic": 60,
           "product": 19,
-          "component": 48
+          "component": 64
         }
       },
-      "darkOverrides": 124
+      "darkOverrides": 229
     },
     {
       "id": "ledger",
       "label": "记账",
-      "brands": 2,
+      "brands": 3,
       "themes": 2,
       "tokens": {
-        "total": 302,
-        "public": 163,
+        "total": 328,
+        "public": 179,
         "byLayer": {
           "primitive": 135,
-          "brand": 22,
-          "semantic": 85,
+          "brand": 57,
+          "semantic": 60,
           "product": 12,
-          "component": 48
+          "component": 64
         }
       },
-      "darkOverrides": 126
+      "darkOverrides": 231
     }
   ],
   "contrast": {
-    "pairs": 120,
+    "pairs": 180,
     "failing": 0
   },
   "artifacts": [
@@ -48,7 +48,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/tokens.ride.css",
       "name": "tokens.ride.css",
       "app": "ride",
-      "bytes": 37082,
+      "bytes": 52224,
       "kind": "css",
       "label": "Web · CSS 变量"
     },
@@ -56,7 +56,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/tokens.ledger.css",
       "name": "tokens.ledger.css",
       "app": "ledger",
-      "bytes": 30156,
+      "bytes": 44446,
       "kind": "css",
       "label": "Web · CSS 变量"
     },
@@ -64,7 +64,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/tokens.ride.wxss",
       "name": "tokens.ride.wxss",
       "app": "ride",
-      "bytes": 26850,
+      "bytes": 28545,
       "kind": "wxss",
       "label": "微信小程序 · WXSS"
     },
@@ -72,7 +72,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/tokens.ledger.wxss",
       "name": "tokens.ledger.wxss",
       "app": "ledger",
-      "bytes": 26006,
+      "bytes": 27701,
       "kind": "wxss",
       "label": "微信小程序 · WXSS"
     },
@@ -80,7 +80,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/tokens.ride.ts",
       "name": "tokens.ride.ts",
       "app": "ride",
-      "bytes": 26439,
+      "bytes": 42307,
       "kind": "ts",
       "label": "TypeScript · 类型"
     },
@@ -88,15 +88,31 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/tokens.ledger.ts",
       "name": "tokens.ledger.ts",
       "app": "ledger",
-      "bytes": 25431,
+      "bytes": 40795,
       "kind": "ts",
       "label": "TypeScript · 类型"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ride.noir.light.tokens.json",
+      "name": "ride.noir.light.tokens.json",
+      "app": "ride",
+      "bytes": 38798,
+      "kind": "dtcg",
+      "label": "DTCG · 交换产物"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ride.noir.dark.tokens.json",
+      "name": "ride.noir.dark.tokens.json",
+      "app": "ride",
+      "bytes": 37880,
+      "kind": "dtcg",
+      "label": "DTCG · 交换产物"
     },
     {
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ride.cycling.light.tokens.json",
       "name": "ride.cycling.light.tokens.json",
       "app": "ride",
-      "bytes": 35529,
+      "bytes": 38960,
       "kind": "dtcg",
       "label": "DTCG · 交换产物"
     },
@@ -104,7 +120,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ride.cycling.dark.tokens.json",
       "name": "ride.cycling.dark.tokens.json",
       "app": "ride",
-      "bytes": 35311,
+      "bytes": 38811,
       "kind": "dtcg",
       "label": "DTCG · 交换产物"
     },
@@ -112,7 +128,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ride.ledger.light.tokens.json",
       "name": "ride.ledger.light.tokens.json",
       "app": "ride",
-      "bytes": 35344,
+      "bytes": 38737,
       "kind": "dtcg",
       "label": "DTCG · 交换产物"
     },
@@ -120,7 +136,23 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ride.ledger.dark.tokens.json",
       "name": "ride.ledger.dark.tokens.json",
       "app": "ride",
-      "bytes": 35186,
+      "bytes": 38641,
+      "kind": "dtcg",
+      "label": "DTCG · 交换产物"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ledger.noir.light.tokens.json",
+      "name": "ledger.noir.light.tokens.json",
+      "app": "ledger",
+      "bytes": 36946,
+      "kind": "dtcg",
+      "label": "DTCG · 交换产物"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ledger.noir.dark.tokens.json",
+      "name": "ledger.noir.dark.tokens.json",
+      "app": "ledger",
+      "bytes": 36021,
       "kind": "dtcg",
       "label": "DTCG · 交换产物"
     },
@@ -128,7 +160,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ledger.cycling.light.tokens.json",
       "name": "ledger.cycling.light.tokens.json",
       "app": "ledger",
-      "bytes": 33680,
+      "bytes": 37111,
       "kind": "dtcg",
       "label": "DTCG · 交换产物"
     },
@@ -136,7 +168,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ledger.cycling.dark.tokens.json",
       "name": "ledger.cycling.dark.tokens.json",
       "app": "ledger",
-      "bytes": 33456,
+      "bytes": 36956,
       "kind": "dtcg",
       "label": "DTCG · 交换产物"
     },
@@ -144,7 +176,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ledger.ledger.light.tokens.json",
       "name": "ledger.ledger.light.tokens.json",
       "app": "ledger",
-      "bytes": 33493,
+      "bytes": 36886,
       "kind": "dtcg",
       "label": "DTCG · 交换产物"
     },
@@ -152,7 +184,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ledger.ledger.dark.tokens.json",
       "name": "ledger.ledger.dark.tokens.json",
       "app": "ledger",
-      "bytes": 33342,
+      "bytes": 36797,
       "kind": "dtcg",
       "label": "DTCG · 交换产物"
     },
@@ -160,7 +192,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/catalog.ride.json",
       "name": "catalog.ride.json",
       "app": "ride",
-      "bytes": 228071,
+      "bytes": 362359,
       "kind": "json",
       "label": "实验台 · Token 目录"
     },
@@ -168,7 +200,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/catalog.ledger.json",
       "name": "catalog.ledger.json",
       "app": "ledger",
-      "bytes": 222871,
+      "bytes": 354560,
       "kind": "json",
       "label": "实验台 · Token 目录"
     },
@@ -176,7 +208,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/qa.ride.json",
       "name": "qa.ride.json",
       "app": "ride",
-      "bytes": 17713,
+      "bytes": 26499,
       "kind": "json",
       "label": "门禁 · 对比度报告"
     },
@@ -184,7 +216,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/qa.ledger.json",
       "name": "qa.ledger.json",
       "app": "ledger",
-      "bytes": 17715,
+      "bytes": 26501,
       "kind": "json",
       "label": "门禁 · 对比度报告"
     },
@@ -192,7 +224,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/design-context.ride.json",
       "name": "design-context.ride.json",
       "app": "ride",
-      "bytes": 25634,
+      "bytes": 38151,
       "kind": "json",
       "label": "AI · 设计上下文"
     },
@@ -200,7 +232,7 @@
       "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/design-context.ledger.json",
       "name": "design-context.ledger.json",
       "app": "ledger",
-      "bytes": 23151,
+      "bytes": 35403,
       "kind": "json",
       "label": "AI · 设计上下文"
     }

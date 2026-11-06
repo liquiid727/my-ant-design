@@ -15,10 +15,12 @@ const DIFF_DIR = path.join(ROOT, 'tests/visual/diff');
 const UPDATE = process.argv.includes('--update');
 
 const CASES = [
-  { id: 'phone-light', device: '手机 375', theme: '浅色' },
-  { id: 'phone-dark', device: '手机 375', theme: '深色' },
-  { id: 'tablet-light', device: '平板 768', theme: '浅色' },
-  { id: 'desktop-light', device: '桌面 1280', theme: '浅色' },
+  { id: 'phone-light', device: 'iPhone SE', theme: '浅色' },
+  { id: 'phone-dark', device: 'iPhone SE', theme: '深色' },
+  { id: 'tablet-light', device: 'iPad mini', theme: '浅色' },
+  { id: 'phone-landscape', device: 'iPhone 16 Pro Max', theme: '浅色', landscape: true },
+  { id: 'laptop-light', device: '笔记本 1280', theme: '浅色' },
+  { id: 'desktop-light', device: '桌面 1440', theme: '浅色' },
 ];
 
 await fs.mkdir(BASELINE_DIR, { recursive: true });
@@ -36,9 +38,15 @@ let failed = 0;
 
 for (const item of CASES) {
   // 主题在顶栏，设备在渲染区
-  const themeButton = page.locator(`.topbar .segmented-item:has-text("${item.theme}")`);
+  const themeButton = page.locator(`.topbar .ctl-segment:has-text("${item.theme}")`);
   if (await themeButton.count()) await themeButton.first().click();
-  await page.locator(`.studio-render-head .segmented-item:has-text("${item.device}")`).first().click();
+  await page.locator(`.studio-render-head .ctl-segment:has-text("${item.device}")`).first().click();
+  await page.waitForTimeout(200);
+
+  // 横屏是开关，确保状态和用例一致
+  const orientation = page.locator('.studio-orientation');
+  const isLandscape = (await orientation.textContent())?.includes('横屏');
+  if (Boolean(item.landscape) !== Boolean(isLandscape)) await orientation.click();
   await page.waitForTimeout(350);
 
   const shot = await page.locator('.recipe-phone').screenshot();

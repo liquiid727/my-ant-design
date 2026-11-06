@@ -291,6 +291,7 @@ export const emitCatalog = async (sets) => {
           id: brand,
           label: base.brandLabel,
           latin: base.latin,
+          featured: base.featured,
           themes: brandSets.map((set) => set.theme),
           counts: {
             total: tokens.length,

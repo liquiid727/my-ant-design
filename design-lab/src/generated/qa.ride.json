@@ -2,10 +2,344 @@
   "generatedBy": "pipeline/compiler",
   "app": "ride",
   "summary": {
-    "pairs": 60,
+    "pairs": 90,
     "failing": 0
   },
   "results": {
+    "noir.light": [
+      {
+        "id": "ink-primary.canvas",
+        "fg": "color.ink.primary",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "正文 / 画布",
+        "fgValue": "#0A0A0C",
+        "bgValue": "#F5F5F7",
+        "ratio": 18.17,
+        "pass": true
+      },
+      {
+        "id": "ink-secondary.canvas",
+        "fg": "color.ink.secondary",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "次要正文 / 画布",
+        "fgValue": "#4B4B52",
+        "bgValue": "#F5F5F7",
+        "ratio": 7.95,
+        "pass": true
+      },
+      {
+        "id": "ink-tertiary.canvas",
+        "fg": "color.ink.tertiary",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "辅助文字 / 画布",
+        "fgValue": "#63636A",
+        "bgValue": "#F5F5F7",
+        "ratio": 5.47,
+        "pass": true
+      },
+      {
+        "id": "ink-primary.raised",
+        "fg": "color.ink.primary",
+        "bg": "color.surface.raised",
+        "min": 4.5,
+        "note": "正文 / 卡片",
+        "fgValue": "#0A0A0C",
+        "bgValue": "#FFFFFF",
+        "ratio": 19.78,
+        "pass": true
+      },
+      {
+        "id": "ink-primary.accent-soft",
+        "fg": "color.ink.primary",
+        "bg": "color.surface.accent-soft",
+        "min": 4.5,
+        "note": "正文 / 品牌浅底",
+        "fgValue": "#0A0A0C",
+        "bgValue": "#EDEDF1",
+        "ratio": 16.94,
+        "pass": true
+      },
+      {
+        "id": "on-primary.primary",
+        "fg": "color.action.on-primary",
+        "bg": "color.action.primary",
+        "min": 4.5,
+        "note": "主按钮文字",
+        "fgValue": "#FFFFFF",
+        "bgValue": "#0A0A0C",
+        "ratio": 19.78,
+        "pass": true
+      },
+      {
+        "id": "on-secondary.secondary",
+        "fg": "color.action.on-secondary",
+        "bg": "color.action.secondary",
+        "min": 4.5,
+        "note": "次按钮文字",
+        "fgValue": "#0A0A0C",
+        "bgValue": "#E7E7EC",
+        "ratio": 16.05,
+        "pass": true
+      },
+      {
+        "id": "ink-inverse.inverse",
+        "fg": "color.ink.inverse",
+        "bg": "color.surface.inverse",
+        "min": 4.5,
+        "note": "反白文字",
+        "fgValue": "#F7F7FA",
+        "bgValue": "#0A0A0C",
+        "ratio": 18.5,
+        "pass": true
+      },
+      {
+        "id": "status-success.canvas",
+        "fg": "color.status.success",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "成功文字",
+        "fgValue": "#4E633D",
+        "bgValue": "#F5F5F7",
+        "ratio": 6.07,
+        "pass": true
+      },
+      {
+        "id": "status-warning.canvas",
+        "fg": "color.status.warning",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "警告文字",
+        "fgValue": "#84592E",
+        "bgValue": "#F5F5F7",
+        "ratio": 5.59,
+        "pass": true
+      },
+      {
+        "id": "status-danger.canvas",
+        "fg": "color.status.danger",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "危险文字",
+        "fgValue": "#8A4A5E",
+        "bgValue": "#F5F5F7",
+        "ratio": 5.99,
+        "pass": true
+      },
+      {
+        "id": "status-info.canvas",
+        "fg": "color.status.info",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "信息文字",
+        "fgValue": "#46656F",
+        "bgValue": "#F5F5F7",
+        "ratio": 5.75,
+        "pass": true
+      },
+      {
+        "id": "ink-primary.warning-soft",
+        "fg": "color.ink.primary",
+        "bg": "color.status.warning-soft",
+        "min": 4.5,
+        "note": "警告底文字",
+        "fgValue": "#0A0A0C",
+        "bgValue": "#F7E8CC",
+        "ratio": 16.36,
+        "pass": true
+      },
+      {
+        "id": "ink-primary.danger-soft",
+        "fg": "color.ink.primary",
+        "bg": "color.status.danger-soft",
+        "min": 4.5,
+        "note": "危险底文字",
+        "fgValue": "#0A0A0C",
+        "bgValue": "#F7DFE4",
+        "ratio": 15.66,
+        "pass": true
+      },
+      {
+        "id": "border-focus.canvas",
+        "fg": "color.border.focus",
+        "bg": "color.surface.canvas",
+        "min": 3,
+        "note": "焦点框（UI 元素）",
+        "fgValue": "#0A0A0C",
+        "bgValue": "#F5F5F7",
+        "ratio": 18.17,
+        "pass": true
+      }
+    ],
+    "noir.dark": [
+      {
+        "id": "ink-primary.canvas",
+        "fg": "color.ink.primary",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "正文 / 画布",
+        "fgValue": "#FFFFFF",
+        "bgValue": "#000000",
+        "ratio": 21,
+        "pass": true
+      },
+      {
+        "id": "ink-secondary.canvas",
+        "fg": "color.ink.secondary",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "次要正文 / 画布",
+        "fgValue": "#B9B9BE",
+        "bgValue": "#000000",
+        "ratio": 10.75,
+        "pass": true
+      },
+      {
+        "id": "ink-tertiary.canvas",
+        "fg": "color.ink.tertiary",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "辅助文字 / 画布",
+        "fgValue": "#8E8E93",
+        "bgValue": "#000000",
+        "ratio": 6.44,
+        "pass": true
+      },
+      {
+        "id": "ink-primary.raised",
+        "fg": "color.ink.primary",
+        "bg": "color.surface.raised",
+        "min": 4.5,
+        "note": "正文 / 卡片",
+        "fgValue": "#FFFFFF",
+        "bgValue": "#0E0E11",
+        "ratio": 19.27,
+        "pass": true
+      },
+      {
+        "id": "ink-primary.accent-soft",
+        "fg": "color.ink.primary",
+        "bg": "color.surface.accent-soft",
+        "min": 4.5,
+        "note": "正文 / 品牌浅底",
+        "fgValue": "#FFFFFF",
+        "bgValue": "#17171C",
+        "ratio": 17.86,
+        "pass": true
+      },
+      {
+        "id": "on-primary.primary",
+        "fg": "color.action.on-primary",
+        "bg": "color.action.primary",
+        "min": 4.5,
+        "note": "主按钮文字",
+        "fgValue": "#000000",
+        "bgValue": "#FFFFFF",
+        "ratio": 21,
+        "pass": true
+      },
+      {
+        "id": "on-secondary.secondary",
+        "fg": "color.action.on-secondary",
+        "bg": "color.action.secondary",
+        "min": 4.5,
+        "note": "次按钮文字",
+        "fgValue": "#FFFFFF",
+        "bgValue": "#1D1D22",
+        "ratio": 16.79,
+        "pass": true
+      },
+      {
+        "id": "ink-inverse.inverse",
+        "fg": "color.ink.inverse",
+        "bg": "color.surface.inverse",
+        "min": 4.5,
+        "note": "反白文字",
+        "fgValue": "#0A0A0C",
+        "bgValue": "#FFFFFF",
+        "ratio": 19.78,
+        "pass": true
+      },
+      {
+        "id": "status-success.canvas",
+        "fg": "color.status.success",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "成功文字",
+        "fgValue": "#C3D6AC",
+        "bgValue": "#000000",
+        "ratio": 13.53,
+        "pass": true
+      },
+      {
+        "id": "status-warning.canvas",
+        "fg": "color.status.warning",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "警告文字",
+        "fgValue": "#F0D5A6",
+        "bgValue": "#000000",
+        "ratio": 14.77,
+        "pass": true
+      },
+      {
+        "id": "status-danger.canvas",
+        "fg": "color.status.danger",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "危险文字",
+        "fgValue": "#EFC4CE",
+        "bgValue": "#000000",
+        "ratio": 13.46,
+        "pass": true
+      },
+      {
+        "id": "status-info.canvas",
+        "fg": "color.status.info",
+        "bg": "color.surface.canvas",
+        "min": 4.5,
+        "note": "信息文字",
+        "fgValue": "#C4D9E2",
+        "bgValue": "#000000",
+        "ratio": 14.37,
+        "pass": true
+      },
+      {
+        "id": "ink-primary.warning-soft",
+        "fg": "color.ink.primary",
+        "bg": "color.status.warning-soft",
+        "min": 4.5,
+        "note": "警告底文字",
+        "fgValue": "#FFFFFF",
+        "bgValue": "#33280F",
+        "ratio": 14.47,
+        "pass": true
+      },
+      {
+        "id": "ink-primary.danger-soft",
+        "fg": "color.ink.primary",
+        "bg": "color.status.danger-soft",
+        "min": 4.5,
+        "note": "危险底文字",
+        "fgValue": "#FFFFFF",
+        "bgValue": "#331C22",
+        "ratio": 15.79,
+        "pass": true
+      },
+      {
+        "id": "border-focus.canvas",
+        "fg": "color.border.focus",
+        "bg": "color.surface.canvas",
+        "min": 3,
+        "note": "焦点框（UI 元素）",
+        "fgValue": "#FFFFFF",
+        "bgValue": "#000000",
+        "ratio": 21,
+        "pass": true
+      }
+    ],
     "cycling.light": [
       {
         "id": "ink-primary.canvas",

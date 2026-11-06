@@ -4,8 +4,9 @@ export type Route =
   | { name: 'home' }
   | { name: 'about'; filter?: string; groupBy?: string; search?: string; preset?: string; phase?: string }
   | { name: 'method'; focus?: string }
-  | { name: 'studio'; sample?: boolean }
-  | { name: 'case'; app: string; tab?: string };
+  | { name: 'studio'; sample?: boolean; device?: string; brand?: string; width?: number; landscape?: boolean }
+  | { name: 'case'; example: string; tab?: string; width?: number }
+  | { name: 'matrix'; app?: string; brand?: string; theme?: string };
 
 export const parseRoute = (hash = window.location.hash): Route => {
   const clean = hash.replace(/^#/, '');
@@ -13,7 +14,15 @@ export const parseRoute = (hash = window.location.hash): Route => {
   const params = new URLSearchParams(query);
 
   const match = path.match(/^\/case\/([a-z0-9-]+)(?:\/([a-z-]+))?/);
-  if (match) return { name: 'case', app: match[1], tab: match[2] };
+  if (match) return { name: 'case', example: match[1], tab: match[2], width: params.get('w') ? Number(params.get('w')) : undefined };
+
+  if (path === '/matrix' || path === '/permutations')
+    return {
+      name: 'matrix',
+      app: params.get('app') ?? undefined,
+      brand: params.get('brand') ?? undefined,
+      theme: params.get('theme') ?? undefined,
+    };
 
   if (path === '/about')
     return {
@@ -25,7 +34,16 @@ export const parseRoute = (hash = window.location.hash): Route => {
       phase: params.get('phase') ?? undefined,
     };
 
-  if (path === '/studio' || path === '/workbench') return { name: 'studio', sample: params.get('sample') === '1' };
+  if (path === '/studio' || path === '/workbench') {
+    return {
+      name: 'studio',
+      sample: params.get('sample') === '1',
+      device: params.get('device') ?? undefined,
+      brand: params.get('brand') ?? undefined,
+      width: params.get('w') ? Number(params.get('w')) : undefined,
+      landscape: params.get('o') === 'land' || undefined,
+    };
+  }
 
   const method = path.match(/^\/method(?:\/([a-z-]+))?$/);
   if (method) return { name: 'method', focus: method[1] };

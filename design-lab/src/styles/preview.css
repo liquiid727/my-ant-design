@@ -1,5 +1,13 @@
 /* ── 产品预览层：屏幕 / 组件 / 明信片 / 记账 / 配方 · 全部读生成的 token，保持产品自己的视觉身份 ── */
 
+/* 预览面自己声明墨色：站点的黑底沿继承链会漏进来 */
+.phone-screen,
+.device-screen,
+.case-shot-inner,
+.reality-body {
+  color: var(--color-ink-primary);
+}
+
 /* ── 屏幕 ── */
 
 .screens {
@@ -705,11 +713,67 @@
   gap: 12px;
   box-shadow: var(--elevation-raised);
   container-type: inline-size;
+  position: relative;
   transition: width var(--motion-duration-base) var(--motion-easing-enter);
+  overflow: hidden;
 }
 
-.recipe-phone[data-device='tablet'],
-.recipe-phone[data-device='desktop'] {
+/* 手机：刘海 + 状态栏；Web：浏览器条 */
+.recipe-phone[data-kind='phone']::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 22px;
+  border-radius: var(--radius-pill);
+  background: var(--color-ink-primary);
+  opacity: 0.9;
+}
+
+/* 横屏时刘海转到左侧边框 */
+.recipe-phone[data-kind='phone'][data-orientation='landscape']::before {
+  top: 50%;
+  left: 6px;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 96px;
+}
+
+.recipe-phone[data-orientation='landscape'] .frame-status {
+  padding-left: 30px;
+  padding-right: 12px;
+}
+
+.recipe-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--type-data-family);
+  font-size: 10px;
+  color: var(--color-ink-tertiary);
+  padding-bottom: 10px;
+}
+
+.recipe-phone[data-kind='phone'] .recipe-status {
+  padding-top: 6px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.recipe-phone[data-kind='tablet'] .recipe-status {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.recipe-phone[data-kind='desktop'] .browser-chrome {
+  margin: -24px -22px 14px;
+  border-radius: 0;
+}
+
+.recipe-phone[data-kind='tablet'],
+.recipe-phone[data-kind='desktop'] {
   padding: 24px 22px;
   gap: 16px;
 }
@@ -723,9 +787,36 @@
   }
 }
 
+/* 桌面：第一个区块当侧栏，其余进主区，比三列更像真实页面 */
+.recipe-side,
+.recipe-main {
+  display: contents;
+}
+
 @container (min-width: 900px) {
   .recipe-phone .recipe-canvas {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: grid;
+    grid-template-columns: minmax(220px, 0.9fr) minmax(0, 2.1fr);
+    gap: 18px 24px;
+    align-items: start;
+  }
+
+  .recipe-phone .recipe-side {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 22px;
+    border-right: var(--hairline);
+    align-self: stretch;
+    /* 内容比画布高时，侧栏跟着滚 */
+    position: sticky;
+    top: 12px;
+  }
+
+  .recipe-phone .recipe-main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 }
 
@@ -749,4 +840,284 @@
   border: 1px dashed var(--color-border-strong);
   border-radius: var(--radius-control);
   padding: 6px 8px;
+}
+
+
+/* ── 记账组件（Amount / BudgetBar / CategoryRow） ── */
+
+.amount {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.amount-value {
+  font-family: var(--type-metric-family);
+  font-size: var(--metric-compact-size, 34px);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  color: var(--color-ink-primary);
+}
+
+.amount[data-direction='income'] .amount-value {
+  color: var(--color-status-success);
+}
+
+.amount[data-direction='transfer'] .amount-value {
+  color: var(--color-ink-secondary);
+}
+
+.amount-caption {
+  font-size: 12px;
+  color: var(--color-ink-tertiary);
+}
+
+.budget {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.budget-label {
+  font-size: 12px;
+  color: var(--color-ink-secondary);
+}
+
+.budget-track {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-sunken);
+  overflow: hidden;
+}
+
+.budget-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-action-primary);
+}
+
+.budget[data-over='true'] .budget-fill {
+  background: var(--color-status-danger);
+}
+
+.budget-meta {
+  font-family: var(--type-data-family);
+  font-size: 10px;
+  color: var(--color-ink-tertiary);
+}
+
+.category-row {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: var(--hairline);
+}
+
+.category-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--color-brand-mark);
+}
+
+.category-row[data-tone='dining'] .category-dot {
+  background: var(--color-status-warning);
+}
+
+.category-row[data-tone='transit'] .category-dot {
+  background: var(--color-status-info);
+}
+
+.category-row[data-tone='subscription'] .category-dot {
+  background: var(--color-action-primary);
+}
+
+.category-name {
+  font-size: 13px;
+  color: var(--color-ink-primary);
+}
+
+.category-share {
+  font-family: var(--type-data-family);
+  font-size: 10px;
+  color: var(--color-ink-tertiary);
+}
+
+.category-amount {
+  font-family: var(--type-data-family);
+  font-size: 12px;
+  color: var(--color-ink-secondary);
+  /* 等宽数字 + 右对齐：列表里的金额按小数点对齐 */
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  min-width: 82px;
+}
+
+.amount-value {
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ── 现实界面：Web 档位 ── */
+
+.device-viewport[data-kind='desktop'] {
+  border-radius: 10px;
+  overflow: hidden;
+  border: var(--hairline);
+  background: var(--color-surface-sunken);
+}
+
+.device-screen[data-kind='desktop'] {
+  background: var(--color-surface-canvas);
+}
+
+.browser-chrome {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 34px;
+  padding: 0 12px;
+  background: var(--color-surface-sunken);
+  border-bottom: var(--hairline);
+}
+
+.browser-dots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.browser-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--color-border-strong);
+  display: block;
+}
+
+.browser-url {
+  font-family: var(--type-data-family);
+  font-size: 10px;
+  color: var(--color-ink-tertiary);
+  background: var(--color-surface-canvas);
+  border-radius: var(--radius-pill);
+  padding: 2px 10px;
+}
+
+
+.studio-width {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--color-ink-tertiary);
+}
+
+.studio-width input {
+  width: 64px;
+  border: var(--hairline);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-raised);
+  color: var(--color-ink-primary);
+  font-family: var(--type-data-family);
+  font-size: 11px;
+  padding: 4px 6px;
+  outline: none;
+}
+
+
+/* ── 设备系统条（共享） ── */
+
+.frame-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--type-data-family);
+  font-size: 10px;
+  color: var(--color-ink-tertiary);
+  padding: 6px 8px 10px;
+}
+
+.frame-status-icons {
+  letter-spacing: 2px;
+}
+
+.frame-browser {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 34px;
+  padding: 0 12px;
+  background: var(--color-surface-sunken);
+  border-bottom: var(--hairline);
+}
+
+.frame-dots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.frame-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--color-border-strong);
+  display: block;
+}
+
+.frame-url {
+  font-family: var(--type-data-family);
+  font-size: 10px;
+  color: var(--color-ink-tertiary);
+  background: var(--color-surface-canvas);
+  border-radius: var(--radius-pill);
+  padding: 2px 10px;
+}
+
+
+.reality-width {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--color-ink-tertiary);
+}
+
+.reality-width input {
+  width: 72px;
+  border: var(--hairline);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-raised);
+  color: var(--color-ink-primary);
+  font-family: var(--type-data-family);
+  font-size: 11px;
+  padding: 4px 6px;
+  outline: none;
+}
+
+.studio-orientation {
+  align-self: center;
+}
+
+.recipe-phone[style*='height'] {
+  overflow: auto;
+}
+
+
+.studio-measure {
+  border: 0;
+  background: transparent;
+  padding: 2px 0;
+  font-family: var(--type-data-family);
+  font-size: 10px;
+  color: var(--color-ink-tertiary);
+  white-space: nowrap;
+  cursor: pointer;
+  border-bottom: 1px dashed var(--color-border-strong);
+}
+
+.studio-measure:hover {
+  color: var(--color-ink-primary);
 }

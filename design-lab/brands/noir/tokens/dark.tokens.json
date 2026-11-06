@@ -1,0 +1,67 @@
+{
+  "$description": "noir 深色：纯黑画布、玻璃卡、白色主操作。站点外壳的暗黑设计感，差值覆盖。",
+  "brand": {
+    "palette": {
+      "$type": "color",
+      "canvas": { "$value": "#000000" },
+      "raised": { "$value": "#0E0E11" },
+      "sunken": { "$value": "#141418" },
+      "ink": { "$value": "#FFFFFF" },
+      "ink-soft": { "$value": "#B9B9BE" },
+      "ink-mute": { "$value": "#8E8E93" },
+      "line": { "$value": "#222227" },
+      "line-strong": { "$value": "#3A3A40" },
+      "mark": { "$value": "#8E8E93" },
+      "quiet": { "$value": "#1D1D22" },
+      "accent": { "$value": "#FFFFFF" },
+      "accent-hover": { "$value": "#E6E6EB" },
+      "accent-pressed": { "$value": "#CFCFD6" },
+      "on-accent": { "$value": "#000000" }
+    }
+  },
+  "color": {
+    "surface": {
+      "$type": "color",
+      "canvas": { "$value": "{brand.palette.canvas}" },
+      "raised": { "$value": "{brand.palette.raised}" },
+      "sunken": { "$value": "{brand.palette.sunken}" },
+      "inverse": { "$value": "#FFFFFF" },
+      "accent-soft": { "$value": "#17171C" }
+    },
+    "ink": {
+      "$type": "color",
+      "primary": { "$value": "{brand.palette.ink}" },
+      "secondary": { "$value": "{brand.palette.ink-soft}" },
+      "tertiary": { "$value": "{brand.palette.ink-mute}" },
+      "inverse": { "$value": "#0A0A0C" },
+      "on-accent": { "$value": "{brand.palette.ink}" }
+    },
+    "action": {
+      "$type": "color",
+      "primary": { "$value": "{brand.palette.accent}" },
+      "primary-hover": { "$value": "{brand.palette.accent-hover}" },
+      "primary-pressed": { "$value": "{brand.palette.accent-pressed}" },
+      "on-primary": { "$value": "{brand.palette.on-accent}" },
+      "secondary": { "$value": "{brand.palette.quiet}" },
+      "on-secondary": { "$value": "{brand.palette.ink}" },
+      "ghost-border": { "$value": "{brand.palette.line-strong}" }
+    },
+    "border": {
+      "$type": "color",
+      "subtle": { "$value": "{brand.palette.line}" },
+      "strong": { "$value": "{brand.palette.line-strong}" },
+      "focus": { "$value": "{brand.palette.ink}" }
+    },
+    "brand": {
+      "$type": "color",
+      "mark": { "$value": "{brand.palette.mark}" },
+      "halo": { "$value": "#2A2A31" }
+    }
+  },
+  "elevation": {
+    "$type": "shadow",
+    "subtle": { "$value": "0 1px 2px rgba(0,0,0,0.60)" },
+    "raised": { "$value": "0 18px 48px rgba(0,0,0,0.65)" },
+    "overlay": { "$value": "0 32px 80px rgba(0,0,0,0.75)" }
+  }
+}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Button, Field, Segmented, TextInput } from './controls';
 import {
   DEFAULT_IMAGE,
   DEFAULT_TEXT,
@@ -36,6 +37,7 @@ export const ProviderSettings = () => {
   const [busy, setBusy] = useState<'models' | 'test' | null>(null);
   const [result, setResult] = useState<TestResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [fieldError, setFieldError] = useState<string | null>(null);
 
   useEffect(() => {
     listeners.add(setOpen);
@@ -109,6 +111,11 @@ export const ProviderSettings = () => {
   };
 
   const save = () => {
+    if (!profile.apiKey.trim()) {
+      setFieldError('先填 API Key，再保存');
+      return;
+    }
+    setFieldError(null);
     saveImageProvider(image);
     saveTextProvider(text);
     setOpen(false);
@@ -137,60 +144,53 @@ export const ProviderSettings = () => {
           {tab === 'text' ? ' 文本模型用于第 4 步的结构映射，不配置也能走完前三步。' : ''}
         </p>
 
-        <div className="settings-tabs" role="tablist">
-          {(
-            [
+        <div className="settings-tabs">
+          <Segmented
+            label="配置类型"
+            value={tab}
+            options={[
               { id: 'image', label: '生图' },
               { id: 'text', label: '文本 / 映射' },
-            ] as { id: Tab; label: string }[]
-          ).map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              className="segmented-item"
-              data-active={tab === item.id}
-              onClick={() => {
-                setTab(item.id);
-                setModels([]);
-                setResult(null);
-                setError(null);
-              }}
-            >
-              {item.label}
-            </button>
-          ))}
+            ]}
+            onChange={(next) => {
+              setTab(next);
+              setModels([]);
+              setResult(null);
+              setError(null);
+            }}
+          />
         </div>
 
         <div className="settings-body">
-          <label className="wb-field">
-            <span className="wb-label">接口地址（OpenAI 兼容）</span>
-            <input
-              className="wb-text"
+          <Field label="接口地址（OpenAI 兼容）">
+            <TextInput
               value={profile.baseUrl}
               spellCheck={false}
               placeholder="https://api.openai.com/v1"
               onChange={(event) => patch({ baseUrl: event.target.value })}
             />
-          </label>
+          </Field>
 
-          <label className="wb-field">
-            <span className="wb-label">API Key</span>
-            <input
-              className="wb-text"
+          <Field
+            label="API Key"
+            error={fieldError ?? undefined}
+            hint="只写进这台机器的 localStorage，不上传"
+          >
+            <TextInput
               type="password"
               value={profile.apiKey}
               spellCheck={false}
               placeholder="sk-…"
-              onChange={(event) => patch({ apiKey: event.target.value })}
+              onChange={(event) => {
+                setFieldError(null);
+                patch({ apiKey: event.target.value });
+              }}
             />
-          </label>
+          </Field>
 
           <div className="settings-row">
-            <label className="wb-field">
-              <span className="wb-label">模型</span>
-              <input
-                className="wb-text"
+            <Field label="模型">
+              <TextInput
                 list="settings-models"
                 value={profile.model}
                 spellCheck={false}
@@ -201,20 +201,17 @@ export const ProviderSettings = () => {
                   <option key={model} value={model} />
                 ))}
               </datalist>
-            </label>
+            </Field>
 
             {tab === 'image' ? (
-              <label className="wb-field">
-                <span className="wb-label">尺寸 / 张数</span>
+              <Field label="尺寸 / 张数">
                 <div className="settings-pair">
-                  <input
-                    className="wb-text"
+                  <TextInput
                     list="settings-sizes"
                     value={image.size}
                     onChange={(event) => patch({ size: event.target.value })}
                   />
-                  <input
-                    className="wb-text"
+                  <TextInput
                     type="number"
                     min={1}
                     max={4}
@@ -227,28 +224,27 @@ export const ProviderSettings = () => {
                     <option key={size} value={size} />
                   ))}
                 </datalist>
-              </label>
+              </Field>
             ) : null}
           </div>
 
           <div className="settings-actions">
             {tab === 'text' ? (
-              <button
-                type="button"
-                className="hero-cta hero-cta-ghost"
+              <Button
+                variant="ghost"
                 onClick={inheritFromImage}
                 disabled={!image.apiKey}
                 title={image.apiKey ? '复制生图的接口地址与 Key，模型保持不变' : '先配置生图，才能沿用'}
               >
                 沿用生图配置
-              </button>
+              </Button>
             ) : null}
-            <button type="button" className="hero-cta hero-cta-ghost" onClick={() => void pullModels()} disabled={busy !== null}>
+            <Button variant="ghost" onClick={() => void pullModels()} disabled={busy !== null}>
               {busy === 'models' ? '拉取中…' : '获取模型列表'}
-            </button>
-            <button type="button" className="hero-cta hero-cta-ghost" onClick={() => void runTest()} disabled={busy !== null}>
+            </Button>
+            <Button variant="ghost" onClick={() => void runTest()} disabled={busy !== null}>
               {busy === 'test' ? '测试中…' : '测试连接'}
-            </button>
+            </Button>
           </div>
 
           {result ? (
@@ -261,9 +257,8 @@ export const ProviderSettings = () => {
         </div>
 
         <footer className="settings-foot">
-          <button
-            type="button"
-            className="settings-link"
+          <Button
+            variant="quiet"
             onClick={() => {
               clearProviders();
               setImage(DEFAULT_IMAGE);
@@ -271,14 +266,12 @@ export const ProviderSettings = () => {
             }}
           >
             清除本机配置
-          </button>
+          </Button>
           <div className="settings-foot-actions">
-            <button type="button" className="hero-cta hero-cta-ghost" onClick={() => setOpen(false)}>
+            <Button variant="ghost" onClick={() => setOpen(false)}>
               取消
-            </button>
-            <button type="button" className="hero-cta" onClick={save}>
-              保存
-            </button>
+            </Button>
+            <Button onClick={save}>保存</Button>
           </div>
         </footer>
       </div>

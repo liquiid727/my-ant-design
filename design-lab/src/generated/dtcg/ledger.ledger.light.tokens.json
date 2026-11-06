@@ -241,6 +241,94 @@
       }
     }
   },
+  "chip": {
+    "active-bg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#FFFFFF"
+      }
+    },
+    "active-fg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0784313725490196,
+          0.08627450980392157,
+          0.10196078431372549
+        ],
+        "alpha": 1,
+        "hex": "#14161A"
+      }
+    },
+    "bg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9294117647058824,
+          0.9372549019607843,
+          0.9529411764705882
+        ],
+        "alpha": 1,
+        "hex": "#EDEFF3"
+      }
+    },
+    "border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8941176470588236,
+          0.9058823529411765,
+          0.9254901960784314
+        ],
+        "alpha": 1,
+        "hex": "#E4E7EC"
+      }
+    },
+    "fg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2980392156862745,
+          0.3333333333333333,
+          0.3843137254901961
+        ],
+        "alpha": 1,
+        "hex": "#4C5562"
+      }
+    },
+    "height": {
+      "$type": "dimension",
+      "$value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "padding-inline": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": {
+        "value": 999,
+        "unit": "px"
+      }
+    }
+  },
   "color": {
     "action": {
       "ghost-border": {
@@ -875,6 +963,94 @@
           "value": 0,
           "unit": "px"
         }
+      }
+    }
+  },
+  "field": {
+    "bg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#FFFFFF"
+      }
+    },
+    "border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8941176470588236,
+          0.9058823529411765,
+          0.9254901960784314
+        ],
+        "alpha": 1,
+        "hex": "#E4E7EC"
+      }
+    },
+    "border-focus": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7058823529411765,
+          0.20392156862745098,
+          0.11764705882352941
+        ],
+        "alpha": 1,
+        "hex": "#B4341E"
+      }
+    },
+    "height": {
+      "$type": "dimension",
+      "$value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "label": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.38823529411764707,
+          0.4235294117647059,
+          0.47058823529411764
+        ],
+        "alpha": 1,
+        "hex": "#636C78"
+      }
+    },
+    "padding-inline": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "placeholder": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.38823529411764707,
+          0.4235294117647059,
+          0.47058823529411764
+        ],
+        "alpha": 1,
+        "hex": "#636C78"
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": {
+        "value": 6,
+        "unit": "px"
       }
     }
   },

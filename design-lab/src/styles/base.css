@@ -1,4 +1,6 @@
-/* ── 基础层：站点的底色、字体与尺度。产品预览另有一套 token，不从这里取值。 ── */
+/* ── 基础层：站点的底色、字体与尺度。
+   这里的 --lab-* 与 brands/noir/tokens 是同一套视觉语言的两种落点：
+   站点外壳固定用它，产品预览则走编译器产出的 --color-*，两者不互相覆盖。 ── */
 
 :root {
   --lab-bg: #000;
@@ -8,8 +10,8 @@
   --lab-ink: #ffffff;
   --lab-ink-soft: #f5f5f7;
   --lab-muted: #b5b5b5;
-  --lab-dim: #86868b;
-  --lab-dimmer: #6e6e73;
+  --lab-dim: #9a9aa0;
+  --lab-dimmer: #7f7f85;
   --lab-line: rgba(255, 255, 255, 0.1);
   --lab-line-soft: rgba(255, 255, 255, 0.06);
   --lab-line-strong: rgba(255, 255, 255, 0.2);
@@ -27,6 +29,10 @@
   --lab-text: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --lab-mono: 'SF Mono', ui-monospace, 'JetBrains Mono', 'SFMono-Regular', Menlo, 'Courier New', monospace;
   --lab-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --lab-shadow: #000000;
+
+  /* 产品层仍在用的别名（旧样式与新增记账组件） */
+  --hairline: 1px solid var(--color-border-subtle);
 }
 
 *,
@@ -142,7 +148,8 @@ pre,
 .case,
 .method,
 .about,
-.studio {
+.studio,
+.matrix {
   width: min(var(--lab-content), 100% - var(--lab-gutter) * 2);
   margin: 0 auto;
   flex: 1;

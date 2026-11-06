@@ -1,6 +1,7 @@
 // allow-hardcoded-file: Studio 处理的是用户图片与生成结果，默认色/透明占位不是页面样式
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CopyButton } from '../components/code';
+import { Button, Segmented, TextInput } from '../components/controls';
 import { pushToast } from '../components/toast';
 import { analyzeImage, deltaE, loadImage, type Cluster, type Profile, type Role } from '../workbench/analysis';
 import { deriveRecipe, readPixels, renderAndDiff, type DiffResult, type Recipe } from '../workbench/recipe';
@@ -15,6 +16,8 @@ import { DEFAULT_IMAGE, DEFAULT_TEXT, generateImages, loadImageProvider, loadTex
 import { openProviderSettings } from '../components/provider-settings';
 import { RecipeCanvas, SUPPORTED } from './RecipeCanvas';
 import { DEMO_RECIPES } from '../workbench/demo';
+import { DeviceChrome } from '../components/device-chrome';
+import { deviceById, renderDevices } from '../lib/devices';
 import type { ThemeName } from './model';
 
 const STEPS = [
@@ -28,14 +31,9 @@ type StepId = (typeof STEPS)[number]['id'];
 
 type Shot = { id: string; src: string; from: 'model' | 'local' };
 
-const DEVICES = [
-  { id: 'phone', label: '手机 375', width: 375, note: '小程序基准' },
-  { id: 'phone-lg', label: '手机 430', width: 430, note: '大屏 iPhone' },
-  { id: 'tablet', label: '平板 768', width: 768, note: 'iPad 竖屏' },
-  { id: 'desktop', label: '桌面 1280', width: 1280, note: 'Web' },
-] as const;
+const DEVICES = renderDevices();
 
-type DeviceId = (typeof DEVICES)[number]['id'];
+type DeviceId = string;
 
 const ROLE_LABEL: Record<Role, string> = {
   background: '背景',
@@ -69,7 +67,23 @@ const PUBLIC_TOKENS: Record<AppId, Set<string>> = {
   ),
 };
 
-export const Studio = ({ sample }: { sample?: boolean }) => {
+export const Studio = ({
+  sample,
+  device: deviceParam,
+  brand: brandParam,
+  width: widthParam,
+  landscape: landscapeParam,
+  theme,
+  onTheme,
+}: {
+  sample?: boolean;
+  device?: string;
+  brand?: string;
+  width?: number;
+  landscape?: boolean;
+  theme: ThemeName;
+  onTheme: (theme: ThemeName) => void;
+}) => {
   const [step, setStep] = useState<StepId>(1);
   const [image, setImage] = useState<ImageProvider>(DEFAULT_IMAGE);
   const [text, setText] = useState<TextProvider>(DEFAULT_TEXT);
@@ -85,17 +99,25 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
   const [label, setLabel] = useState('新品牌');
   const [latin, setLatin] = useState('Studio Brand');
   const [customId, setCustomId] = useState<string | null>(null);
-  const [previewTheme, setPreviewTheme] = useState<ThemeName>('light');
   const [rebuild, setRebuild] = useState<{ recipe: Recipe; diff: DiffResult } | null>(null);
   const [rebuildState, setRebuildState] = useState<'idle' | 'busy' | 'error'>('idle');
   const [targetApp, setTargetApp] = useState<AppId>('ride');
-  const [renderBrand, setRenderBrand] = useState<'generated' | 'cycling' | 'ledger'>('generated');
-  const [device, setDevice] = useState<DeviceId>('phone');
+  const [renderBrand, setRenderBrand] = useState<'generated' | 'cycling' | 'ledger' | 'noir'>(
+    (brandParam as 'cycling' | 'ledger' | 'noir' | undefined) ?? 'generated',
+  );
+  const [device, setDevice] = useState<DeviceId>(deviceById(deviceParam)?.id ?? 'se');
+  const [landscape, setLandscape] = useState(Boolean(landscapeParam));
+  const [zoom, setZoom] = useState<'auto' | 50 | 75 | 100>('auto');
+  const [customWidth, setCustomWidth] = useState<number | null>(
+    widthParam && widthParam >= 320 && widthParam <= 1600 ? Math.round(widthParam) : null,
+  );
   const [mapping, setMapping] = useState<{ recipe: PageRecipe | null; errors: string[]; attempts: number } | null>(null);
   const [mappingState, setMappingState] = useState<'idle' | 'busy' | 'error'>('idle');
   const [outputTheme, setOutputTheme] = useState<ThemeName | 'recipe' | 'page-recipe'>('light');
 
   const fileInput = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLDivElement | null>(null);
+  const [measured, setMeasured] = useState<{ w: number; h: number } | null>(null);
   const shotsRef = useRef<Shot[]>([]);
   shotsRef.current = shots;
 
@@ -133,7 +155,20 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
   }, [customId, label, latin]);
 
   const pack = useMemo(() => generatePack({ id, label, latin, seed, font, radius }), [id, label, latin, seed, font, radius]);
-  const resolved = previewTheme === 'light' ? pack.light.resolved : pack.dark.resolved;
+  const resolved = theme === 'light' ? pack.light.resolved : pack.dark.resolved;
+  const deviceInfo = deviceById(device);
+  const baseWidth = customWidth ?? deviceInfo?.width ?? 375;
+  const baseHeight = deviceInfo ? Math.round(baseWidth * (deviceInfo.height / deviceInfo.width)) : Math.round(baseWidth * 1.8);
+  const effectiveWidth = landscape ? baseHeight : baseWidth;
+  const frameHeight = landscape ? baseWidth : null;
+  // 横屏只换尺寸，不换设备类型（横过来的手机还是手机）
+  const effectiveKind = customWidth
+    ? customWidth >= 900
+      ? 'desktop'
+      : customWidth >= 600
+        ? 'tablet'
+        : 'phone'
+    : (deviceInfo?.kind ?? 'phone');
   const reference = shots.find((shot) => shot.id === selected) ?? null;
 
   /** 选中一张图就立刻分析，省一次点击 */
@@ -225,7 +260,7 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, reference, seed, previewTheme]);
+  }, [step, reference, seed, theme]);
 
   const runMapping = async () => {
     if (!rebuild) return;
@@ -274,10 +309,33 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
 
   const recipeVars = useMemo(() => {
     const entries = brandTokens
-      ? brandTokens.map((token) => [`--${token.path.replace(/\./g, '-')}`, previewTheme === 'light' ? token.values.light : token.values.dark])
+      ? brandTokens.map((token) => [`--${token.path.replace(/\./g, '-')}`, theme === 'light' ? token.values.light : token.values.dark])
       : Object.entries(resolved).map(([path, value]) => [`--${path.replace(/\./g, '-')}`, value]);
     return Object.fromEntries(entries) as React.CSSProperties;
-  }, [brandTokens, previewTheme, resolved]);
+  }, [brandTokens, theme, resolved]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (sample) params.set('sample', '1');
+    if (device !== 'se') params.set('device', device);
+    if (renderBrand !== 'generated') params.set('brand', renderBrand);
+    if (customWidth) params.set('w', String(customWidth));
+    if (landscape) params.set('o', 'land');
+    const query = params.toString();
+    window.history.replaceState(null, '', query ? `#/studio?${query}` : '#/studio');
+  }, [device, renderBrand, customWidth, landscape, sample]);
+
+  // 实际渲染出来的像素尺寸，方便对齐截图
+  useEffect(() => {
+    const node = phoneRef.current;
+    if (!node) return;
+    const observer = new ResizeObserver(() => {
+      const rect = node.getBoundingClientRect();
+      setMeasured({ w: Math.round(rect.width), h: Math.round(rect.height) });
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [mapping?.recipe, device, landscape, customWidth, theme]);
 
   const vars = {
     '--wb-canvas': resolved['color.surface.canvas'],
@@ -378,9 +436,9 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
                     {image.apiKey ? '已配置 Key' : '未配置 Key'}
                   </p>
                 </div>
-                <button type="button" className="hero-cta hero-cta-ghost" onClick={openProviderSettings}>
+                <Button variant="ghost" onClick={openProviderSettings}>
                   配置
-                </button>
+                </Button>
               </div>
 
               <div className="wb-field">
@@ -397,12 +455,12 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
               </div>
 
               <div className="studio-actions">
-                <button type="button" className="hero-cta" onClick={() => void runGeneration()} disabled={status.kind === 'busy'}>
+                <Button onClick={() => void runGeneration()} disabled={status.kind === 'busy'}>
                   {status.kind === 'busy' ? '生成中…' : '生成图片'}
-                </button>
-                <button type="button" className="hero-cta hero-cta-ghost" onClick={() => fileInput.current?.click()}>
+                </Button>
+                <Button variant="ghost" onClick={() => fileInput.current?.click()}>
                   导入本地图片
-                </button>
+                </Button>
                 <input ref={fileInput} type="file" accept="image/*" multiple hidden onChange={(event) => void importFiles(event.target.files)} />
               </div>
               <p className="studio-hint">没有 Key 也能用：直接导入你已有的参考图，后面三步完全一样。</p>
@@ -499,9 +557,9 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
                     </li>
                   ))}
                 </ul>
-                <button type="button" className="hero-cta" onClick={() => setStep(3)} disabled={!profile}>
+                <Button onClick={() => setStep(3)} disabled={!profile}>
                   用这份分析去归一 →
-                </button>
+                </Button>
               </div>
             </div>
           )}
@@ -526,49 +584,35 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
                     value={seed}
                     onChange={(event) => setSeed(event.target.value.toUpperCase())}
                   />
-                  <input className="wb-text" value={seed} onChange={(event) => setSeed(event.target.value.toUpperCase())} spellCheck={false} />
+                  <TextInput value={seed} onChange={(event) => setSeed(event.target.value.toUpperCase())} spellCheck={false} />
                 </div>
               </div>
 
               <div className="wb-field">
                 <span className="wb-label">字体性格</span>
-                <div className="segmented">
-                  {[
+                <Segmented
+                  label="字体性格"
+                  value={font}
+                  options={[
                     { id: 'serif', label: '衬线 · 编辑感' },
                     { id: 'sans', label: '无衬线 · 技术感' },
-                  ].map((option) => (
-                    <button
-                      key={option.id}
-                      type="button"
-                      className="segmented-item"
-                      data-active={font === option.id}
-                      onClick={() => setFont(option.id as 'serif' | 'sans')}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
+                  ]}
+                  onChange={setFont}
+                />
               </div>
 
               <div className="wb-field">
                 <span className="wb-label">圆角尺度</span>
-                <div className="segmented">
-                  {[
+                <Segmented
+                  label="圆角尺度"
+                  value={radius}
+                  options={[
                     { id: 'small', label: '利落' },
                     { id: 'medium', label: '中性' },
                     { id: 'large', label: '柔和' },
-                  ].map((option) => (
-                    <button
-                      key={option.id}
-                      type="button"
-                      className="segmented-item"
-                      data-active={radius === option.id}
-                      onClick={() => setRadius(option.id as 'small' | 'medium' | 'large')}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
+                  ]}
+                  onChange={setRadius}
+                />
               </div>
 
               <div className="wb-two">
@@ -576,13 +620,13 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
                   <label className="wb-label" htmlFor="studio-label">
                     品牌名
                   </label>
-                  <input id="studio-label" className="wb-text" value={label} onChange={(event) => setLabel(event.target.value)} />
+                  <TextInput id="studio-label" value={label} onChange={(event) => setLabel(event.target.value)} />
                 </div>
                 <div className="wb-field">
                   <label className="wb-label" htmlFor="studio-latin">
                     Latin
                   </label>
-                  <input id="studio-latin" className="wb-text" value={latin} onChange={(event) => setLatin(event.target.value)} />
+                  <TextInput id="studio-latin" value={latin} onChange={(event) => setLatin(event.target.value)} />
                 </div>
               </div>
 
@@ -590,9 +634,8 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
                 <label className="wb-label" htmlFor="studio-id">
                   目录名
                 </label>
-                <input
+                <TextInput
                   id="studio-id"
-                  className="wb-text"
                   value={id}
                   onChange={(event) => setCustomId(event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
                 />
@@ -601,27 +644,23 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
                 </p>
               </div>
 
-              <button type="button" className="hero-cta" onClick={() => setStep(4)}>
+              <Button onClick={() => setStep(4)}>
                 看导出与校验 →
-              </button>
+              </Button>
             </div>
 
             <div className="studio-col">
               <div className="studio-preview-bar">
                 <span className="wb-label">预览主题</span>
-                <div className="segmented">
-                  {(['light', 'dark'] as ThemeName[]).map((item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      className="segmented-item"
-                      data-active={previewTheme === item}
-                      onClick={() => setPreviewTheme(item)}
-                    >
-                      {item === 'light' ? '浅色' : '深色'}
-                    </button>
-                  ))}
-                </div>
+                <Segmented
+                  label="预览主题"
+                  value={theme}
+                  options={[
+                    { id: 'light', label: '浅色' },
+                    { id: 'dark', label: '深色' },
+                  ]}
+                  onChange={onTheme}
+                />
               </div>
 
               <div className="wb-preview" style={vars}>
@@ -712,22 +751,18 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
                 提议会立刻用和 <code>npm run recipe</code> 相同的规则校验，不合格就带着错误再问一轮。
               </p>
               <div className="studio-mapping-controls">
-                <div className="segmented">
-                  {(['ride', 'ledger'] as AppId[]).map((item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      className="segmented-item"
-                      data-active={targetApp === item}
-                      onClick={() => setTargetApp(item)}
-                    >
-                      {item === 'ride' ? '映射到骑行' : '映射到记账'}
-                    </button>
-                  ))}
-                </div>
-                <button type="button" className="hero-cta" onClick={() => void runMapping()} disabled={mappingState === 'busy' || !rebuild}>
+                <Segmented
+                  label="映射目标"
+                  value={targetApp}
+                  options={[
+                    { id: 'ride', label: '映射到骑行' },
+                    { id: 'ledger', label: '映射到记账' },
+                  ]}
+                  onChange={setTargetApp}
+                />
+                <Button onClick={() => void runMapping()} disabled={mappingState === 'busy' || !rebuild}>
                   {mappingState === 'busy' ? '生成中…' : mapping?.recipe ? '重新生成' : '生成页面配方'}
-                </button>
+                </Button>
               </div>
 
               {mapping ? (
@@ -800,28 +835,20 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
             <div className="studio-col">
               <div className="studio-preview-bar">
                 <span className="wb-label">导出</span>
-                <div className="segmented">
-                  {(['light', 'dark', 'recipe', 'page-recipe'] as const).map((item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      className="segmented-item"
-                      data-active={outputTheme === item}
-                      onClick={() => setOutputTheme(item)}
-                    >
-                      {item === 'light'
-                        ? 'brand.tokens.json'
-                        : item === 'dark'
-                          ? 'dark.tokens.json'
-                          : item === 'recipe'
-                            ? 'visual-recipe.json'
-                            : 'page-recipe.json'}
-                    </button>
-                  ))}
-                </div>
-                <button type="button" className="hero-cta hero-cta-ghost" onClick={download}>
+                <Segmented
+                  label="导出内容"
+                  value={outputTheme}
+                  options={[
+                    { id: 'light', label: 'brand.tokens.json' },
+                    { id: 'dark', label: 'dark.tokens.json' },
+                    { id: 'recipe', label: 'visual-recipe.json' },
+                    { id: 'page-recipe', label: 'page-recipe.json' },
+                  ]}
+                  onChange={setOutputTheme}
+                />
+                <Button variant="ghost" onClick={download}>
                   下载
-                </button>
+                </Button>
               </div>
 
               <div className="wb-code">
@@ -838,45 +865,91 @@ export const Studio = ({ sample }: { sample?: boolean }) => {
             <div className="studio-render">
               <div className="studio-render-head">
                 <span className="wb-label">配方 → 界面</span>
-                <div className="segmented">
-                  {DEVICES.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      className="segmented-item"
-                      data-active={device === item.id}
-                      title={item.note}
-                      onClick={() => setDevice(item.id)}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
-                <div className="segmented">
-                  {(
-                    [
-                      { id: 'generated', label: '本品牌' },
-                      { id: 'cycling', label: '骑行包' },
-                      { id: 'ledger', label: '记账包' },
-                    ] as { id: 'generated' | 'cycling' | 'ledger'; label: string }[]
-                  ).map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      className="segmented-item"
-                      data-active={renderBrand === item.id}
-                      onClick={() => setRenderBrand(item.id)}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
+                <Segmented
+                  label="设备"
+                  value={device}
+                  options={DEVICES.map((item) => ({
+                    id: item.id,
+                    label: item.label,
+                    title: `${item.width} × ${item.height}`,
+                  }))}
+                  onChange={(next) => {
+                    setCustomWidth(null);
+                    setDevice(next);
+                  }}
+                />
+                <button
+                  type="button"
+                  className="ctl-chip studio-orientation"
+                  data-active={landscape}
+                  onClick={() => setLandscape((value) => !value)}
+                  title="宽高互换"
+                >
+                  {landscape ? '横屏' : '竖屏'}
+                </button>
+                {measured ? (
+                  <button
+                    type="button"
+                    className="studio-measure"
+                    title="复制实际渲染尺寸"
+                    onClick={() => {
+                      const text = `${measured.w} × ${measured.h} @ ${Math.round((measured.w / effectiveWidth) * 100)}%`;
+                      void navigator.clipboard?.writeText(text).then(() => pushToast('已复制尺寸')).catch(() => undefined);
+                    }}
+                  >
+                    {measured.w} × {measured.h} · {Math.round((measured.w / effectiveWidth) * 100)}%
+                  </button>
+                ) : null}
+                <Segmented
+                  label="缩放"
+                  value={zoom}
+                  options={[
+                    { id: 'auto', label: '自适应' },
+                    { id: 50, label: '50%' },
+                    { id: 75, label: '75%' },
+                    { id: 100, label: '100%' },
+                  ]}
+                  onChange={setZoom}
+                />
+                <label className="studio-width">
+                  宽
+                  <input
+                    type="number"
+                    min={320}
+                    max={1600}
+                    value={effectiveWidth}
+                    onChange={(event) => {
+                      const next = Number(event.target.value);
+                      setCustomWidth(next >= 320 && next <= 1600 ? Math.round(next) : null);
+                    }}
+                  />
+                  px
+                </label>
+                <Segmented
+                  label="品牌包"
+                  value={renderBrand}
+                  options={[
+                    { id: 'generated', label: '本品牌' },
+                    { id: 'cycling', label: '骑行包' },
+                    { id: 'ledger', label: '记账包' },
+                    { id: 'noir', label: 'Noir 包' },
+                  ]}
+                  onChange={setRenderBrand}
+                />
               </div>
               <div
+                ref={phoneRef}
                 className="recipe-phone"
-                data-device={device}
-                style={{ ...recipeVars, width: `min(100%, ${DEVICES.find((item) => item.id === device)?.width ?? 375}px)` }}
+                data-kind={effectiveKind}
+                data-orientation={landscape ? 'landscape' : 'portrait'}
+                style={{
+                  ...recipeVars,
+                  width: `min(100%, ${effectiveWidth}px)`,
+                  ...(frameHeight ? { height: frameHeight } : {}),
+                  ...(zoom === 'auto' ? {} : { transform: `scale(${zoom / 100})`, transformOrigin: 'top left', marginBottom: 0 }),
+                }}
               >
+                <DeviceChrome kind={effectiveKind} />
                 <RecipeCanvas recipe={mapping.recipe} />
               </div>
               <p className="studio-hint">

@@ -1,7 +1,11 @@
 import { screensOf } from '../apps';
 import { CopyButton } from '../components/code';
+import { BrowserFrame } from '../components/web';
+import { Button } from '../components/controls';
 import { navigate } from '../lib/router';
-import { apps, brandsOf, bytes, manifest, perAppArtifacts, type ThemeName } from './model';
+import { EXAMPLES, type Example } from './examples';
+import { NoirWeb } from './noir-web';
+import { apps, brandsOf, bytes, manifest, perAppArtifacts } from './model';
 
 const VALUE_LAYOUT = [
   {
@@ -14,7 +18,7 @@ const VALUE_LAYOUT = [
     index: '02',
     title: '多端、多品牌，不用复制组件',
     body: '组件只认语义层。换品牌是换一套变量，换产品是换一套业务语义——页面结构一行都不动。',
-    note: '2 产品 × 2 品牌 × 2 主题 = 8 套排列',
+    note: `${apps.length} 产品 × ${brandsOf('ride').length} 品牌 × 2 主题 = ${manifest.permutations} 套排列`,
   },
   {
     index: '03',
@@ -24,55 +28,60 @@ const VALUE_LAYOUT = [
   },
 ];
 
-const SCOPE: Record<string, string> = {
-  ride: 'Token 分层 · 组件契约 · Web 与小程序双端产物 · 视觉门禁',
-  ledger: '第二产品语义 · 组件复用验证 · 门禁扩展',
-};
-
-const CaseCard = ({ appId, theme }: { appId: string; theme: ThemeName }) => {
-  const app = apps.find((item) => item.id === appId);
-  const screens = screensOf(appId);
+const ExampleCard = ({ example }: { example: Example }) => {
+  const screens = screensOf(example.app);
+  const stat = manifest.apps.find((item) => item.id === example.app);
   const Screen = screens[0].component;
-  const brands = brandsOf(appId);
-  const featured = brands.find((brand) => brand.id === appId) ?? brands[0];
-  const stat = manifest.apps.find((item) => item.id === appId);
+  const systemTokens = stat ? stat.tokens.public - (stat.tokens.byLayer.product ?? 0) : 0;
 
-  if (!app || !stat) return null;
+  if (!stat) return null;
 
   return (
-    <article className="case-card">
-      <span className="case-shot" data-app={appId} data-brand={featured.id} data-theme={theme}>
-        <span className="case-shot-inner">
-          <Screen />
-        </span>
-      </span>
-      <span className="case-body">
-        <span className="case-eyebrow">
-          {app.label} · {brands.length} 品牌 · {screens.length} 屏
-        </span>
-        <span className="case-title">{featured.latin}</span>
-        <span className="case-desc">{appId === 'ride' ? '路线规划 · 骑行记录 · 成就 · 明信片' : '月度账目 · 分类预算 · 流水明细'}</span>
-        <span className="case-role">我做了什么 · {SCOPE[appId]}</span>
-        <span className="case-meta">
-          {stat.tokens.public} 个公开 token · {stat.tokens.byLayer.product ?? 0} 个产品语义
-        </span>
-        <span className="case-actions">
-          <button type="button" className="case-cta" onClick={() => navigate(`/case/${appId}`)}>
-            进入案例 →
+    <article className="example-card">
+      <div className="example-preview" data-medium={example.medium}>
+        {example.medium === 'mobile' ? (
+          <span className="example-shot" data-app={example.app} data-brand={example.brand} data-theme={example.theme}>
+            <span className="example-shot-inner">
+              <Screen />
+            </span>
+          </span>
+        ) : (
+          <span className="example-web" data-app={example.app} data-brand={example.brand} data-theme={example.theme}>
+            <span className="example-web-scale">
+              <BrowserFrame url={`${example.id}.alro.studio`} meta={`${example.app} · ${example.brand}`}>
+                <NoirWeb />
+              </BrowserFrame>
+            </span>
+          </span>
+        )}
+      </div>
+
+      <div className="example-body">
+        <p className="example-kicker">
+          {example.kicker} · {example.medium === 'web' ? '1160 宽' : `${screens.length} 屏`}
+        </p>
+        <h3 className="example-title">{example.title}</h3>
+        <p className="example-desc">{example.description}</p>
+        <p className="example-scope">我做了什么 · {example.scope}</p>
+        <p className="example-meta">
+          {example.medium === 'web'
+            ? `${systemTokens} 个系统 token · ${manifest.permutations} 套排列`
+            : `${stat.tokens.public} 个公开 token · ${stat.tokens.byLayer.product ?? 0} 个产品语义`}
+        </p>
+        <div className="example-actions">
+          <button type="button" className="case-cta" onClick={() => navigate(`/case/${example.id}`)}>
+            进入示例 →
           </button>
-          <button type="button" className="case-cta case-cta-ghost" onClick={() => navigate(`/case/${appId}/reality`)}>
-            现实界面
+          <button type="button" className="case-cta case-cta-ghost" onClick={() => navigate(`/matrix?app=${example.app}&brand=${example.brand}&theme=${example.theme}`)}>
+            全部排列
           </button>
-          <button type="button" className="case-cta case-cta-ghost" onClick={() => navigate(`/case/${appId}/decisions`)}>
-            设计决策
-          </button>
-        </span>
-      </span>
+        </div>
+      </div>
     </article>
   );
 };
 
-export const Home = ({ theme, onTheme }: { theme: ThemeName; onTheme?: (theme: ThemeName) => void }) => {
+export const Home = () => {
   const rideArtifacts = perAppArtifacts('ride');
   const rideBytes = rideArtifacts.reduce((sum, item) => sum + item.bytes, 0);
   const publicTokens = manifest.apps.reduce((sum, app) => sum + app.tokens.public, 0);
@@ -83,16 +92,22 @@ export const Home = ({ theme, onTheme }: { theme: ThemeName; onTheme?: (theme: T
       label: '个产物 / 一次编译',
       calc: [
         { text: 'tokens.css / wxss / ts：各 1 个', to: '/method/output' },
-        { text: 'dtcg：4 个（2 品牌 × 2 主题）', to: '/method/output' },
+        {
+          text: `dtcg：${rideArtifacts.filter((item) => item.kind === 'dtcg').length} 个（${brandsOf('ride').length} 品牌 × 2 主题）`,
+          to: '/method/output',
+        },
         { text: 'catalog / qa / design-context：3 个', to: '/method/output' },
-        { text: '单个产品 10 个 × 2 个产品 = 20', to: '/method/output' },
+        {
+          text: `单个产品 ${rideArtifacts.length} 个 × ${apps.length} 个产品 = ${manifest.artifacts.length}`,
+          to: '/method/output',
+        },
       ],
     },
     {
       value: String(manifest.permutations),
       label: '套排列 / 同一批组件',
       calc: [
-        { text: '2 个产品 × 2 个品牌 × 2 个主题', to: '/case/ride' },
+        { text: `${apps.length} 个产品 × ${brandsOf('ride').length} 个品牌 × 2 个主题`, to: '/matrix' },
         { text: '组件只有一份，排列只影响变量', to: '/method/process' },
       ],
     },
@@ -121,12 +136,10 @@ export const Home = ({ theme, onTheme }: { theme: ThemeName; onTheme?: (theme: T
             再编译成 Web 与小程序真正能用的变量——并用门禁和像素基线守住它，让 AI 参与进来也不跑偏。
           </p>
           <div className="hero-actions">
-            <button type="button" className="hero-cta" onClick={() => navigate('/method')}>
-              它是怎么做到的 →
-            </button>
-            <button type="button" className="hero-cta hero-cta-ghost" onClick={() => navigate('/about')}>
+            <Button onClick={() => navigate('/method')}>它是怎么做到的 →</Button>
+            <Button variant="ghost" onClick={() => navigate('/about')}>
               关于这套东西
-            </button>
+            </Button>
           </div>
           <dl className="hero-stats">
             <div>
@@ -153,10 +166,10 @@ export const Home = ({ theme, onTheme }: { theme: ThemeName; onTheme?: (theme: T
         </div>
 
         <aside className="hero-panel">
-          <p className="hero-panel-title">一句话说清它是什么</p>
+          <p className="hero-panel-title">Token 管线 · 一次运行</p>
           <p className="hero-panel-lede">
-            一套 <strong>Token-first 的前端设计管线</strong>：定义 → 编译 → 门禁 → 消费 → 回归，
-            每个环节都有文件和命令，不依赖某个人的手感。
+            定义 → 编译 → 门禁 → 消费 → 回归。每个环节都有文件和命令，
+            不依赖某个人的手感。
           </p>
           <ol className="hero-flow">
             <li>
@@ -228,25 +241,20 @@ export const Home = ({ theme, onTheme }: { theme: ThemeName; onTheme?: (theme: T
       <section className="home-section" id="cases">
         <header className="home-head home-head-row">
           <div>
-            <p className="eyebrow">案例</p>
-            <h2 className="home-title">两个产品，同一套组件</h2>
+            <p className="eyebrow">示例</p>
+            <h2 className="home-title">三个示例，三种身份</h2>
             <p className="home-note">
-              骑行与记账共用同一批组件与同一套语义层，只换产品语义与品牌包。点进去可以逐屏看：排列矩阵、真机尺寸、动效、审计、决策与完整 token 表。
+              骑行与记账是移动端；Noir 是同一套组件的桌面 Web 立面。每个示例固定自己的品牌与主题，
+              进入后只看这一种身份；想看全部组合，去「排列」。
             </p>
           </div>
-          {onTheme ? (
-            <div className="segmented" role="group" aria-label="预览主题">
-              {(['light', 'dark'] as ThemeName[]).map((item) => (
-                <button key={item} type="button" className="segmented-item" data-active={theme === item} onClick={() => onTheme(item)}>
-                  {item === 'light' ? '浅色预览' : '深色预览'}
-                </button>
-              ))}
-            </div>
-          ) : null}
+          <button type="button" className="how-link" onClick={() => navigate('/matrix')}>
+            全部 {manifest.permutations} 套排列 →
+          </button>
         </header>
-        <div className="cases">
-          {apps.map((app) => (
-            <CaseCard key={app.id} appId={app.id} theme={theme} />
+        <div className="examples">
+          {EXAMPLES.map((example) => (
+            <ExampleCard key={example.id} example={example} />
           ))}
         </div>
       </section>

@@ -29,6 +29,18 @@ export const APPS = [
 /** 品牌：只决定视觉身份（颜色 / 字体 / 圆角 / 阴影 / 缓动）。 */
 export const BRANDS = [
   {
+    id: 'noir',
+    label: 'Noir',
+    latin: 'Noir',
+    description: '纯黑 + 冷白 + 玻璃卡 + 胶囊圆角，站点外壳的暗黑设计感。',
+    featured: true,
+    brand: ['brands/noir/tokens/brand.tokens.json'],
+    themes: {
+      light: [],
+      dark: [`${CORE}/themes/dark.tokens.json`, 'brands/noir/tokens/dark.tokens.json'],
+    },
+  },
+  {
     id: 'cycling',
     label: '骑行',
     latin: 'Ride Atlas',

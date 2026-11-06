@@ -2,13 +2,13 @@
 
 一条可以跑通的设计管线：**源 JSON → 解析 → 多目标产物 → 门禁 → 实验台**。
 三个正交维度：**app（产品语义）× brand（视觉身份）× theme（明暗）**。
-当前 **2 产品 × 2 品牌 × 2 主题 = 8 套排列**，共用同一套 core 与同一批组件。
+当前 **2 产品 × 3 品牌 × 2 主题 = 12 套排列**，共用同一套 core 与同一批组件。
 
 ```
 tokens/*.json  ──▶  编译器（解析 / 换算 / 分级）  ──▶  CSS · WXSS · TS · DTCG · AI 上下文
                           │
                           └──▶ 门禁：主题完整性 / 白名单 / 分层方向 / 对比度 / 硬编码扫描 / 契约可解析
-                          └──▶ 实验台：排列矩阵 · 实例三屏 · 动效回放 · 审计 · Token 表
+                          └──▶ 实验台：排列矩阵 · 实例三屏 · 桌面 Web · 动效回放 · 审计 · Token 表
 ```
 
 ## 快速开始
@@ -20,8 +20,9 @@ npm run tokens      # 编译：src/generated/*
 npm run lint:tokens # token 门禁
 npm run weapp       # 构建小程序包 + 校验 var() 覆盖
 npm run test        # @ds/core 单测
-npm run visual            # 案例页基线
-npm run visual:studio     # 配方渲染基线（示例配方 × 设备 × 明暗）      # PR 级视觉回归（4 套排列 × 3 屏）
+npm run visual            # 排列页基线
+npm run visual:studio     # 配方渲染基线（示例配方 × 设备 × 明暗）
+# 渲染结果可直接深链：#/studio?sample=1&device=desktop      # PR 级视觉回归（4 套排列 × 3 屏）
 npm run proposal -- agents/examples/01-add-night-notice.json   # Token 提案预检
 npm run verify      # tokens + lint + weapp + 提案门禁契约测试
 npm run dev         # 实验台 http://localhost:4517
@@ -53,6 +54,7 @@ design-lab/
 │   ├── ride/tokens/product.tokens.json + contracts/*.json
 │   └── ledger/tokens/product.tokens.json + contracts/*.json
 ├── brands/                      # 品牌：只换视觉，不碰结构
+│   ├── noir/tokens/{brand,dark}.tokens.json
 │   ├── cycling/tokens/{brand,dark}.tokens.json
 │   └── ledger/tokens/{brand,dark}.tokens.json
 ├── agents/                      # 两个闭环的契约与示例（提案 / 生成）
@@ -62,7 +64,7 @@ design-lab/
 ├── src/
 │   ├── generated/               # 产物（勿手改）：tokens.<app>.{css,wxss,ts} 等
 │   ├── components/ui.tsx        # 只吃 token 的通用组件（VM 来自 ds-core）
-│   ├── apps/{ride,ledger}/screens.tsx  # 各产品的屏
+│   ├── apps/{ride,ledger}/screens.tsx  # 各产品的手机屏
 │   └── lab/*                    # 实验台各面板（含现实界面）
 └── docs/adr/                    # 三个关键取舍
 ```
@@ -84,7 +86,7 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 ## 三个概念
 
 **分层**：`primitive`（原色，禁止业务引用）→ `semantic`（用途）→ `component`（组件私有）。
-品牌包和产品语义是**扩展位**，不是新的一层；品牌包只能覆盖白名单里的 ~20 个键。
+品牌包和产品语义是**扩展位**，不是新的一层；品牌包只能覆盖白名单里的键。
 
 **三轴**：排列 = `产品 × 品牌 × 主题`。产品决定有哪些语义键，品牌决定这些键长什么样，
 主题只补差值（骑行 124 个、记账 126 个变量），
@@ -93,6 +95,10 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 
 **品牌包能改什么**：`brand.palette` · `color.{brand,surface,ink,action,border}` · `radius.*` ·
 `type.{display,title,metric}.*` · `elevation.*` · `motion.easing.*`。白名单之外一律拦截。
+
+**Noir** 是把站点外壳的界面语言写成品牌包：纯黑画布、`#0E0E11` 玻璃卡、白色主操作、
+22px 控制圆角 / 26px 卡片、SF Pro 系的 sans + mono 数据、深阴影。它的深色排列做成了独立的
+Noir Web 示例；浅色排列是同一套语言的冷白对照。
 
 **白标怎么成立**：产品语义引用品牌意图（`route.primary → {color.action.primary}`），
 而不是引用原始色阶。所以换品牌，骑行界面连地图配色和明信片邮戳都会跟着换，结构一行不动。
@@ -134,7 +140,7 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 | 主题完整性 | light / dark 键集合必须一致，不允许只在一边新增 | error |
 | 品牌包白名单 | 越权覆盖（例如改 `space.*`）直接失败 | error |
 | 分层依赖方向 | 组件 token 引用色阶即失败；颜色必须走语义层 | error |
-| 对比度 | 15 组配对 × 8 套排列 = 120 项，AA 阈值按用途区分 | error |
+| 对比度 | 15 组配对 × 12 套排列 = 180 项，AA 阈值按用途区分 | error |
 | 组件契约可解析 | 契约里引用的 token 必须存在且公开 | error |
 | 禁止硬编码颜色 | 扫描 `src/**`，`#hex` / `rgb()` / `hsl()` 一律拦 | error |
 | 产品语义不越界 | 通用组件与小程序组件不许用 `route.*` / `transaction.*`；各 app 只能用自己产品的语义 | error |
@@ -148,7 +154,8 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 - 只新增 `ledger/tokens/*.json` + `pipeline.config.mjs` 一个条目；
 - 组件、页面、产品语义、门禁一行不改；
 - 结果：同一个骑行界面换品牌后，字体（衬线→无衬线）、圆角（18px→10px）、
-  强调色（柠檬绿→砖红）、阴影、缓动全部改变，对比度仍然全过。
+  强调色（柠檬绿→砖红）、阴影、缓动全部改变，对比度仍然全过；
+- 新增的 `noir` 用同样的方式再走一遍：纯黑 + 玻璃卡 + 白色主操作，作为独立的桌面 Web 示例。
 
 边界：`ledger` 仍是行驶在骑行产品上的白标。真正的"第二个产品"需要把 `product`
 从品牌里拆成 `app` 层（`app × brand × theme`），配置里已预留位置。见 [ADR-0004](docs/adr/0004-second-brand-pack.md)。
@@ -199,28 +206,31 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 `npm run dev` 之后是两个层级，而不是一条长滚动页：
 
 ```
-#/                 首页：它是什么、解决什么、两个案例、怎么做到的摘要、三条命令
+#/                 首页：三个示例（Ride / Ledger / Noir）+ 方法摘要 + 三条命令
 #/studio           工作台：生成/导入参考图 → 抽出配色角色 → 归一成品牌包 → 重建 + 像素 diff
                    → 自动映射页面配方 → 用配方渲染界面（可切品牌验证"只换变量"）
                    （BYO key 调 OpenAI 兼容的 /images/generations 与 /chat/completions，
                    图片只在浏览器里分析，产出 brand/dark token、visual-recipe、page-recipe）
 #/method           方法：五步流程 · 生成方式 · 交付物（切产品 + 本次编译改动）
 #/about            关于：为什么做、交付什么、不是什么、现在到哪了、时间线（git log · 按日期/里程碑 · 类型筛选 · 折叠）、谁做的
-#/case/ride        案例页：骑行
-#/case/ledger      案例页：记账
-                   概览 / 现实界面 / 动效 / 审计 / Token 表 / 设计决策
+#/matrix?app=ride  排列矩阵：产品 × 品牌 × 主题，12 套排列一次看全
+#/case/ride        示例页：Ride Atlas · 移动端 · 骑行包 · 浅色
+#/case/ledger      示例页：Ledger · 移动端 · 记账包 · 浅色
+#/case/noir        示例页：Noir · Web · Noir 包 · 深色
+                   移动端：概览 / 现实界面 / 动效 / 审计 / Token 表 / 设计决策
+                   Web：Web 界面 / 动效 / 审计 / Token 表 / 设计决策
 #/case/ledger/reality   深链到某个标签（标签即 URL，可分享）
 ```
 
 首页只回答"这是什么、解决什么问题、凭什么相信"；怎么实现搬到 `方法`，
 为什么做、边界在哪搬到 `关于`。三页各有各的职责，不再把工程细节压在第一屏。
 
-首页只回答三个问题：这套东西怎么做的、产出了什么、AI 怎么参与；具体到某个产品的矩阵、
-真机尺寸、动效与 token 表，都收进案例页的标签里，不再堆在同一屏。
+首页只回答三个问题：这套东西怎么做的、产出了什么、AI 怎么参与；三个示例各自锁定一种身份，
+全部排列收进 `排列` 页，示例页只展示这一种身份，不再堆在同一屏。
 
 "设计决策"标签的内容不是手写的，而是 `npm run adr` 从 `docs/adr/*.md` 摘出来生成
 `src/generated/adr-index.json`——页面上那句话，原文一定在仓库里。
-与当前案例直接相关的决策（记账 → ADR-0004/0005/0007）会排在前面并打标。
+与当前示例直接相关的决策（记账 → ADR-0004/0005/0007）会排在前面并打标。
 
 ## 现实界面
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import timelineJson from '../generated/timeline.json';
+import { Button } from '../components/controls';
 import { navigate } from '../lib/router';
 import { apps, manifest } from './model';
 
@@ -552,7 +553,7 @@ export const About = ({
       <div className="about-who">
         <p>
           一个独立工作室，做设计工程与前端实现。这套管线来自自己的项目需求：一个人要同时维护 Web 与小程序、
-          两套品牌、还要让 AI 参与交付，所以把"一致性"从人的记忆里搬进了编译器和门禁。
+          多套品牌、还要让 AI 参与交付，所以把"一致性"从人的记忆里搬进了编译器和门禁。
         </p>
         <p className="about-stack-line">
           技术底座：
@@ -562,14 +563,15 @@ export const About = ({
             </span>
           ))}
         </p>
-        <p className="about-sign-note">这个站本身就是这套系统的产物：页面用的是编译出来的同一批 token，改一处颜色，这里也会跟着变。</p>
+        <p className="about-sign-note">
+          示例里的每一屏都直接吃编译出来的 token；这层黑色外壳是站点自己的界面样式，不参与产品的排列，
+          这样对照才看得清哪一层来自系统、哪一层只是包装。
+        </p>
         <p className="about-links">
-          <button type="button" className="hero-cta" onClick={() => navigate('/method')}>
-            看完整方法 →
-          </button>
-          <button type="button" className="hero-cta hero-cta-ghost" onClick={() => navigate('/')}>
-            回到首页看案例
-          </button>
+          <Button onClick={() => navigate('/method')}>看完整方法 →</Button>
+          <Button variant="ghost" onClick={() => navigate('/')}>
+            回到首页看示例
+          </Button>
         </p>
         <p className="about-sign-links">
           <a href="https://github.com/liquiid727/my-ant-design" target="_blank" rel="noreferrer">
