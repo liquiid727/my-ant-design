@@ -1,0 +1,13 @@
+{
+  "name": "ProgressRing",
+  "purpose": "用环形成绩表达完成度，骑行结束页的主视觉",
+  "props": [
+    { "name": "value", "type": "number", "required": true, "note": "0–1" },
+    { "name": "size", "type": "'sm' | 'md' | 'lg'", "default": "md" },
+    { "name": "label", "type": "string" },
+    { "name": "animate", "type": "boolean", "default": true, "note": "遵循 prefers-reduced-motion" }
+  ],
+  "states": ["idle", "animating", "complete", "reduced-motion"],
+  "tokens": ["ring.size", "ring.stroke", "ring.track", "ring.fill", "ring.ink", "motion.duration.celebrate", "motion.easing.spring"],
+  "rules": ["进度只从 0 增长，不回退", "完成时只做一次庆祝动效", "reduced-motion 下直接落位"]
+}

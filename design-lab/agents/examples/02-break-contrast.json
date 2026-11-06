@@ -1,0 +1,18 @@
+{
+  "id": "tcp-bright-primary",
+  "author": "agent",
+  "intent": "把主色换成更沉静的深绿，让按钮不那么跳",
+  "rationale": "（故意写坏的例子）想验证对比度门禁会不会拦住它：深绿主色配深色文字必然不达标。",
+  "scope": {
+    "brand": "cycling",
+    "theme": "light"
+  },
+  "changes": [
+    {
+      "op": "set",
+      "path": "color.action.primary",
+      "type": "color",
+      "value": "{color.ramp.forest.500}"
+    }
+  ]
+}

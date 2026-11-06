@@ -1,0 +1,39 @@
+/* 值全部来自 tokens.wxss（page 上定义的自定义属性会继承进组件） */
+.ds-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--button-height);
+  min-width: var(--size-touch-min);
+  padding: 0 var(--button-padding-inline);
+  border: 0;
+  border-radius: var(--button-radius);
+  background: var(--button-bg);
+  color: var(--button-fg);
+  font-size: var(--button-font-size);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.ds-action::after {
+  border: 0;
+}
+
+.ds-action[data-variant='secondary'] {
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-fg);
+}
+
+.ds-action[data-variant='ghost'] {
+  background: transparent;
+  border: var(--button-border-width) solid var(--button-ghost-border);
+  color: var(--color-ink-secondary);
+}
+
+.ds-action--pressed {
+  transform: scale(var(--button-pressed-scale));
+}
+
+.ds-action[disabled] {
+  opacity: 0.4;
+}

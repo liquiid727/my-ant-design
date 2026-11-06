@@ -1,0 +1,59 @@
+{
+  "name": "RouteCard",
+  "purpose": "路线卡片：地图缩略 + 距离 / 爬升 / 时长 + 一个动作",
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "distanceKm",
+      "type": "number",
+      "required": true
+    },
+    {
+      "name": "elevationM",
+      "type": "number"
+    },
+    {
+      "name": "durationMin",
+      "type": "number"
+    },
+    {
+      "name": "surface",
+      "type": "'road' | 'gravel' | 'mixed'",
+      "default": "mixed"
+    },
+    {
+      "name": "layout",
+      "type": "'card' | 'row'",
+      "default": "card",
+      "note": "row 用于列表密度场景，隐藏地图"
+    },
+    {
+      "name": "onSelect",
+      "type": "() => void"
+    }
+  ],
+  "states": [
+    "default",
+    "pressed",
+    "loading",
+    "empty"
+  ],
+  "tokens": [
+    "card.radius",
+    "card.padding",
+    "card.bg",
+    "card.border",
+    "route.card.map-height",
+    "route.card.gap",
+    "color.route.primary",
+    "color.route.elevation"
+  ],
+  "rules": [
+    "地图区域不得挤压指标区",
+    "空态给出下一步动作，不显示 0 值占位"
+  ]
+}

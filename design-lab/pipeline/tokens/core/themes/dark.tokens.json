@@ -1,0 +1,58 @@
+{
+  "$description": "深色主题：只覆盖语义层，不新增 token、不改名。",
+  "color": {
+    "surface": {
+      "$type": "color",
+      "canvas": { "$value": "{color.ramp.neutral.900}" },
+      "raised": { "$value": "{color.ramp.neutral.800}" },
+      "sunken": { "$value": "#12140B" },
+      "inverse": { "$value": "{color.ramp.neutral.50}" },
+      "accent-soft": { "$value": "{color.ramp.forest.500}" }
+    },
+    "ink": {
+      "$type": "color",
+      "primary": { "$value": "{color.ramp.neutral.50}" },
+      "secondary": { "$value": "{color.ramp.neutral.300}" },
+      "tertiary": { "$value": "{color.ramp.neutral.400}" },
+      "inverse": { "$value": "{color.ramp.neutral.900}" },
+      "on-accent": { "$value": "{color.ramp.neutral.50}" }
+    },
+    "action": {
+      "$type": "color",
+      "primary": { "$value": "{color.ramp.lime.400}" },
+      "primary-hover": { "$value": "{color.ramp.lime.300}" },
+      "primary-pressed": { "$value": "{color.ramp.lime.500}" },
+      "on-primary": { "$value": "{color.ramp.forest.700}" },
+      "secondary": { "$value": "{color.ramp.sage.400}" },
+      "on-secondary": { "$value": "{color.ramp.forest.700}" },
+      "ghost-border": { "$value": "{color.ramp.neutral.700}" }
+    },
+    "border": {
+      "$type": "color",
+      "subtle": { "$value": "{color.ramp.neutral.800}" },
+      "strong": { "$value": "{color.ramp.neutral.700}" },
+      "focus": { "$value": "{color.ramp.sage.400}" }
+    },
+    "status": {
+      "$type": "color",
+      "success": { "$value": "{color.ramp.sage.300}" },
+      "success-soft": { "$value": "#22301C" },
+      "warning": { "$value": "{color.ramp.amber.300}" },
+      "warning-soft": { "$value": "#33280F" },
+      "danger": { "$value": "{color.ramp.rose.300}" },
+      "danger-soft": { "$value": "#331C22" },
+      "info": { "$value": "{color.ramp.sky.300}" },
+      "info-soft": { "$value": "#16262E" }
+    },
+    "overlay": {
+      "$type": "color",
+      "scrim": { "$value": "#0000008C" }
+    }
+  },
+  "elevation": {
+    "$type": "shadow",
+    "subtle": { "$value": "0 1px 2px rgba(0,0,0,0.50)" },
+    "raised": { "$value": "0 10px 28px rgba(0,0,0,0.55)" },
+    "overlay": { "$value": "0 24px 64px rgba(0,0,0,0.60)" }
+  }
+}

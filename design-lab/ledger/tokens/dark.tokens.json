@@ -1,0 +1,57 @@
+{
+  "$description": "ledger 深色：冷黑 + 亮砖红，同样是差值覆盖。",
+  "brand": {
+    "palette": {
+      "$type": "color",
+      "canvas": { "$value": "#0E1014" },
+      "raised": { "$value": "#171A20" },
+      "ink": { "$value": "#F4F5F7" },
+      "ink-soft": { "$value": "#B7BEC9" },
+      "ink-mute": { "$value": "#8D96A3" },
+      "brick": { "$value": "#FF6A4D" },
+      "brick-hover": { "$value": "#FF8269" },
+      "brick-pressed": { "$value": "#E5543A" }
+    }
+  },
+  "color": {
+    "surface": {
+      "$type": "color",
+      "canvas": { "$value": "{brand.palette.canvas}" },
+      "raised": { "$value": "{brand.palette.raised}" },
+      "sunken": { "$value": "#0A0C0F" },
+      "inverse": { "$value": "{brand.palette.ink}" },
+      "accent-soft": { "$value": "#2A1512" }
+    },
+    "ink": {
+      "$type": "color",
+      "primary": { "$value": "{brand.palette.ink}" },
+      "secondary": { "$value": "{brand.palette.ink-soft}" },
+      "tertiary": { "$value": "{brand.palette.ink-mute}" }
+    },
+    "action": {
+      "$type": "color",
+      "primary": { "$value": "{brand.palette.brick}" },
+      "primary-hover": { "$value": "{brand.palette.brick-hover}" },
+      "primary-pressed": { "$value": "{brand.palette.brick-pressed}" },
+      "on-primary": { "$value": "{brand.palette.canvas}" },
+      "secondary": { "$value": "{brand.palette.ink}" },
+      "on-secondary": { "$value": "{brand.palette.canvas}" }
+    },
+    "border": {
+      "$type": "color",
+      "subtle": { "$value": "#262B33" },
+      "strong": { "$value": "#343B45" },
+      "focus": { "$value": "{brand.palette.brick}" }
+    },
+    "brand": {
+      "$type": "color",
+      "mark": { "$value": "{brand.palette.brick}" },
+      "halo": { "$value": "#2A1512" }
+    }
+  },
+  "elevation": {
+    "$type": "shadow",
+    "subtle": { "$value": "0 1px 2px rgba(0,0,0,0.5)" },
+    "raised": { "$value": "0 8px 24px rgba(0,0,0,0.55)" }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$description": "骑行品牌包的深色主题覆盖：同样只允许语义层键。",
+  "color": {
+    "surface": {
+      "$type": "color",
+      "canvas": { "$value": "{color.ramp.neutral.900}" },
+      "raised": { "$value": "#1E2116" },
+      "accent-soft": { "$value": "{color.ramp.forest.500}" }
+    },
+    "ink": {
+      "$type": "color",
+      "primary": { "$value": "{color.ramp.neutral.50}" },
+      "secondary": { "$value": "{color.ramp.neutral.300}" },
+      "tertiary": { "$value": "{color.ramp.neutral.400}" }
+    },
+    "action": {
+      "$type": "color",
+      "primary": { "$value": "{color.ramp.lime.400}" },
+      "primary-hover": { "$value": "{color.ramp.lime.300}" },
+      "primary-pressed": { "$value": "{color.ramp.lime.500}" },
+      "on-primary": { "$value": "{color.ramp.forest.700}" }
+    }
+  },
+  "elevation": {
+    "$type": "shadow",
+    "raised": { "$value": "0 12px 32px rgba(0,0,0,0.55)" }
+  }
+}

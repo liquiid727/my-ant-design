@@ -1,0 +1,50 @@
+{
+  "brand": {
+    "$description": "品牌私有原色。只有本品牌包内部可以引用。",
+    "palette": {
+      "$type": "color",
+      "paper": { "$value": "#F7F4E9" },
+      "paper-raised": { "$value": "#FFFCF2" },
+      "ink-soft": { "$value": "#666A57" },
+      "sunset": { "$value": "#E7B27C" }
+    }
+  },
+  "color": {
+    "surface": {
+      "$type": "color",
+      "canvas": { "$value": "{brand.palette.paper}" },
+      "raised": { "$value": "{brand.palette.paper-raised}" },
+      "accent-soft": { "$value": "{color.ramp.sage.200}" }
+    },
+    "ink": {
+      "$type": "color",
+      "primary": { "$value": "{color.ramp.forest.700}" },
+      "secondary": { "$value": "{color.ramp.forest.500}" },
+      "tertiary": { "$value": "{brand.palette.ink-soft}" }
+    },
+    "action": {
+      "$type": "color",
+      "primary": { "$value": "{color.ramp.lime.500}" },
+      "primary-hover": { "$value": "{color.ramp.lime.400}" },
+      "primary-pressed": { "$value": "{color.ramp.lime.600}" },
+      "on-primary": { "$value": "{color.ramp.forest.700}" },
+      "secondary": { "$value": "{color.ramp.sage.700}" },
+      "on-secondary": { "$value": "{color.ramp.neutral.0}" }
+    },
+    "brand": {
+      "$type": "color",
+      "mark": { "$value": "{color.ramp.sage.600}" },
+      "halo": { "$value": "{color.ramp.sage.100}" }
+    }
+  },
+  "radius": {
+    "$type": "dimension",
+    "control": { "$value": "14px" },
+    "card": { "$value": "20px" },
+    "sheet": { "$value": "28px" }
+  },
+  "elevation": {
+    "$type": "shadow",
+    "raised": { "$value": "0 12px 32px rgba(33,45,30,0.12)" }
+  }
+}

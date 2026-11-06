@@ -1,0 +1,39 @@
+{
+  "$description": "产品语义：只属于骑行这条业务，不进 core。",
+  "color": {
+    "route": {
+      "$type": "color",
+      "primary": { "$value": "{color.action.primary}" },
+      "elevation": { "$value": "{color.ramp.clay.400}" },
+      "water": { "$value": "{color.ramp.sky.500}" },
+      "detour": { "$value": "{color.ramp.amber.500}" },
+      "surface": { "$value": "{color.surface.accent-soft}" }
+    },
+    "achievement": {
+      "$type": "color",
+      "gold": { "$value": "{color.ramp.amber.400}" },
+      "silver": { "$value": "{color.ramp.neutral.300}" },
+      "bronze": { "$value": "{color.ramp.clay.500}" },
+      "locked": { "$value": "{color.ramp.neutral.200}" }
+    },
+    "postcard": {
+      "$type": "color",
+      "paper": { "$value": "{color.ramp.neutral.0}" },
+      "stamp": { "$value": "{color.brand.mark}" },
+      "ink": { "$value": "{color.ramp.forest.700}" },
+      "sky": { "$value": "{color.ramp.sky.200}" },
+      "sun": { "$value": "{color.ramp.amber.300}" },
+      "hill": { "$value": "{color.brand.halo}" }
+    }
+  },
+  "route": {
+    "card": {
+      "gap": { "$type": "dimension", "$value": "{space.12}" },
+      "padding": { "$type": "dimension", "$value": "{space.16}" },
+      "map-height": { "$type": "dimension", "$value": "132px" }
+    },
+    "stat": {
+      "gap": { "$type": "dimension", "$value": "{space.4}" }
+    }
+  }
+}

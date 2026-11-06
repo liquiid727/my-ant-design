@@ -1,0 +1,11 @@
+<button
+  class="ds-action"
+  data-variant="{{variant}}"
+  disabled="{{disabled}}"
+  hover-class="ds-action--pressed"
+  hover-stay-time="80"
+  bindtap="onTap"
+  aria-label="{{label}}"
+>
+  {{label}}
+</button>

@@ -1,0 +1,13 @@
+{
+  "name": "@ds/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Headless design-system logic: 输入 → ViewModel，无样式、无平台依赖。",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run"
+  }
+}

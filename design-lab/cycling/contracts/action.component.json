@@ -1,0 +1,13 @@
+{
+  "name": "Action",
+  "purpose": "唯一的操作入口：主 / 次 / 幽灵三档，覆盖按压反馈",
+  "props": [
+    { "name": "label", "type": "string", "required": true },
+    { "name": "variant", "type": "'primary' | 'secondary' | 'ghost'", "default": "primary" },
+    { "name": "disabled", "type": "boolean", "default": false },
+    { "name": "onClick", "type": "() => void" }
+  ],
+  "states": ["default", "pressed", "disabled", "focus"],
+  "tokens": ["button.height", "button.radius", "button.padding-inline", "button.bg", "button.fg", "button.pressed-scale", "motion.duration.fast", "motion.easing.standard", "size.touch-min"],
+  "rules": ["按压缩放不超过 3%", "触控高度不低于 size.touch-min", "禁用态不降低对比度以外的可读性"]
+}

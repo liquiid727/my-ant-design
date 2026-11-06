@@ -1,0 +1,220 @@
+{
+  "color": {
+    "$description": "原始色阶。只允许语义层引用，业务代码不得直接使用。",
+    "$type": "color",
+    "ramp": {
+      "neutral": {
+        "0": { "$value": "#FFFFFF" },
+        "50": { "$value": "#FAF8F1" },
+        "100": { "$value": "#F2F0E6" },
+        "200": { "$value": "#E6E3D7" },
+        "300": { "$value": "#D0CDBF" },
+        "400": { "$value": "#A6A497" },
+        "500": { "$value": "#7C7B6E" },
+        "600": { "$value": "#58584D" },
+        "700": { "$value": "#3B3C33" },
+        "800": { "$value": "#26271F" },
+        "900": { "$value": "#17180F" }
+      },
+      "sage": {
+        "100": { "$value": "#E9F0DF" },
+        "200": { "$value": "#D8E4C8" },
+        "300": { "$value": "#C3D6AC" },
+        "400": { "$value": "#A9C08C" },
+        "500": { "$value": "#8CA472" },
+        "600": { "$value": "#6C8455" },
+        "700": { "$value": "#4E633D" }
+      },
+      "forest": {
+        "500": { "$value": "#3B4A34" },
+        "600": { "$value": "#2C3A28" },
+        "700": { "$value": "#212D1E" }
+      },
+      "lime": {
+        "200": { "$value": "#EDF5CB" },
+        "300": { "$value": "#DEEBA8" },
+        "400": { "$value": "#CCDF82" },
+        "500": { "$value": "#B7CE5E" },
+        "600": { "$value": "#96AC42" },
+        "700": { "$value": "#75872F" }
+      },
+      "amber": {
+        "200": { "$value": "#F7E8CC" },
+        "300": { "$value": "#F0D5A6" },
+        "400": { "$value": "#E3B97E" },
+        "500": { "$value": "#CF9C57" },
+        "600": { "$value": "#A5783D" },
+        "700": { "$value": "#84592E" }
+      },
+      "rose": {
+        "200": { "$value": "#F7DFE4" },
+        "300": { "$value": "#EFC4CE" },
+        "400": { "$value": "#E0A2B2" },
+        "500": { "$value": "#C87F93" },
+        "600": { "$value": "#A25F73" },
+        "700": { "$value": "#8A4A5E" }
+      },
+      "sky": {
+        "200": { "$value": "#DDEAF0" },
+        "300": { "$value": "#C4D9E2" },
+        "400": { "$value": "#A1BFCC" },
+        "500": { "$value": "#7C9EAD" },
+        "600": { "$value": "#5C7E8D" },
+        "700": { "$value": "#46656F" }
+      },
+      "clay": {
+        "300": { "$value": "#DDBBA4" },
+        "400": { "$value": "#C99C80" },
+        "500": { "$value": "#AB7B5D" },
+        "600": { "$value": "#8A5E44" }
+      }
+    }
+  },
+
+  "space": {
+    "$description": "间距刻度，375 设计宽下的 px 值。",
+    "$type": "dimension",
+    "2": { "$value": "2px" },
+    "4": { "$value": "4px" },
+    "6": { "$value": "6px" },
+    "8": { "$value": "8px" },
+    "12": { "$value": "12px" },
+    "16": { "$value": "16px" },
+    "20": { "$value": "20px" },
+    "24": { "$value": "24px" },
+    "32": { "$value": "32px" },
+    "40": { "$value": "40px" },
+    "48": { "$value": "48px" },
+    "64": { "$value": "64px" }
+  },
+
+  "radius": {
+    "$type": "dimension",
+    "none": { "$value": "0px" },
+    "xs": { "$value": "4px" },
+    "sm": { "$value": "8px" },
+    "md": { "$value": "12px" },
+    "lg": { "$value": "18px" },
+    "xl": { "$value": "26px" },
+    "full": { "$value": "999px" }
+  },
+
+  "size": {
+    "$type": "dimension",
+    "control": {
+      "sm": { "$value": "36px" },
+      "md": { "$value": "44px" },
+      "lg": { "$value": "52px" }
+    },
+    "touch": { "$value": "44px" },
+    "nav": { "$value": "56px" },
+    "avatar": {
+      "sm": { "$value": "28px" },
+      "md": { "$value": "36px" },
+      "lg": { "$value": "48px" }
+    },
+    "ring": {
+      "sm": { "$value": "64px" },
+      "md": { "$value": "96px" },
+      "lg": { "$value": "156px" }
+    },
+    "hairline": { "$value": "1px" },
+    "stroke": { "$value": "2px" },
+    "stroke-bold": { "$value": "6px" },
+    "icon": {
+      "sm": { "$value": "16px" },
+      "md": { "$value": "20px" },
+      "lg": { "$value": "24px" }
+    }
+  },
+
+  "border": {
+    "width": {
+      "$type": "dimension",
+      "hairline": { "$value": "1px" },
+      "thick": { "$value": "2px" }
+    }
+  },
+
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "serif": { "$value": ["Songti SC", "Source Han Serif SC", "Noto Serif SC", "Georgia", "serif"] },
+      "sans": { "$value": ["-apple-system", "PingFang SC", "Helvetica Neue", "sans-serif"] },
+      "mono": { "$value": ["SF Mono", "ui-monospace", "Menlo", "monospace"] }
+    },
+    "size": {
+      "$type": "dimension",
+      "11": { "$value": "11px" },
+      "12": { "$value": "12px" },
+      "13": { "$value": "13px" },
+      "14": { "$value": "14px" },
+      "16": { "$value": "16px" },
+      "18": { "$value": "18px" },
+      "22": { "$value": "22px" },
+      "26": { "$value": "26px" },
+      "32": { "$value": "32px" },
+      "40": { "$value": "40px" }
+    },
+    "line": {
+      "$type": "dimension",
+      "16": { "$value": "16px" },
+      "18": { "$value": "18px" },
+      "20": { "$value": "20px" },
+      "22": { "$value": "22px" },
+      "24": { "$value": "24px" },
+      "28": { "$value": "28px" },
+      "32": { "$value": "32px" },
+      "38": { "$value": "38px" },
+      "44": { "$value": "44px" }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": { "$value": 400 },
+      "medium": { "$value": 500 },
+      "semibold": { "$value": 600 },
+      "bold": { "$value": 700 }
+    },
+    "tracking": {
+      "$type": "dimension",
+      "tight": { "$value": "-0.3px" },
+      "normal": { "$value": "0px" },
+      "wide": { "$value": "0.4px" },
+      "caps": { "$value": "1.1px" }
+    }
+  },
+
+  "duration": {
+    "$type": "duration",
+    "instant": { "$value": "0ms" },
+    "fast": { "$value": "140ms" },
+    "base": { "$value": "220ms" },
+    "slow": { "$value": "320ms" },
+    "sheet": { "$value": "380ms" },
+    "celebrate": { "$value": "700ms" },
+    "unlock": { "$value": "900ms" }
+  },
+
+  "easing": {
+    "$type": "cubicBezier",
+    "standard": { "$value": [0.2, 0, 0, 1] },
+    "enter": { "$value": [0.05, 0.7, 0.1, 1] },
+    "exit": { "$value": [0.3, 0, 0.8, 0.15] },
+    "spring": { "$value": [0.34, 1.56, 0.64, 1] },
+    "celebrate": { "$value": [0.22, 1.4, 0.36, 1] }
+  },
+
+  "shadow": {
+    "$type": "shadow",
+    "subtle": { "$value": "0 1px 2px rgba(23,24,15,0.06)" },
+    "raised": { "$value": "0 10px 28px rgba(23,24,15,0.10)" },
+    "overlay": { "$value": "0 24px 64px rgba(23,24,15,0.18)" }
+  },
+
+  "opacity": {
+    "$type": "number",
+    "disabled": { "$value": 0.4 },
+    "pressed": { "$value": 0.72 },
+    "scrim": { "$value": 0.42 }
+  }
+}

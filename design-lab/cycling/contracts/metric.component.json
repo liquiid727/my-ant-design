@@ -1,0 +1,14 @@
+{
+  "name": "Metric",
+  "purpose": "以等宽数字呈现单个骑行指标（距离 / 爬升 / 时长 / 均速）",
+  "props": [
+    { "name": "value", "type": "number", "required": true, "note": "数值本体；格式化在 ds-core 完成，组件不解析业务数据" },
+    { "name": "unit", "type": "string", "enum": ["km", "m", "min", "km/h", "kcal"] },
+    { "name": "label", "type": "string", "required": true },
+    { "name": "tone", "type": "'default' | 'muted'", "default": "default" },
+    { "name": "size", "type": "'md' | 'lg'", "default": "md" }
+  ],
+  "states": ["default", "muted"],
+  "tokens": ["metric.value-size", "metric.value-line", "metric.unit-size", "metric.label-size", "metric.ink", "metric.muted-ink", "metric.family"],
+  "rules": ["不承载交互", "数值与单位之间不断行", "标签不超过 6 个汉字"]
+}

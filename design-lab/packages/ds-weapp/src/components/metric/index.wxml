@@ -1,0 +1,6 @@
+<view class="ds-metric" data-tone="{{tone}}" aria-label="{{ariaLabel}}">
+  <view class="ds-metric__value">
+    {{value}}<text wx:if="{{unit}}" class="ds-metric__unit">{{unit}}</text>
+  </view>
+  <view class="ds-metric__label">{{label}}</view>
+</view>

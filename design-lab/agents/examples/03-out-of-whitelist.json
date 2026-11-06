@@ -1,0 +1,15 @@
+{
+  "id": "tcp-global-density",
+  "author": "agent",
+  "intent": "把全局页面间距调小，提高信息密度",
+  "rationale": "（故意越权的例子）间距属于 core，不允许品牌包改。",
+  "scope": { "brand": "cycling", "theme": "both" },
+  "changes": [
+    {
+      "op": "set",
+      "path": "space.page",
+      "type": "dimension",
+      "value": "12px"
+    }
+  ]
+}

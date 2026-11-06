@@ -1,0 +1,39 @@
+{
+  "name": "design-lab",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vite",
+    "tokens": "node pipeline/compiler/build.mjs",
+    "lint:tokens": "node pipeline/lint/run.mjs",
+    "verify": "npm run tokens && npm run lint:tokens && npm run weapp && npm run check:proposals",
+    "build": "npm run verify && npm run test && tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "weapp": "node packages/ds-weapp/scripts/build.mjs",
+    "visual": "node scripts/visual.mjs",
+    "visual:update": "node scripts/visual.mjs --update",
+    "visual:weapp": "node scripts/visual-weapp.mjs",
+    "proposal": "node scripts/proposal.mjs",
+    "check:proposals": "node scripts/check-proposals.mjs"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "miniprogram-automator": "^0.13.0",
+    "pixelmatch": "^8.0.0",
+    "playwright": "^1.61.1",
+    "pngjs": "^7.0.0",
+    "style-dictionary": "^5.7.1",
+    "typescript": "~5.9",
+    "vite": "^8.3.5",
+    "vitest": "^4.1.12"
+  }
+}

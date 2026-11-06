@@ -1,0 +1,9 @@
+{
+  "name": "@ds/weapp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "微信小程序组件：WXML/WXSS 只吃 tokens.wxss 里的变量，展示层不写死任何值。",
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  }
+}

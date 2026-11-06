@@ -1,0 +1,87 @@
+name: design-lab
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'design-lab/**'
+      - '.github/workflows/design-lab.yml'
+  pull_request:
+    paths:
+      - 'design-lab/**'
+      - '.github/workflows/design-lab.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: design-lab
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: design-lab/package-lock.json
+
+      - run: npm ci
+
+      - name: Token 门禁
+        run: npm run verify
+
+      - name: 生成物必须与源一致
+        run: |
+          CHANGED=$(git status --porcelain -- src/generated)
+          if [ -n "$CHANGED" ]; then
+            echo "::error::src/generated 与 tokens 源不一致，请本地运行 npm run tokens 并提交产物"
+            echo "$CHANGED"
+            git --no-pager diff -- src/generated | head -200
+            exit 1
+          fi
+
+      - name: 类型检查与打包
+        run: npm run build
+
+  visual:
+    # 基线由 macOS 生成，换平台需要重新生成并提交
+    runs-on: macos-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: design-lab
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: design-lab/package-lock.json
+
+      - run: npm ci
+
+      - name: 安装 Chromium
+        run: npx playwright install chromium
+
+      - name: 构建
+        run: npm run build
+
+      - name: 视觉回归（4 套排列 × 3 屏）
+        run: npm run visual
+
+      - name: 失败时保留差异图
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff
+          path: design-lab/tests/visual/diff
+          if-no-files-found: ignore

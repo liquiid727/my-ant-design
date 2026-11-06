@@ -1,0 +1,99 @@
+{
+  "generatedBy": "pipeline/compiler · design-lab",
+  "permutations": 4,
+  "tokens": {
+    "total": 300,
+    "public": 161,
+    "byLayer": {
+      "primitive": 135,
+      "brand": 22,
+      "semantic": 76,
+      "product": 19,
+      "component": 48
+    }
+  },
+  "darkOverrides": 138,
+  "contrast": {
+    "pairs": 60,
+    "failing": 0
+  },
+  "artifacts": [
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/tokens.css",
+      "name": "tokens.css",
+      "bytes": 22367,
+      "kind": "tokens",
+      "label": "Web · CSS 变量"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/tokens.wxss",
+      "name": "tokens.wxss",
+      "bytes": 22990,
+      "kind": "tokens",
+      "label": "微信小程序 · WXSS"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/tokens.ts",
+      "name": "tokens.ts",
+      "bytes": 12179,
+      "kind": "tokens",
+      "label": "TypeScript · 类型"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/cycling.light.tokens.json",
+      "name": "cycling.light.tokens.json",
+      "bytes": 63724,
+      "kind": "cycling",
+      "label": "DTCG · 交换产物"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/cycling.dark.tokens.json",
+      "name": "cycling.dark.tokens.json",
+      "bytes": 63506,
+      "kind": "cycling",
+      "label": "DTCG · 交换产物"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ledger.light.tokens.json",
+      "name": "ledger.light.tokens.json",
+      "bytes": 64723,
+      "kind": "ledger",
+      "label": "ledger.light.tokens.json"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/dtcg/ledger.dark.tokens.json",
+      "name": "ledger.dark.tokens.json",
+      "bytes": 64583,
+      "kind": "ledger",
+      "label": "ledger.dark.tokens.json"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/catalog.json",
+      "name": "catalog.json",
+      "bytes": 221672,
+      "kind": "catalog",
+      "label": "实验台 · Token 目录"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/qa.json",
+      "name": "qa.json",
+      "bytes": 17696,
+      "kind": "qa",
+      "label": "门禁 · 对比度报告"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/design-context.json",
+      "name": "design-context.json",
+      "bytes": 14534,
+      "kind": "design-context",
+      "label": "AI · 设计上下文"
+    },
+    {
+      "file": "/Users/liquiid/code/my-ant-design/design-lab/src/generated/design-context.ledger.json",
+      "name": "design-context.ledger.json",
+      "bytes": 9826,
+      "kind": "design-context",
+      "label": "design-context.ledger.json"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+.ds-metric {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-metric__value {
+  display: flex;
+  align-items: baseline;
+  font-family: var(--metric-family);
+  font-size: var(--metric-value-size);
+  line-height: var(--metric-value-line);
+  font-weight: 600;
+  letter-spacing: var(--type-metric-tracking);
+  color: var(--metric-ink);
+}
+
+.ds-metric[data-tone='muted'] .ds-metric__value {
+  font-size: var(--metric-muted-size);
+  line-height: 1.15;
+  color: var(--metric-muted-ink);
+}
+
+.ds-metric__unit {
+  margin-left: var(--metric-unit-gap);
+  font-family: var(--type-body-family);
+  font-size: var(--metric-unit-size);
+  color: var(--metric-muted-ink);
+}
+
+.ds-metric__label {
+  font-family: var(--type-label-family);
+  font-size: var(--metric-label-size);
+  letter-spacing: var(--metric-label-tracking);
+  color: var(--metric-muted-ink);
+}

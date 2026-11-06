@@ -1,0 +1,6 @@
+<view class="ds-ring" style="width: {{size}}px; height: {{size}}px;" aria-role="img" aria-label="{{ariaLabel}}">
+  <canvas type="2d" id="ring-canvas" class="ds-ring__canvas"></canvas>
+  <view class="ds-ring__label">
+    <slot />
+  </view>
+</view>
