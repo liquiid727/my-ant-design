@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "cycling.dark",
+  "name": "Ride Atlas · dark",
+  "algorithm": "dark",
+  "token": {
+    "colorPrimary": "#CCDF82",
+    "colorTextLightSolid": "#212D1E",
+    "colorBgLayout": "#17180F",
+    "colorBgContainer": "#1E2116",
+    "colorBgElevated": "#1E2116",
+    "colorText": "#FAF8F1",
+    "colorTextSecondary": "#D0CDBF",
+    "colorTextTertiary": "#A6A497",
+    "colorBorder": "#3B3C33",
+    "colorBorderSecondary": "#26271F",
+    "colorSplit": "#26271F",
+    "colorSuccess": "#C3D6AC",
+    "colorSuccessBg": "#22301C",
+    "colorWarning": "#F0D5A6",
+    "colorWarningBg": "#33280F",
+    "colorError": "#EFC4CE",
+    "colorErrorBg": "#331C22",
+    "colorInfo": "#C4D9E2",
+    "colorInfoBg": "#16262E",
+    "colorLink": "#C4D9E2",
+    "borderRadius": 14,
+    "borderRadiusLG": 20,
+    "fontFamily": "-apple-system, \"PingFang SC\", \"Helvetica Neue\", sans-serif",
+    "fontFamilyCode": "\"SF Mono\", ui-monospace, Menlo, monospace",
+    "fontSize": 14,
+    "padding": 16,
+    "paddingSM": 12,
+    "paddingLG": 20,
+    "margin": 16,
+    "marginSM": 8,
+    "marginLG": 32,
+    "motionDurationFast": "0.14s",
+    "motionDurationMid": "0.22s",
+    "motionDurationSlow": "0.32s",
+    "motionEaseInOut": "cubic-bezier(0.2, 0, 0, 1)",
+    "boxShadow": "0px 12px 32px 0px rgba(0, 0, 0, 0.55)",
+    "boxShadowSecondary": "0px 24px 64px 0px rgba(0, 0, 0, 0.6)"
+  },
+  "components": {
+    "Button": {
+      "borderRadius": 14,
+      "controlHeight": 44,
+      "primaryShadow": "none",
+      "defaultShadow": "none"
+    },
+    "Card": {
+      "borderRadiusLG": 20,
+      "paddingLG": 20
+    },
+    "Input": {
+      "borderRadius": 14,
+      "controlHeight": 44
+    },
+    "Select": {
+      "borderRadius": 14,
+      "optionSelectedBg": "#3B4A34"
+    },
+    "Modal": {
+      "borderRadiusLG": 20
+    },
+    "Table": {
+      "headerBg": "#12140B",
+      "rowHoverBg": "#17180F",
+      "borderColor": "#26271F"
+    },
+    "Menu": {
+      "itemSelectedBg": "#3B4A34",
+      "itemBorderRadius": 14
+    }
+  }
+}

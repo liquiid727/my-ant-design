@@ -8,6 +8,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { APPS, DESIGN_WIDTH, OUTPUT_DIR, PRIVATE_PREFIXES } from '../pipeline.config.mjs';
 import { cssVarName, formatValue, isPublic } from './format.mjs';
+import { projectTheme } from '../../packages/ds-antd/src/index.mjs';
 import { ROOT } from './paths.mjs';
 
 const HEADER = '由 design-lab/pipeline/compiler 生成，请勿手改。改动请落在 tokens 源文件。';
@@ -397,6 +398,51 @@ const appOf = (name) => {
   const flat = name.match(/^(?:tokens|catalog|qa|design-context)\.([a-z0-9-]+)\./);
   if (flat && APP_IDS.has(flat[1])) return flat[1];
   return null;
+};
+
+
+/**
+ * antd 目标：每个品牌 × 主题投影成一份 ThemeConfig。
+ * 映射只读 semantic / brand 层，所以同一品牌在 ride 和 ledger 下结果相同，按 brand.theme 去重。
+ * 缺 token 直接失败：这份产物是给后台用的，不能带半张主题出去。
+ */
+export const emitAntd = async (sets) => {
+  const artifacts = [];
+  const configs = new Map();
+
+  for (const set of sets) {
+    const key = `${set.brand}.${set.theme}`;
+    if (configs.has(key)) continue;
+    const { config, missing } = projectTheme(set);
+    if (missing.length > 0) {
+      throw new Error(`antd 映射缺少 token：${key} → ${missing.join(', ')}`);
+    }
+    configs.set(key, config);
+  }
+
+  const ids = [...configs.keys()].sort();
+
+  for (const id of ids) {
+    artifacts.push(await write(`antd/${id}.json`, `${JSON.stringify(configs.get(id), null, 2)}\n`));
+  }
+
+  const imports = ids.map((id, index) => `import theme${index} from './${id}.json';`).join('\n');
+  const entries = ids.map((id, index) => `  '${id}': theme${index},`).join('\n');
+  const index = [
+    `// ${HEADER}`,
+    imports,
+    '',
+    'export const antdThemes = {',
+    entries,
+    '} as const;',
+    '',
+    'export type AntdThemeId = keyof typeof antdThemes;',
+    '',
+  ].join('\n');
+
+  artifacts.push(await write('antd/index.ts', index));
+
+  return artifacts;
 };
 
 export const emitManifest = async (payload) => {

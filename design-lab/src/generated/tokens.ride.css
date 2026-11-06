@@ -100,6 +100,7 @@
   --layout-gutter-phone: 16px;
   --layout-gutter-tablet: 32px;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --metric-compact-size: 17px;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #0a0a0c;
@@ -290,6 +291,7 @@
   --layout-gutter-phone: 16px;
   --layout-gutter-tablet: 32px;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --metric-compact-size: 17px;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #0a0a0c;
@@ -382,7 +384,7 @@
   --type-title-weight: 600;
 }
 
-/* noir · light：覆盖 0 / 186 个变量 */
+/* noir · light：覆盖 0 / 187 个变量 */
 [data-app="ride"][data-brand="noir"] {
   --badge-bg: #ededf1;
   --badge-ink: #0a0a0c;
@@ -480,6 +482,7 @@
   --layout-gutter-phone: 16px;
   --layout-gutter-tablet: 32px;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --metric-compact-size: 17px;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #0a0a0c;
@@ -572,7 +575,7 @@
   --type-title-weight: 600;
 }
 
-/* noir · dark：覆盖 85 / 186 个变量 */
+/* noir · dark：覆盖 85 / 187 个变量 */
 [data-app="ride"][data-brand="noir"][data-theme="dark"] {
   --badge-bg: #17171c;
   --badge-ink: #ffffff;
@@ -670,6 +673,7 @@
   --layout-gutter-phone: 16px;
   --layout-gutter-tablet: 32px;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --metric-compact-size: 17px;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #ffffff;
@@ -762,7 +766,7 @@
   --type-title-weight: 600;
 }
 
-/* cycling · light：覆盖 78 / 186 个变量 */
+/* cycling · light：覆盖 78 / 187 个变量 */
 [data-app="ride"][data-brand="cycling"] {
   --badge-bg: #d8e4c8;
   --badge-ink: #212d1e;
@@ -860,6 +864,7 @@
   --layout-gutter-phone: 16px;
   --layout-gutter-tablet: 32px;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --metric-compact-size: 17px;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #212d1e;
@@ -952,7 +957,7 @@
   --type-title-weight: 600;
 }
 
-/* cycling · dark：覆盖 65 / 186 个变量 */
+/* cycling · dark：覆盖 65 / 187 个变量 */
 [data-app="ride"][data-brand="cycling"][data-theme="dark"] {
   --badge-bg: #3b4a34;
   --badge-ink: #faf8f1;
@@ -1050,6 +1055,7 @@
   --layout-gutter-phone: 16px;
   --layout-gutter-tablet: 32px;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --metric-compact-size: 17px;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #faf8f1;
@@ -1142,7 +1148,7 @@
   --type-title-weight: 600;
 }
 
-/* ledger · light：覆盖 81 / 186 个变量 */
+/* ledger · light：覆盖 81 / 187 个变量 */
 [data-app="ride"][data-brand="ledger"] {
   --badge-bg: #fdece8;
   --badge-ink: #212d1e;
@@ -1240,6 +1246,7 @@
   --layout-gutter-phone: 16px;
   --layout-gutter-tablet: 32px;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --metric-compact-size: 17px;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #14161a;
@@ -1332,7 +1339,7 @@
   --type-title-weight: 600;
 }
 
-/* ledger · dark：覆盖 79 / 186 个变量 */
+/* ledger · dark：覆盖 79 / 187 个变量 */
 [data-app="ride"][data-brand="ledger"][data-theme="dark"] {
   --badge-bg: #2a1512;
   --badge-ink: #faf8f1;
@@ -1430,6 +1437,7 @@
   --layout-gutter-phone: 16px;
   --layout-gutter-tablet: 32px;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --metric-compact-size: 17px;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #f4f5f7;

@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "noir.dark",
+  "name": "Noir · dark",
+  "algorithm": "dark",
+  "token": {
+    "colorPrimary": "#FFFFFF",
+    "colorTextLightSolid": "#000000",
+    "colorBgLayout": "#000000",
+    "colorBgContainer": "#0E0E11",
+    "colorBgElevated": "#0E0E11",
+    "colorText": "#FFFFFF",
+    "colorTextSecondary": "#B9B9BE",
+    "colorTextTertiary": "#8E8E93",
+    "colorBorder": "#3A3A40",
+    "colorBorderSecondary": "#222227",
+    "colorSplit": "#222227",
+    "colorSuccess": "#C3D6AC",
+    "colorSuccessBg": "#22301C",
+    "colorWarning": "#F0D5A6",
+    "colorWarningBg": "#33280F",
+    "colorError": "#EFC4CE",
+    "colorErrorBg": "#331C22",
+    "colorInfo": "#C4D9E2",
+    "colorInfoBg": "#16262E",
+    "colorLink": "#C4D9E2",
+    "borderRadius": 22,
+    "borderRadiusLG": 26,
+    "fontFamily": "-apple-system, \"PingFang SC\", \"Helvetica Neue\", sans-serif",
+    "fontFamilyCode": "\"SF Mono\", ui-monospace, Menlo, monospace",
+    "fontSize": 14,
+    "padding": 16,
+    "paddingSM": 12,
+    "paddingLG": 20,
+    "margin": 16,
+    "marginSM": 8,
+    "marginLG": 32,
+    "motionDurationFast": "0.14s",
+    "motionDurationMid": "0.22s",
+    "motionDurationSlow": "0.32s",
+    "motionEaseInOut": "cubic-bezier(0.2, 0, 0, 1)",
+    "boxShadow": "0px 18px 48px 0px rgba(0, 0, 0, 0.65)",
+    "boxShadowSecondary": "0px 32px 80px 0px rgba(0, 0, 0, 0.75)"
+  },
+  "components": {
+    "Button": {
+      "borderRadius": 22,
+      "controlHeight": 44,
+      "primaryShadow": "none",
+      "defaultShadow": "none"
+    },
+    "Card": {
+      "borderRadiusLG": 26,
+      "paddingLG": 20
+    },
+    "Input": {
+      "borderRadius": 22,
+      "controlHeight": 44
+    },
+    "Select": {
+      "borderRadius": 22,
+      "optionSelectedBg": "#17171C"
+    },
+    "Modal": {
+      "borderRadiusLG": 26
+    },
+    "Table": {
+      "headerBg": "#141418",
+      "rowHoverBg": "#000000",
+      "borderColor": "#222227"
+    },
+    "Menu": {
+      "itemSelectedBg": "#17171C",
+      "itemBorderRadius": 22
+    }
+  }
+}

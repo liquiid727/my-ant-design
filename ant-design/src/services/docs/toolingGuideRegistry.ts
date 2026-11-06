@@ -15,8 +15,8 @@ export type ToolingGuide = {
 };
 
 export const ABOUT_CONTENT_METADATA = {
-  version: '0709',
-  updatedAt: '2026-07-17',
+  version: '1105',
+  updatedAt: '2026-11-05',
 } as const;
 
 export const TOOLING_VERIFICATION_MAX_AGE_DAYS = 90;
@@ -110,8 +110,8 @@ export const toolingGuideRegistry: ToolingGuide[] = [
       'Context7 等第三方文档 MCP 可作为补充，但不能代替 Ant Design 官方 CLI/MCP。',
     ],
     officialUrl: 'https://ant.design/docs/react/mcp',
-    lastVerifiedAt: '2026-07-17',
-    verifiedToolVersion: '@ant-design/cli 6.5.1',
+    lastVerifiedAt: '2026-11-05',
+    verifiedToolVersion: '@ant-design/cli 6.7.0',
     reviewCommands: [
       'antd -V',
       'antd setup --client claude --dry-run',
@@ -154,8 +154,8 @@ export const toolingGuideRegistry: ToolingGuide[] = [
       '第三方 MCP 只能补充资料；Ant Design 组件、Token 和版本知识以官方 CLI/MCP 为准。',
     ],
     officialUrl: 'https://ant.design/docs/react/cli',
-    lastVerifiedAt: '2026-07-17',
-    verifiedToolVersion: '@ant-design/cli 6.5.1',
+    lastVerifiedAt: '2026-11-05',
+    verifiedToolVersion: '@ant-design/cli 6.7.0',
     reviewCommands: [
       'antd -V',
       'antd setup --client codex',

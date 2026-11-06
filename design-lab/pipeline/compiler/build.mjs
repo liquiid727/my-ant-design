@@ -11,7 +11,8 @@ import { APPS, BRANDS, OUTPUT_DIR, PRIVATE_PREFIXES } from '../pipeline.config.m
 import { resolveAll } from './resolve.mjs';
 import { isPublic } from './format.mjs';
 import { runContrast } from './qa.mjs';
-import { emitCatalog, emitContext, emitCss, emitDtcg, emitManifest, emitQa, emitTs, emitWxss } from './emit.mjs';
+import { auditAntd } from './antd-gate.mjs';
+import { emitAntd, emitCatalog, emitContext, emitCss, emitDtcg, emitManifest, emitQa, emitTs, emitWxss } from './emit.mjs';
 import { ROOT } from './paths.mjs';
 import { collectChanges } from './changes.mjs';
 import { collectTimeline } from './timeline.mjs';
@@ -31,6 +32,7 @@ const readContracts = async (dir) => {
 const main = async () => {
   const started = Date.now();
   const sets = await resolveAll();
+  const antdAudit = await auditAntd(sets);
 
   // 对比度：每个排列各自跑，按 app 汇总
   const qaReports = Object.fromEntries(APPS.map((app) => [app.id, { generatedBy: 'pipeline/compiler', app: app.id, summary: { pairs: 0, failing: 0 }, results: {} }]));
@@ -56,6 +58,7 @@ const main = async () => {
     ...(await emitWxss(sets)),
     ...(await emitTs(sets)),
     ...(await emitDtcg(sets)),
+    ...(await emitAntd(sets)),
     ...(await emitCatalog(sets)),
     ...(await emitQa(qaReports)),
     ...(await emitContext({ sets, contractsByApp })),
@@ -114,6 +117,7 @@ const main = async () => {
     ['小程序', artifacts.filter((item) => item.file.endsWith('.wxss'))],
     ['类型', artifacts.filter((item) => item.file.endsWith('.ts'))],
     ['DTCG', artifacts.filter((item) => item.file.includes('/dtcg/'))],
+    ['antd', artifacts.filter((item) => item.file.includes('/antd/'))],
     ['派生', artifacts.filter((item) => /catalog|qa|design-context|manifest/.test(item.file))],
   ];
 
@@ -135,12 +139,35 @@ const main = async () => {
     return;
   }
 
+  if (antdAudit.failures.length > 0) {
+    console.log('  ✗ antd 投影门禁未通过：');
+    for (const failure of antdAudit.failures) {
+      if (failure.kind === 'unclassified') {
+        console.log(`    语义键没有决定去向：${failure.detail.join(', ')}`);
+        console.log('    在 packages/ds-antd 的 TOKEN_MAP 里映射，或在 EXCLUDED 里写明理由。');
+      } else if (failure.kind === 'missing') {
+        console.log(`    ${failure.id} 缺少 token：${failure.detail.join(', ')}`);
+      } else {
+        for (const item of failure.detail) {
+          console.log(`    ${failure.id} · ${item.id} = ${item.ratio} : 1，需要 ${item.min}（${item.note}）`);
+        }
+      }
+    }
+    console.log('');
+    process.exitCode = 1;
+    return;
+  }
+
   console.log(
     changes.summary.changed
       ? `  · 本次编译改动 ${changes.summary.changed} 个产物（+${changes.summary.added} / −${changes.summary.removed} 行）`
       : '  · 本次编译没有产物变化',
   );
   console.log(`  ✓ 对比度 ${pairTotal} 组配对全部达标`);
+  console.log(
+    `  ✓ antd 投影 ${antdAudit.themes.length} 套 · 语义覆盖 ${antdAudit.coverage.mapped}/${antdAudit.coverage.total}` +
+      `（${antdAudit.coverage.excluded.length} 条显式排除）· 对比度 ${antdAudit.pairs} 组`,
+  );
   console.log(`  ✓ 产物已写入 ${OUTPUT_DIR}/`);
   console.log(`  用时 ${Date.now() - started}ms`);
   console.log('');

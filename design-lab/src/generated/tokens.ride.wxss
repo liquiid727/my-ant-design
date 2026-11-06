@@ -100,6 +100,7 @@ page {
   --layout-gutter-phone: 32rpx;
   --layout-gutter-tablet: 64rpx;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --metric-compact-size: 34rpx;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #0a0a0c;
@@ -291,6 +292,7 @@ page {
     --layout-gutter-phone: 32rpx;
     --layout-gutter-tablet: 64rpx;
     --layout-scale-type-tablet: 1.08;
+    --layout-scale-type-web: 1.16;
     --metric-compact-size: 34rpx;
     --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
     --metric-ink: #ffffff;
@@ -482,6 +484,7 @@ page {
   --layout-gutter-phone: 32rpx;
   --layout-gutter-tablet: 64rpx;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --metric-compact-size: 34rpx;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #ffffff;
@@ -672,6 +675,7 @@ page {
   --layout-gutter-phone: 32rpx;
   --layout-gutter-tablet: 64rpx;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --metric-compact-size: 34rpx;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #0a0a0c;

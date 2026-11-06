@@ -54,5 +54,13 @@
     "problem": "ADR-0006 用容器查询解决了 Web 侧的布局档位，但微信小程序 WebView 不支持 @container，WXSS 里那段规则等于不存在。同时，宽屏下字号仍是手机尺寸——内容宽度变了， 阅读密度没变，平板上会显得又小又空。",
     "decision": "1. 同一套断点，两种表达 两个 class 覆盖的变量完全一致（--layout-gutter、--layout-content-max、整套字号）， 所以\"同一屏在平板上长什么样\"在两端是同一份定义。",
     "file": "docs/adr/0007-weapp-responsive.md"
+  },
+  {
+    "id": "ADR-0008",
+    "title": "antd 是投影目标，不是第二个设计系统",
+    "status": "已采纳（P0 垂直切片：noir）",
+    "problem": "design-lab 自己渲染品牌产品 UI（Web + 小程序），组件只有 7 个；生产后台需要表格、表单、 日期、权限这类\"没人愿意自己写\"的东西，antd 有 75 个组件和成套交互规范。",
+    "decision": "一份 token 源，两个渲染器。",
+    "file": "docs/adr/0008-antd-target.md"
   }
 ]

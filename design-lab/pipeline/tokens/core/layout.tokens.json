@@ -42,6 +42,9 @@
       "type": {
         "tablet": {
           "$value": 1.08
+        },
+        "web": {
+          "$value": 1.16
         }
       }
     }

@@ -25,14 +25,14 @@
         "dark"
       ],
       "counts": {
-        "total": 328,
-        "public": 179,
+        "total": 329,
+        "public": 180,
         "byLayer": {
           "component": 64,
           "primitive": 135,
           "brand": 57,
           "product": 12,
-          "semantic": 60
+          "semantic": 61
         }
       },
       "tokens": [
@@ -2992,6 +2992,21 @@
           }
         },
         {
+          "path": "layout.scale.type.web",
+          "type": "number",
+          "layer": "semantic",
+          "public": true,
+          "alias": null,
+          "values": {
+            "light": 1.16,
+            "dark": 1.16
+          },
+          "hex": {
+            "light": null,
+            "dark": null
+          }
+        },
+        {
           "path": "ledger.amount.size",
           "type": "dimension",
           "layer": "product",
@@ -4968,13 +4983,13 @@
         "dark"
       ],
       "counts": {
-        "total": 318,
-        "public": 179,
+        "total": 319,
+        "public": 180,
         "byLayer": {
           "component": 64,
           "primitive": 135,
           "brand": 22,
-          "semantic": 85,
+          "semantic": 86,
           "product": 12
         }
       },
@@ -7785,6 +7800,21 @@
           }
         },
         {
+          "path": "layout.scale.type.web",
+          "type": "number",
+          "layer": "semantic",
+          "public": true,
+          "alias": null,
+          "values": {
+            "light": 1.16,
+            "dark": 1.16
+          },
+          "hex": {
+            "light": null,
+            "dark": null
+          }
+        },
+        {
           "path": "ledger.amount.size",
           "type": "dimension",
           "layer": "product",
@@ -9761,13 +9791,13 @@
         "dark"
       ],
       "counts": {
-        "total": 322,
-        "public": 179,
+        "total": 323,
+        "public": 180,
         "byLayer": {
           "component": 64,
           "primitive": 135,
           "brand": 48,
-          "semantic": 63,
+          "semantic": 64,
           "product": 12
         }
       },
@@ -12631,6 +12661,21 @@
           "values": {
             "light": 1.08,
             "dark": 1.08
+          },
+          "hex": {
+            "light": null,
+            "dark": null
+          }
+        },
+        {
+          "path": "layout.scale.type.web",
+          "type": "number",
+          "layer": "semantic",
+          "public": true,
+          "alias": null,
+          "values": {
+            "light": 1.16,
+            "dark": 1.16
           },
           "hex": {
             "light": null,

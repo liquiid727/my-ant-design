@@ -1,4 +1,4 @@
-import { ApiOutlined, CheckCircleFilled, CodeOutlined, KeyOutlined, LinkOutlined, RobotOutlined } from '@ant-design/icons';
+import { ApiOutlined, CheckCircleFilled, CodeOutlined, KeyOutlined, LinkOutlined, RobotOutlined, SyncOutlined } from '@ant-design/icons';
 import { App, AutoComplete, Button, Collapse, Divider, Form, Input, Modal, Select, Space, Tag, Typography } from 'antd';
 import { useMemo, useState } from 'react';
 import type { LLMConfig, LLMProvider } from '../../types';
@@ -10,8 +10,8 @@ import { useUIStore } from '../../stores/uiStore';
 const providerDefaults: Record<LLMProvider, { baseURL: string; model: string; models: string[] }> = {
   openai: {
     baseURL: 'https://api.openai.com/v1',
-    model: 'gpt-5.5',
-    models: ['gpt-5.5', 'gpt-5.4', 'gpt-5.6', 'gpt-4o-mini', 'gpt-4o'],
+    model: 'gpt6.1',
+    models: ['gpt6.1'],
   },
   deepseek: { baseURL: 'https://api.deepseek.com/v1', model: 'deepseek-chat', models: ['deepseek-chat'] },
   qwen: { baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-plus', models: ['qwen-plus', 'qwen-max'] },
@@ -42,6 +42,9 @@ export function SettingsModal() {
   const [form] = Form.useForm<LLMConfig>();
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<'success' | 'error' | null>(null);
+  const [fetchingModels, setFetchingModels] = useState(false);
+  const [modelOptions, setModelOptions] = useState<string[]>([]);
+  const [modelSource, setModelSource] = useState<'default' | 'remote'>('default');
   const isOpen = useUIStore((state) => state.isSettingsOpen);
   const closeSettings = useUIStore((state) => state.closeSettings);
   const llmConfig = useSettingsStore((state) => state.llmConfig);
@@ -50,7 +53,25 @@ export function SettingsModal() {
   const provider = Form.useWatch('provider', form) ?? llmConfig.provider;
   const locale = Form.useWatch('locale', form) ?? llmConfig.locale;
   const apiKey = Form.useWatch('apiKey', form) ?? llmConfig.apiKey;
-  const models = providerDefaults[provider].models;
+  const models = modelOptions.length > 0 ? modelOptions : providerDefaults[provider].models;
+
+  const fetchModels = async () => {
+    const values = form.getFieldsValue();
+    if (!values.baseURL || !values.apiKey) {
+      message.warning('请先填写 Base URL 与 API Key');
+      return;
+    }
+    setFetchingModels(true);
+    const result = await new LLMClient(values).listModels();
+    setFetchingModels(false);
+    if (result.ok) {
+      setModelOptions(result.data);
+      setModelSource('remote');
+      message.success(`已从服务商获取 ${result.data.length} 个模型`);
+      return;
+    }
+    message.error(result.error);
+  };
 
   const promptPreview = useMemo(
     () => buildSystemPrompt({ locale: locale ?? undefined }),
@@ -69,6 +90,7 @@ export function SettingsModal() {
             className="settings-test-btn"
             icon={<ApiOutlined />}
             loading={testing}
+            disabled={!apiKey}
             onClick={async () => {
               const values = form.getFieldsValue();
               setTesting(true);
@@ -139,6 +161,8 @@ export function SettingsModal() {
             onChange={(next: LLMProvider) => {
               const defaults = providerDefaults[next];
               form.setFieldsValue({ provider: next, baseURL: defaults.baseURL, model: defaults.model });
+              setModelOptions(defaults.models);
+              setModelSource('default');
               setTestResult(null);
             }}
           />
@@ -152,10 +176,32 @@ export function SettingsModal() {
         <Typography.Text type="secondary" style={{ display: 'block', marginTop: -16, marginBottom: 16, fontSize: 12 }}>
           {maskApiKey(apiKey)}
         </Typography.Text>
-        <Form.Item label="Model" name="model" rules={[{ required: true }]}>
+        <Form.Item
+          label="Model"
+          name="model"
+          rules={[{ required: true }]}
+          extra={(
+            <Space size={8} style={{ marginTop: 4 }}>
+              <Button
+                size="small"
+                type="link"
+                icon={<SyncOutlined spin={fetchingModels} />}
+                loading={fetchingModels}
+                onClick={fetchModels}
+                style={{ padding: 0 }}
+              >
+                从服务商获取模型列表
+              </Button>
+              <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                {modelSource === 'remote' ? `${modelOptions.length} 个模型` : '使用内置候选'}
+              </Typography.Text>
+            </Space>
+          )}
+        >
           <AutoComplete
             options={models.map((model) => ({ label: model, value: model }))}
-            placeholder="Select or enter a model"
+            placeholder="选择或输入模型，例如 gpt6.1"
+            popupMatchSelectWidth={false}
           />
         </Form.Item>
         <Form.Item label="AI Language" name="locale">

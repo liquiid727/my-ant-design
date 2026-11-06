@@ -80,6 +80,35 @@ export class LLMClient {
     }
   }
 
+  async listModels(): Promise<Result<string[]>> {
+    try {
+      const response = await fetch(this.modelsUrl(), {
+        method: 'GET',
+        headers: this.headers(),
+      });
+
+      if (!response.ok) return { ok: false, error: await normalizeError(response), status: response.status };
+
+      const json = (await response.json()) as {
+        data?: Array<{ id?: string; display_name?: string }>;
+        models?: Array<{ name?: string; displayName?: string }>;
+      };
+
+      const ids = this.config.provider === 'gemini'
+        ? (json.models ?? []).map((model) => (model.name ?? '').replace(/^models\//, ''))
+        : (json.data ?? []).map((model) => model.id ?? '');
+
+      const models = [...new Set(ids.filter(Boolean))].sort((a, b) => a.localeCompare(b));
+      if (models.length === 0) return { ok: false, error: '服务商没有返回可用模型列表。' };
+      return { ok: true, data: models };
+    } catch {
+      return {
+        ok: false,
+        error: '无法获取模型列表：网络或 CORS 阻止了浏览器直连。请检查 Base URL 或改用允许 CORS 的代理。',
+      };
+    }
+  }
+
   async *chat(params: ChatParams): AsyncGenerator<ChatChunk> {
     const response = await this.request(params.messages, params.promptOptions);
     if (!response.ok) throw new Error(await normalizeError(response));
@@ -121,12 +150,26 @@ export class LLMClient {
       : new Error('网络或 CORS 阻止了浏览器直连。请尝试 OpenRouter 或 Proxy。');
   }
 
+  private modelsUrl() {
+    const base = trimSlash(this.config.baseURL);
+    return this.config.provider === 'gemini'
+      ? `${base}/models?key=${encodeURIComponent(this.config.apiKey)}`
+      : `${base}/models`;
+  }
+
   private headers(): Record<string, string> {
     if (this.config.provider === 'claude') {
       return {
         'Content-Type': 'application/json',
         'x-api-key': this.config.apiKey,
         'anthropic-version': '2023-06-01',
+      };
+    }
+
+    if (this.config.provider === 'gemini') {
+      return {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': this.config.apiKey,
       };
     }
 

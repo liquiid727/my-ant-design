@@ -11,7 +11,7 @@ const defaultConfig: LLMConfig = {
   provider: 'openai',
   baseURL: 'https://api.openai.com/v1',
   apiKey: '',
-  model: 'gpt-5.5',
+  model: 'gpt6.1',
   locale: detectLocale(),
 };
 

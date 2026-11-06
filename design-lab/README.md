@@ -112,6 +112,7 @@ Noir Web 示例；浅色排列是同一套语言的冷白对照。
 **布局**：`layout.breakpoint.*` / `layout.gutter.*` / `layout.content.max-*` / `layout.scale.type.tablet` 是 token。
 断点由编译器展开成字面量，其余仍是变量；宽屏下字号按 `layout.scale.type.tablet`（1.08）在编译期放大。
 
+- Web 示例按 `layout.scale.type.web`（1.16）在 CSS 层放大字号；手机屏仍按 375 的设计尺度。
 - Web / 实验台用 `@container (min-width: 600px)`——容器查询，看的是样机宽度不是页面宽度；
 - 小程序没有容器查询，产物里给的是 `.layout-medium` / `.layout-expanded` 两个 class，
   由 `@ds/weapp` 的 `runtime/layout.js` 按 `windowWidth` 挂到页面根节点上。

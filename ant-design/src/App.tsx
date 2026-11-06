@@ -1,9 +1,12 @@
 import { ConfigProvider, App as AntApp } from 'antd';
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
+import { StudioThemeVars } from './components/layout/StudioThemeVars';
 import { PlaygroundPage } from './components/playground/PlaygroundPage';
 import { STORAGE_USAGE_WARNING_EVENT } from './services/storage';
+import { useThemeStore } from './stores/themeStore';
+import { buildStudioChromeTheme, isDarkTheme } from './themes/studioChrome';
 
 const LibraryPage = lazy(() => import('./components/library/LibraryPage').then((module) => ({ default: module.LibraryPage })));
 const AboutPage = lazy(() => import('./components/about/AboutPage').then((module) => ({ default: module.AboutPage })));
@@ -14,9 +17,14 @@ const AIDrawer = lazy(() => import('./components/ai/AIDrawer').then((module) => 
 const SquarePage = lazy(() => import('./components/plaza/SquarePage').then((module) => ({ default: module.SquarePage })));
 
 export default function App() {
+  const currentTheme = useThemeStore((state) => state.currentTheme);
+  const chromeTheme = useMemo(() => buildStudioChromeTheme(currentTheme), [currentTheme]);
+  const dark = isDarkTheme(currentTheme.algorithm);
+
   return (
-    <ConfigProvider>
+    <ConfigProvider theme={chromeTheme}>
       <AntApp>
+        <StudioThemeVars dark={dark} />
         <StudioApp />
       </AntApp>
     </ConfigProvider>

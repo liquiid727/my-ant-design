@@ -94,6 +94,7 @@ page {
   --layout-gutter-phone: 32rpx;
   --layout-gutter-tablet: 64rpx;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --ledger-amount-size: 80rpx;
   --ledger-row-gap: 16rpx;
   --ledger-row-padding: 24rpx;
@@ -278,6 +279,7 @@ page {
     --layout-gutter-phone: 32rpx;
     --layout-gutter-tablet: 64rpx;
     --layout-scale-type-tablet: 1.08;
+    --layout-scale-type-web: 1.16;
     --ledger-amount-size: 80rpx;
     --ledger-row-gap: 16rpx;
     --ledger-row-padding: 24rpx;
@@ -462,6 +464,7 @@ page {
   --layout-gutter-phone: 32rpx;
   --layout-gutter-tablet: 64rpx;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --ledger-amount-size: 80rpx;
   --ledger-row-gap: 16rpx;
   --ledger-row-padding: 24rpx;
@@ -645,6 +648,7 @@ page {
   --layout-gutter-phone: 32rpx;
   --layout-gutter-tablet: 64rpx;
   --layout-scale-type-tablet: 1.08;
+  --layout-scale-type-web: 1.16;
   --ledger-amount-size: 80rpx;
   --ledger-row-gap: 16rpx;
   --ledger-row-padding: 24rpx;
