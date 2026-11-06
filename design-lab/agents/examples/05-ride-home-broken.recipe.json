@@ -1,0 +1,31 @@
+{
+  "id": "recipe-ride-broken",
+  "app": "ride",
+  "page": "pages/home/index",
+  "intent": "（故意写坏的例子）想验证 recipe 校验能不能拦住未知 prop、写死颜色和超出契约的枚举",
+  "sections": [
+    {
+      "component": "RouteCard",
+      "props": {
+        "title": "西湖西溪绿道",
+        "distanceKm": 23.4,
+        "surface": "trail",
+        "theme": "paper"
+      }
+    },
+    {
+      "component": "PrimaryButton",
+      "props": {
+        "label": "开始骑行"
+      }
+    },
+    {
+      "component": "Action",
+      "props": {
+        "label": "开始骑行",
+        "variant": "primary",
+        "accent": "#B7CE5E"
+      }
+    }
+  ]
+}

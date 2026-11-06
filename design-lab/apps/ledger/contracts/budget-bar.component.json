@@ -1,0 +1,12 @@
+{
+  "name": "BudgetBar",
+  "purpose": "预算使用条：已用 / 预算 / 是否超支",
+  "props": [
+    { "name": "used", "type": "number", "required": true },
+    { "name": "total", "type": "number", "required": true },
+    { "name": "label", "type": "string" }
+  ],
+  "states": ["normal", "over", "empty"],
+  "tokens": ["color.budget.track", "color.budget.fill", "color.budget.over", "ledger.row.gap"],
+  "rules": ["超过 100% 时只换颜色，不延长进度条", "空预算显示引导文案而不是 0%"]
+}

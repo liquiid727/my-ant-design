@@ -24,10 +24,12 @@ const THRESHOLD = 0.006; // 0.6% 像素差异
 const update = process.argv.includes('--update');
 
 const PERMUTATIONS = [
-  { brand: 'cycling', theme: 'light' },
-  { brand: 'cycling', theme: 'dark' },
-  { brand: 'ledger', theme: 'light' },
-  { brand: 'ledger', theme: 'dark' },
+  { app: 'ride', brand: 'cycling', theme: 'light' },
+  { app: 'ride', brand: 'cycling', theme: 'dark' },
+  { app: 'ride', brand: 'ledger', theme: 'light' },
+  { app: 'ledger', brand: 'cycling', theme: 'light' },
+  { app: 'ledger', brand: 'ledger', theme: 'light' },
+  { app: 'ledger', brand: 'ledger', theme: 'dark' },
 ];
 
 const main = async () => {
@@ -43,7 +45,8 @@ const main = async () => {
 
   for (const permutation of PERMUTATIONS) {
     await page.evaluate(
-      ({ brand, theme }) => {
+      ({ app, brand, theme }) => {
+        document.documentElement.dataset.app = app;
         document.documentElement.dataset.brand = brand;
         document.documentElement.dataset.theme = theme;
         document.documentElement.style.scrollBehavior = 'auto';
@@ -53,7 +56,7 @@ const main = async () => {
     );
     await page.waitForTimeout(700);
 
-    const name = `${permutation.brand}-${permutation.theme}.png`;
+    const name = `${permutation.app}-${permutation.brand}-${permutation.theme}.png`;
     const shot = await page.locator('.screens').screenshot();
     const file = path.join(BASELINE_DIR, name);
 

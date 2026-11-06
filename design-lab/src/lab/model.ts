@@ -1,7 +1,10 @@
-import catalogJson from '../generated/catalog.json';
+import ledgerCatalogJson from '../generated/catalog.ledger.json';
+import rideCatalogJson from '../generated/catalog.ride.json';
 import manifestJson from '../generated/manifest.json';
-import qaJson from '../generated/qa.json';
-import { themes } from '../generated/tokens';
+import qaLedgerJson from '../generated/qa.ledger.json';
+import qaRideJson from '../generated/qa.ride.json';
+
+export const themeNames: ThemeName[] = ['light', 'dark'];
 
 export type Layer = 'primitive' | 'semantic' | 'brand' | 'product' | 'component' | 'unknown';
 export type ThemeName = 'light' | 'dark';
@@ -26,7 +29,12 @@ export type CatalogBrand = {
   tokens: CatalogToken[];
 };
 
-type Catalog = { designWidth: number; brands: CatalogBrand[] };
+export type CatalogApp = {
+  app: string;
+  appLabel: string;
+  designWidth: number;
+  brands: CatalogBrand[];
+};
 
 type ContrastResult = {
   id: string;
@@ -41,37 +49,79 @@ type ContrastResult = {
 };
 
 type Qa = {
+  app: string;
   summary: { pairs: number; failing: number };
   results: Record<string, ContrastResult[]>;
 };
 
 type Manifest = {
   permutations: number;
-  tokens: { total: number; public: number; byLayer: Record<string, number> };
-  darkOverrides: number;
+  apps: {
+    id: string;
+    label: string;
+    brands: number;
+    themes: number;
+    tokens: { total: number; public: number; byLayer: Record<string, number> };
+    darkOverrides: number;
+  }[];
   contrast: { pairs: number; failing: number };
   artifacts: { file: string; name: string; bytes: number; kind: string; label: string }[];
 };
 
-export const catalog = catalogJson as unknown as Catalog;
-export const qa = qaJson as unknown as Qa;
 export const manifest = manifestJson as unknown as Manifest;
 
-export const brands = catalog.brands;
-export const themeNames = brands[0].themes as ThemeName[];
-export const activeThemes = themes;
+const catalogs = [rideCatalogJson, ledgerCatalogJson] as unknown as CatalogApp[];
+const qaByApp: Record<string, Qa> = {
+  ride: qaRideJson as unknown as Qa,
+  ledger: qaLedgerJson as unknown as Qa,
+};
 
-export const brandById = (brandId: string): CatalogBrand => brands.find((item) => item.id === brandId) ?? brands[0];
+export const apps = catalogs.map((catalog) => ({
+  id: catalog.app,
+  label: catalog.appLabel,
+  brands: catalog.brands,
+}));
 
-export const valueOf = (brandId: string, path: string, theme: ThemeName): string => {
-  const token = brandById(brandId).tokens.find((item) => item.path === path);
+export type AppEntry = (typeof apps)[number];
+
+export const appById = (appId: string): CatalogApp =>
+  catalogs.find((catalog) => catalog.app === appId) ?? catalogs[0];
+
+export const appLabel = (appId: string): string => appById(appId).appLabel;
+
+export const brandsOf = (appId: string): CatalogBrand[] => appById(appId).brands;
+
+export const brandById = (appId: string, brandId: string): CatalogBrand => {
+  const list = brandsOf(appId);
+  return list.find((brand) => brand.id === brandId) ?? list[0];
+};
+
+export const qaFor = (appId: string): Qa => qaByApp[appId] ?? qaByApp.ride;
+
+export const breakpointsOf = (appId: string): { tablet: number; wide: number } => {
+  const firstBrand = brandsOf(appId)[0].id;
+  const read = (tokenPath: string, fallback: number) => {
+    const parsed = parseFloat(valueOf(appId, firstBrand, tokenPath, 'light'));
+    return Number.isFinite(parsed) ? parsed : fallback;
+  };
+  return { tablet: read('layout.breakpoint.tablet', 600), wide: read('layout.breakpoint.wide', 900) };
+};
+
+export const valueOf = (appId: string, brandId: string, path: string, theme: ThemeName): string => {
+  const token = brandById(appId, brandId).tokens.find((item) => item.path === path);
   return token?.values?.[theme] ?? '';
 };
 
-export const overriddenCount = (brandId: string): number =>
-  brandById(brandId).tokens.filter((token) => token.public && token.values.light !== token.values.dark).length;
+export const overriddenCount = (appId: string, brandId: string): number =>
+  brandById(appId, brandId).tokens.filter((token) => token.public && token.values.light !== token.values.dark).length;
 
 export const bytes = (size: number) => (size < 1024 ? `${size} B` : `${(size / 1024).toFixed(1)} KB`);
+
+const appMatcher = (appId: string) => new RegExp(`(^|\\.)${appId}\\.`);
+
+export const perAppArtifacts = (appId: string) =>
+  manifest.artifacts.filter((artifact) => appMatcher(appId).test(artifact.name));
+
 
 export const LAYER_LABEL: Record<string, string> = {
   primitive: '原始',
@@ -86,7 +136,7 @@ export const LAYER_NOTE: Record<string, string> = {
   primitive: '色阶与刻度，业务不可引用',
   semantic: '用途语义，品牌覆盖的唯一入口',
   brand: '品牌包，只覆盖白名单',
-  product: '骑行专有语义',
+  product: '本产品专有语义',
   component: '组件私有变量',
   unknown: '未标注',
 };

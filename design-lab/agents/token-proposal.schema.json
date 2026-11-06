@@ -3,20 +3,63 @@
   "title": "Token Change Proposal",
   "description": "Agent 或人提出的 token 变更。只描述意图与改动，不直接改文件；由 scripts/proposal.mjs 预检。",
   "type": "object",
-  "required": ["id", "intent", "scope", "changes"],
+  "required": [
+    "id",
+    "intent",
+    "scope",
+    "changes"
+  ],
   "additionalProperties": false,
   "properties": {
-    "id": { "type": "string", "pattern": "^tcp-[a-z0-9-]+$" },
-    "intent": { "type": "string", "minLength": 4 },
-    "rationale": { "type": "string", "description": "为什么现有 token 不够用；评审先看这一段" },
-    "author": { "type": "string", "enum": ["agent", "human"] },
+    "id": {
+      "type": "string",
+      "pattern": "^tcp-[a-z0-9-]+$"
+    },
+    "intent": {
+      "type": "string",
+      "minLength": 4
+    },
+    "rationale": {
+      "type": "string",
+      "description": "为什么现有 token 不够用；评审先看这一段"
+    },
+    "author": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "human"
+      ]
+    },
     "scope": {
       "type": "object",
-      "required": ["brand"],
+      "required": [
+        "brand"
+      ],
       "additionalProperties": false,
       "properties": {
-        "brand": { "type": "string", "enum": ["cycling", "ledger"] },
-        "theme": { "type": "string", "enum": ["light", "dark", "both"], "default": "both" }
+        "brand": {
+          "type": "string",
+          "enum": [
+            "cycling",
+            "ledger"
+          ]
+        },
+        "theme": {
+          "type": "string",
+          "enum": [
+            "light",
+            "dark",
+            "both"
+          ],
+          "default": "both"
+        },
+        "app": {
+          "type": "string",
+          "enum": [
+            "ride",
+            "ledger"
+          ]
+        }
       }
     },
     "changes": {
@@ -24,17 +67,44 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["op", "path"],
+        "required": [
+          "op",
+          "path"
+        ],
         "additionalProperties": false,
         "properties": {
-          "op": { "type": "string", "enum": ["add", "set", "deprecate"] },
-          "path": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)+$" },
+          "op": {
+            "type": "string",
+            "enum": [
+              "add",
+              "set",
+              "deprecate"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)+$"
+          },
           "type": {
             "type": "string",
-            "enum": ["color", "dimension", "duration", "cubicBezier", "fontFamily", "fontWeight", "number", "shadow"]
+            "enum": [
+              "color",
+              "dimension",
+              "duration",
+              "cubicBezier",
+              "fontFamily",
+              "fontWeight",
+              "number",
+              "shadow"
+            ]
           },
-          "value": { "description": "友好值：\"#hex\" / \"18px\" / \"220ms\" / [cubicBezier] / \"{alias.path}\"" },
-          "note": { "type": "string", "description": "deprecate 时的替代建议" }
+          "value": {
+            "description": "友好值：\"#hex\" / \"18px\" / \"220ms\" / [cubicBezier] / \"{alias.path}\""
+          },
+          "note": {
+            "type": "string",
+            "description": "deprecate 时的替代建议"
+          }
         }
       }
     }

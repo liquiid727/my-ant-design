@@ -1,4 +1,5 @@
-import { Action, Badge, MetricValue, ProgressRing, RouteCard } from '../components/ui';
+import { Action, Badge, MetricValue, ProgressRing } from '../../components/ui';
+import { RouteCard } from './components';
 
 export const HomeScreen = () => (
   <div className="screen">
@@ -19,7 +20,7 @@ export const HomeScreen = () => (
     <RouteCard title="西湖西溪绿道" distanceKm={23.4} elevationM={218} durationMin={95} surface="mixed" />
 
     <p className="screen-eyebrow">你上周骑过</p>
-    <div className="screen-list">
+    <div className="screen-list" data-cols="2">
       <RouteCard title="龙井茶山环线" distanceKm={12.8} surface="road" layout="row" />
       <RouteCard title="钱塘江堤晨骑" distanceKm={31.2} surface="gravel" layout="row" />
     </div>

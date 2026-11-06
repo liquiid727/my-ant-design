@@ -1,0 +1,32 @@
+{
+  "$description": "记账产品的语义：交易、预算、分类。与骑行的 route / achievement 完全无关。",
+  "color": {
+    "transaction": {
+      "$type": "color",
+      "expense": { "$value": "{color.status.danger}" },
+      "income": { "$value": "{color.status.success}" },
+      "transfer": { "$value": "{color.status.info}" }
+    },
+    "budget": {
+      "$type": "color",
+      "track": { "$value": "{color.ramp.neutral.200}" },
+      "fill": { "$value": "{color.action.primary}" },
+      "over": { "$value": "{color.ramp.amber.600}" }
+    },
+    "category": {
+      "$type": "color",
+      "dining": { "$value": "{color.ramp.amber.500}" },
+      "transit": { "$value": "{color.ramp.sky.500}" },
+      "subscription": { "$value": "{color.ramp.clay.500}" }
+    }
+  },
+  "ledger": {
+    "row": {
+      "gap": { "$type": "dimension", "$value": "{space.8}" },
+      "padding": { "$type": "dimension", "$value": "{space.12}" }
+    },
+    "amount": {
+      "size": { "$type": "dimension", "$value": "{type.metric.size}" }
+    }
+  }
+}

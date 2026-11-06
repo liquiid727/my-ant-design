@@ -1,5 +1,6 @@
 {
   "generatedBy": "pipeline/compiler",
+  "app": "ride",
   "summary": {
     "pairs": 60,
     "failing": 0

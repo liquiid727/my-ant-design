@@ -3,7 +3,11 @@
   "author": "agent",
   "intent": "夜间骑行需要一个低饱和的提示色，现有 status.warning 太抢眼",
   "rationale": "status.warning 是给错误提示用的；夜间沉浸模式需要更柔和的提醒，且必须同时有深色值。",
-  "scope": { "brand": "cycling", "theme": "both" },
+  "scope": {
+    "app": "ride",
+    "brand": "cycling",
+    "theme": "both"
+  },
   "changes": [
     {
       "op": "add",

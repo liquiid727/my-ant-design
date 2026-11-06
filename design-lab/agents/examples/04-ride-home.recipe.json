@@ -1,0 +1,41 @@
+{
+  "id": "recipe-ride-home",
+  "app": "ride",
+  "page": "pages/home/index",
+  "intent": "首页：只展示一条推荐路线和两个已走过的路线入口",
+  "sections": [
+    {
+      "component": "RouteCard",
+      "props": {
+        "title": "西湖西溪绿道",
+        "distanceKm": 23.4,
+        "elevationM": 218,
+        "durationMin": 95,
+        "surface": "mixed"
+      },
+      "tokens": [
+        "card.radius",
+        "color.route.primary"
+      ]
+    },
+    {
+      "component": "Metric",
+      "props": {
+        "value": 23.4,
+        "unit": "km",
+        "label": "本周里程"
+      }
+    },
+    {
+      "component": "Action",
+      "props": {
+        "label": "开始骑行",
+        "variant": "primary"
+      },
+      "tokens": [
+        "button.height",
+        "button.bg"
+      ]
+    }
+  ]
+}

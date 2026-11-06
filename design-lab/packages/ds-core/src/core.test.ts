@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
+  amountVM,
+  layoutBucket,
+  layoutClass,
+  typeScale,
+  formatAmount,
   formatDistance,
   formatDuration,
   formatPercent,
@@ -28,6 +33,12 @@ describe('format', () => {
     expect(formatPercent(0.776)).toEqual({ value: '78', unit: '%' });
     expect(formatPercent(1.4)).toEqual({ value: '100', unit: '%' });
     expect(formatPercent(-1)).toEqual({ value: '0', unit: '%' });
+  });
+
+  it('金额按分格式化并加千分位', () => {
+    expect(formatAmount(348250)).toEqual({ value: '¥3,482.50', unit: '' });
+    expect(formatAmount(-12800)).toEqual({ value: '-¥128.00', unit: '' });
+    expect(amountVM({ cents: 348250, direction: 'expense' }).ariaLabel).toBe('支出 ¥3,482.50');
   });
 
   it('速度保留一位小数', () => {
@@ -94,5 +105,28 @@ describe('planMotion', () => {
     const plan = planMotion('press', { reducedMotion: true, resolve });
     expect(plan).toMatchObject({ play: false, durationMs: 0, easing: 'linear' });
     expect(plan.durationToken).toBe('motion.duration.fast');
+  });
+});
+
+describe('layoutBucket', () => {
+  it('按断点分档：600 以下是紧凑，900 以上是宽', () => {
+    expect(layoutBucket(375)).toBe('compact');
+    expect(layoutBucket(599)).toBe('compact');
+    expect(layoutBucket(600)).toBe('medium');
+    expect(layoutBucket(899)).toBe('medium');
+    expect(layoutBucket(900)).toBe('expanded');
+    expect(layoutBucket(1133)).toBe('expanded');
+  });
+
+  it('自定义断点', () => {
+    expect(layoutBucket(700, { tablet: 700, wide: 1000 })).toBe('medium');
+    expect(layoutBucket(700, { tablet: 800, wide: 1000 })).toBe('compact');
+  });
+
+  it('class 名与字号系数', () => {
+    expect(layoutClass(393)).toBe('layout-compact');
+    expect(layoutClass(744)).toBe('layout-medium');
+    expect(typeScale('compact')).toBe(1);
+    expect(typeScale('medium')).toBeCloseTo(1.08);
   });
 });

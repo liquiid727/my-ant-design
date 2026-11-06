@@ -7,7 +7,7 @@
     "dev": "vite",
     "tokens": "node pipeline/compiler/build.mjs",
     "lint:tokens": "node pipeline/lint/run.mjs",
-    "verify": "npm run tokens && npm run lint:tokens && npm run weapp && npm run check:proposals",
+    "verify": "npm run tokens && npm run lint:tokens && npm run weapp && npm run check:proposals && npm run check:recipes",
     "build": "npm run verify && npm run test && tsc --noEmit && vite build",
     "preview": "vite preview",
     "check": "tsc --noEmit",
@@ -17,7 +17,9 @@
     "visual:update": "node scripts/visual.mjs --update",
     "visual:weapp": "node scripts/visual-weapp.mjs",
     "proposal": "node scripts/proposal.mjs",
-    "check:proposals": "node scripts/check-proposals.mjs"
+    "check:proposals": "node scripts/check-proposals.mjs",
+    "recipe": "node scripts/recipe.mjs",
+    "check:recipes": "node scripts/check-recipes.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",

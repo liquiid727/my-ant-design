@@ -1,0 +1,49 @@
+{
+  "$description": "布局层：断点、栏宽、内容宽度。与品牌无关，也不属于某个产品。",
+  "layout": {
+    "breakpoint": {
+      "$type": "dimension",
+      "tablet": {
+        "$value": "600px"
+      },
+      "wide": {
+        "$value": "900px"
+      }
+    },
+    "gutter": {
+      "$type": "dimension",
+      "phone": {
+        "$value": "{space.gutter}"
+      },
+      "tablet": {
+        "$value": "{space.section}"
+      }
+    },
+    "content": {
+      "$type": "dimension",
+      "max-phone": {
+        "$value": "480px"
+      },
+      "max-tablet": {
+        "$value": "700px"
+      }
+    },
+    "columns": {
+      "$type": "number",
+      "phone": {
+        "$value": 1
+      },
+      "tablet": {
+        "$value": 2
+      }
+    },
+    "scale": {
+      "$type": "number",
+      "type": {
+        "tablet": {
+          "$value": 1.08
+        }
+      }
+    }
+  }
+}

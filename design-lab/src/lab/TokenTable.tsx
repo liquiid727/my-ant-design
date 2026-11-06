@@ -9,8 +9,8 @@ const SCOPES: { id: Scope; label: string }[] = [
   { id: 'all', label: '全部' },
 ];
 
-export const TokenTable = ({ brand: brandId, theme }: { brand: string; theme: ThemeName }) => {
-  const brand = brandById(brandId);
+export const TokenTable = ({ app, brand: brandId, theme }: { app: string; brand: string; theme: ThemeName }) => {
+  const brand = brandById(app, brandId);
   const [query, setQuery] = useState('');
   const [scope, setScope] = useState<Scope>('public');
 

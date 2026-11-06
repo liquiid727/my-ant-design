@@ -1,0 +1,13 @@
+{
+  "name": "CategoryRow",
+  "purpose": "分类消费行：色点 + 名称 + 金额 + 占比",
+  "props": [
+    { "name": "name", "type": "string", "required": true },
+    { "name": "amount", "type": "number", "required": true },
+    { "name": "share", "type": "number", "note": "0–1" },
+    { "name": "tone", "type": "'dining' | 'transit' | 'subscription' | 'other'", "default": "other" }
+  ],
+  "states": ["default", "pressed"],
+  "tokens": ["color.category.dining", "color.category.transit", "color.category.subscription", "ledger.row.gap", "ledger.row.padding"],
+  "rules": ["色点只用于分类识别，不作为唯一信息", "金额右对齐并使用等宽数字"]
+}

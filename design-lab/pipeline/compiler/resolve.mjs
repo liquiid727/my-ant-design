@@ -7,7 +7,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import StyleDictionary from 'style-dictionary';
-import { BRANDS, THEMES } from '../pipeline.config.mjs';
+import { APPS, BRANDS, SHARED, THEMES } from '../pipeline.config.mjs';
 import { isAlias, normalize } from './normalize.mjs';
 import { ROOT } from './paths.mjs';
 
@@ -76,16 +76,24 @@ const flattenResolved = (node, trail = [], out = []) => {
   return out;
 };
 
-export const resolveBrandTheme = async (brand, theme, patch) => {
+export const resolveSet = async (app, brand, theme, patch) => {
   const merged = {};
   const layers = new Map();
 
-  for (const [layer, files] of Object.entries(brand.layers)) {
+  const layersToMerge = [
+    ['primitive', SHARED.primitive],
+    ['semantic', SHARED.semantic],
+    ['brand', brand.brand],
+    ['product', app.product],
+    ['component', SHARED.component],
+    ['semantic', brand.themes?.[theme] ?? []],
+  ];
+
+  for (const [layer, files] of layersToMerge) {
     for (const file of files) mergeInto(merged, await readJson(file), layers, layer);
   }
-  for (const file of brand.themes?.[theme] ?? []) mergeInto(merged, await readJson(file), layers, 'semantic');
 
-  // 提案预演：把补丁树当作最后一层（虚拟品牌文件），不落盘
+  // 提案预演：把补丁树当作最后一层，不落盘
   if (patch) mergeInto(merged, patch, layers, 'brand');
 
   const canonical = normalize(merged);
@@ -109,6 +117,8 @@ export const resolveBrandTheme = async (brand, theme, patch) => {
   for (const token of tokens) token.layer = layers.get(token.path) ?? 'unknown';
 
   return {
+    app: app.id,
+    appLabel: app.label,
     brand: brand.id,
     brandLabel: brand.label,
     latin: brand.latin,
@@ -120,10 +130,15 @@ export const resolveBrandTheme = async (brand, theme, patch) => {
 
 export const resolveAll = async () => {
   const sets = [];
-  for (const brand of BRANDS) {
-    for (const theme of THEMES) {
-      sets.push(await resolveBrandTheme(brand, theme));
+  for (const app of APPS) {
+    for (const brand of BRANDS) {
+      for (const theme of THEMES) {
+        sets.push(await resolveSet(app, brand, theme));
+      }
     }
   }
   return sets;
 };
+
+export const findApp = (id) => APPS.find((app) => app.id === id) ?? APPS[0];
+export const findBrand = (id) => BRANDS.find((brand) => brand.id === id) ?? BRANDS[0];

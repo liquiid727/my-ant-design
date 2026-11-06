@@ -1,7 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import './generated/tokens.css';
+import './generated/tokens.ride.css';
+import './generated/tokens.ledger.css';
 import './styles.css';
 
 const container = document.getElementById('root');

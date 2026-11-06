@@ -1,5 +1,6 @@
 export {
   clamp,
+  formatAmount,
   formatByKind,
   formatDistance,
   formatDuration,
@@ -10,10 +11,13 @@ export {
   type MetricKind,
 } from './format';
 export {
+  amountVM,
   metricVM,
   ringVM,
   routeCardVM,
   unlockVM,
+  type AmountDirection,
+  type AmountVM,
   type MetricVM,
   type RingVM,
   type RouteCardVM,
@@ -22,3 +26,12 @@ export {
   type UnlockVM,
 } from './view-model';
 export { MOTION_INTENTS, planMotion, type MotionIntent, type MotionPlan } from './motion';
+export {
+  DEFAULT_BREAKPOINTS,
+  isWide,
+  layoutBucket,
+  layoutClass,
+  typeScale,
+  type Breakpoints,
+  type LayoutBucket,
+} from './layout';

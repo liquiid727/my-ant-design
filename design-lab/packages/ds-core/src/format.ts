@@ -1,6 +1,6 @@
 /** 数值 → 展示字符串。只做格式化，不读 token、不碰 DOM、不认品牌。 */
 
-export type MetricKind = 'distance' | 'elevation' | 'duration' | 'speed' | 'percent' | 'count';
+export type MetricKind = 'distance' | 'elevation' | 'duration' | 'speed' | 'percent' | 'count' | 'amount';
 
 export type FormattedValue = { value: string; unit: string };
 
@@ -37,6 +37,16 @@ export const formatSpeed = (kmh: number): FormattedValue => ({
   unit: 'km/h',
 });
 
+/** 金额：入参是分，展示保留两位并加千分位。 */
+export const formatAmount = (cents: number, currency: 'CNY' = 'CNY'): FormattedValue => {
+  const abs = Math.abs(Math.round(cents)) / 100;
+  const [integer, fraction] = abs.toFixed(2).split('.');
+  const grouped = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const sign = cents < 0 ? '-' : '';
+  const symbol = currency === 'CNY' ? '¥' : '';
+  return { value: `${sign}${symbol}${grouped}.${fraction}`, unit: '' };
+};
+
 export const formatPercent = (ratio: number): FormattedValue => ({
   value: String(Math.round(clamp(ratio) * 100)),
   unit: '%',
@@ -54,6 +64,8 @@ export const formatByKind = (kind: MetricKind, value: number, mode: 'clock' | 'c
       return formatSpeed(value);
     case 'percent':
       return formatPercent(value);
+    case 'amount':
+      return formatAmount(value);
     default:
       return { value: String(Math.round(value)), unit: '' };
   }

@@ -83,6 +83,34 @@ export const routeCardVM = ({
   };
 };
 
+export type AmountDirection = 'expense' | 'income' | 'transfer';
+
+export type AmountVM = {
+  value: string;
+  direction: AmountDirection;
+  caption: string;
+  ariaLabel: string;
+};
+
+/** 金额 VM：方向只影响语义标记，格式与颜色都交给样式层。 */
+export const amountVM = ({
+  cents,
+  direction = 'expense',
+  caption = '',
+}: {
+  cents: number;
+  direction?: AmountDirection;
+  caption?: string;
+}): AmountVM => {
+  const formatted = formatByKind('amount', cents);
+  return {
+    value: formatted.value,
+    direction,
+    caption,
+    ariaLabel: `${direction === 'income' ? '收入' : direction === 'transfer' ? '转账' : '支出'} ${formatted.value}`,
+  };
+};
+
 export type RingVM = {
   ratio: number;
   /** 直接给到 stroke-dashoffset 的比例（1 = 完全未填充）。 */

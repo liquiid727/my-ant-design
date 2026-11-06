@@ -1,48 +1,63 @@
 /**
- * 管线配置：唯一一处声明"哪些文件组成一个品牌、一套主题"。
- * 顺序即优先级，后者覆盖前者。
+ * 管线配置：三个维度——app（产品语义）× brand（视觉身份）× theme（明暗）。
+ * 唯一一处声明"哪些文件组成一个排列"。
  */
 export const DESIGN_WIDTH = 375;
 
 const CORE = 'pipeline/tokens/core';
 
+/** 产品：决定业务语义（route / transaction …）与页面契约。 */
+export const APPS = [
+  {
+    id: 'ride',
+    label: '骑行',
+    latin: 'Ride Atlas',
+    description: '路线规划、骑行记录、成就与明信片。',
+    product: ['apps/ride/tokens/product.tokens.json'],
+    contracts: 'apps/ride/contracts',
+  },
+  {
+    id: 'ledger',
+    label: '记账',
+    latin: 'Ledger',
+    description: '月度账目、分类预算、流水明细。',
+    product: ['apps/ledger/tokens/product.tokens.json'],
+    contracts: 'apps/ledger/contracts',
+  },
+];
+
+/** 品牌：只决定视觉身份（颜色 / 字体 / 圆角 / 阴影 / 缓动）。 */
 export const BRANDS = [
   {
     id: 'cycling',
     label: '骑行',
     latin: 'Ride Atlas',
-    description: '以骑行为参考实例验证整条管线的品牌包。',
-    layers: {
-      primitive: [`${CORE}/primitive.tokens.json`],
-      semantic: [`${CORE}/semantic.tokens.json`],
-      brand: ['cycling/tokens/brand.tokens.json'],
-      product: ['cycling/tokens/product.tokens.json'],
-      component: ['pipeline/tokens/component/component.tokens.json'],
-    },
+    description: '暖米白 + 柠檬绿 + 宋体，自然杂志感。',
+    brand: ['brands/cycling/tokens/brand.tokens.json'],
     themes: {
       light: [],
-      dark: [`${CORE}/themes/dark.tokens.json`, 'cycling/tokens/dark.tokens.json'],
+      dark: [`${CORE}/themes/dark.tokens.json`, 'brands/cycling/tokens/dark.tokens.json'],
     },
   },
   {
     id: 'ledger',
     label: '记账',
     latin: 'Ledger',
-    description: '第二个品牌包：与骑行视觉相反，只换品牌，不碰组件与页面结构。',
-    layers: {
-      primitive: [`${CORE}/primitive.tokens.json`],
-      semantic: [`${CORE}/semantic.tokens.json`],
-      brand: ['ledger/tokens/brand.tokens.json'],
-      // 同一产品的第二个品牌包（白标）：产品语义沿用骑行，不新增业务词。
-      product: ['cycling/tokens/product.tokens.json'],
-      component: ['pipeline/tokens/component/component.tokens.json'],
-    },
+    description: '冷白 + 砖红 + 无衬线 + 小圆角。',
+    brand: ['brands/ledger/tokens/brand.tokens.json'],
     themes: {
       light: [],
-      dark: [`${CORE}/themes/dark.tokens.json`, 'ledger/tokens/dark.tokens.json'],
+      dark: [`${CORE}/themes/dark.tokens.json`, 'brands/ledger/tokens/dark.tokens.json'],
     },
   },
 ];
+
+/** 与产品、品牌都无关的层。 */
+export const SHARED = {
+  primitive: [`${CORE}/primitive.tokens.json`],
+  semantic: [`${CORE}/semantic.tokens.json`, `${CORE}/layout.tokens.json`],
+  component: ['pipeline/tokens/component/component.tokens.json'],
+};
 
 export const THEMES = ['light', 'dark'];
 

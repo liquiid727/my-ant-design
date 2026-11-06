@@ -1,7 +1,8 @@
-import { manifest, qa, valueOf } from './model';
+import { manifest, qaFor, valueOf } from './model';
 
-const rowsFor = (brand: string) =>
-  (qa.results[`${brand}.light`] ?? []).map((light) => {
+const rowsFor = (app: string, brand: string) => {
+  const qa = qaFor(app);
+  return (qa.results[`${brand}.light`] ?? []).map((light) => {
     const dark = (qa.results[`${brand}.dark`] ?? []).find((item) => item.id === light.id);
     return {
       ...light,
@@ -11,6 +12,7 @@ const rowsFor = (brand: string) =>
       darkBg: dark?.bgValue,
     };
   });
+};
 
 const Status = ({ pass }: { pass: boolean }) => (
   <span className="audit-status" data-pass={pass}>
@@ -18,8 +20,8 @@ const Status = ({ pass }: { pass: boolean }) => (
   </span>
 );
 
-export const AuditPanel = ({ brand }: { brand: string }) => {
-  const rows = rowsFor(brand);
+export const AuditPanel = ({ app, brand }: { app: string; brand: string }) => {
+  const rows = rowsFor(app, brand);
   const failing = rows.filter((row) => !row.pass || !row.darkPass).length;
 
   return (
@@ -36,12 +38,12 @@ export const AuditPanel = ({ brand }: { brand: string }) => {
           <p className="audit-fact-note">有任何一条即阻断合并</p>
         </div>
         <div className="audit-fact">
-          <p className="audit-fact-value">{valueOf(brand, 'size.touch-min', 'light').replace('px', '')}</p>
+          <p className="audit-fact-value">{valueOf(app, brand, 'size.touch-min', 'light').replace('px', '')}</p>
           <p className="audit-fact-label">最小触控</p>
           <p className="audit-fact-note">px；换算成 rpx 后仍达标</p>
         </div>
         <div className="audit-fact">
-          <p className="audit-fact-value">{valueOf(brand, 'border.width.hairline', 'light').replace('px', '')}</p>
+          <p className="audit-fact-value">{valueOf(app, brand, 'border.width.hairline', 'light').replace('px', '')}</p>
           <p className="audit-fact-label">发丝线</p>
           <p className="audit-fact-note">px；不随屏宽缩放</p>
         </div>

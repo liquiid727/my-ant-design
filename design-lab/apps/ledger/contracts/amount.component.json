@@ -1,0 +1,13 @@
+{
+  "name": "Amount",
+  "purpose": "账目主数字：金额 + 方向（支出/收入/转账）",
+  "props": [
+    { "name": "value", "type": "number", "required": true, "note": "分单位整数，格式化在 ds-core 完成" },
+    { "name": "currency", "type": "string", "enum": ["CNY"], "default": "CNY" },
+    { "name": "direction", "type": "'expense' | 'income' | 'transfer'", "default": "expense" },
+    { "name": "caption", "type": "string" }
+  ],
+  "states": ["default", "loading"],
+  "tokens": ["ledger.amount.size", "type.metric.tracking", "color.transaction.expense", "color.transaction.income", "color.transaction.transfer"],
+  "rules": ["不使用千分位以外的修饰", "方向决定颜色，不决定字号", "金额与币种之间不断行"]
+}

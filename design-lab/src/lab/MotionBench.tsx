@@ -28,7 +28,7 @@ const CurvePreview = ({ easing }: { easing: string }) => {
   );
 };
 
-export const MotionBench = ({ brand }: { brand: string }) => {
+export const MotionBench = ({ app, brand }: { app: string; brand: string }) => {
   const [runId, setRunId] = useState(0);
   const [playing, setPlaying] = useState<string | null>(null);
 
@@ -48,8 +48,8 @@ export const MotionBench = ({ brand }: { brand: string }) => {
 
       <div className="motion-list">
         {ROWS.map((row) => {
-          const duration = valueOf(brand, `motion.duration.${row.duration}`, 'light');
-          const easing = valueOf(brand, `motion.easing.${row.easing}`, 'light');
+          const duration = valueOf(app, brand, `motion.duration.${row.duration}`, 'light');
+          const easing = valueOf(app, brand, `motion.easing.${row.easing}`, 'light');
           return (
             <button type="button" className="motion-row" key={row.duration} onClick={() => play(row)}>
               <span className="motion-id">

@@ -10,8 +10,8 @@
  */
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { BRANDS, BRAND_OVERRIDE_ALLOWLIST } from '../pipeline/pipeline.config.mjs';
-import { resolveBrandTheme } from '../pipeline/compiler/resolve.mjs';
+import { APPS, BRANDS, BRAND_OVERRIDE_ALLOWLIST } from '../pipeline/pipeline.config.mjs';
+import { resolveSet } from '../pipeline/compiler/resolve.mjs';
 import { runContrast } from '../pipeline/compiler/qa.mjs';
 import { ROOT } from '../pipeline/compiler/paths.mjs';
 import { formatValue, isPublic } from '../pipeline/compiler/format.mjs';
@@ -45,6 +45,9 @@ const validate = (proposal) => {
   }
   if (!Array.isArray(proposal.changes) || proposal.changes.length === 0) errors.push('changes 必须是非空数组');
   if (!proposal.rationale) warnings.push('建议补 rationale：评审时最先看的就是它');
+
+  if (!proposal.scope?.app) warnings.push('scope.app 未声明，默认按 ride 预检');
+  else if (!APPS.some((item) => item.id === proposal.scope.app)) errors.push(`scope.app 必须是 ${APPS.map((a) => a.id).join(' / ')}`);
 
   const brand = proposal.scope?.brand;
   if (!brand || !BRANDS.some((item) => item.id === brand)) errors.push(`scope.brand 必须是 ${BRANDS.map((b) => b.id).join(' / ')}`);
@@ -110,6 +113,7 @@ const main = async () => {
   const { errors, warnings } = validate(proposal);
   const brandId = proposal.scope?.brand;
   const brand = BRANDS.find((item) => item.id === brandId);
+  const app = APPS.find((item) => item.id === (proposal.scope?.app ?? APPS[0].id)) ?? APPS[0];
   const scopeTheme = proposal.scope?.theme ?? 'both';
   const themes = scopeTheme === 'both' ? ['light', 'dark'] : [scopeTheme];
 
@@ -119,6 +123,7 @@ const main = async () => {
   const report = {
     proposal: proposal.id,
     intent: proposal.intent,
+    app: app.id,
     brand: brandId,
     themes,
     errors,
@@ -137,11 +142,11 @@ const main = async () => {
     }
 
     for (const theme of themes) {
-      const before = await resolveBrandTheme(brand, theme);
-      const after = await resolveBrandTheme(brand, theme, patch);
+      const before = await resolveSet(app, brand, theme);
+      const after = await resolveSet(app, brand, theme, patchFor(theme));
       const changed = summarize(before, after);
       report.permutations.push({
-        permutation: `${brand.id}.${theme}`,
+        permutation: `${app.id}.${brand.id}.${theme}`,
         changed: changed.length,
         details: changed.slice(0, 24),
       });
@@ -153,7 +158,7 @@ const main = async () => {
       report.contrast.after += afterFailures.length;
       for (const failure of afterFailures) {
         if (!beforeFailures.includes(failure.id)) {
-          report.contrast.newFailures.push({ permutation: `${brand.id}.${theme}`, id: failure.id, ratio: failure.ratio, min: failure.min, note: failure.note });
+          report.contrast.newFailures.push({ permutation: `${app.id}.${brand.id}.${theme}`, id: failure.id, ratio: failure.ratio, min: failure.min, note: failure.note });
         }
       }
     }
@@ -161,8 +166,8 @@ const main = async () => {
 
   if (!errors.length && brand) {
     // 主题完整性：light / dark 的键集合必须一致，只改一边会被拦下
-    const light = await resolveBrandTheme(brand, 'light', patchFor('light'));
-    const dark = await resolveBrandTheme(brand, 'dark', patchFor('dark'));
+    const light = await resolveSet(app, brand, 'light', patchFor('light'));
+    const dark = await resolveSet(app, brand, 'dark', patchFor('dark'));
     const lightKeys = new Set(light.tokens.map((token) => token.path));
     const darkKeys = new Set(dark.tokens.map((token) => token.path));
     for (const key of lightKeys) if (!darkKeys.has(key)) report.themeParity.push(`dark 缺少 ${key}`);
@@ -180,7 +185,7 @@ const main = async () => {
 
   console.log('');
   console.log(`  TCP  ${proposal.id ?? '(无 id)'}  —  ${proposal.intent ?? '(无 intent)'}`);
-  console.log(`  品牌 ${brandId ?? '?'} · 主题 ${themes.join('/')} · ${proposal.changes?.length ?? 0} 处改动`);
+  console.log(`  产品 ${app.id} · 品牌 ${brandId ?? '?'} · 主题 ${themes.join('/')} · ${proposal.changes?.length ?? 0} 处改动`);
   console.log('');
 
   if (errors.length) {

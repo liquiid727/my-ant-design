@@ -1,5 +1,5 @@
-/* 由 design-lab/pipeline/compiler 生成，请勿手改。改动请落在 tokens/ 源文件。
-   微信小程序目标：px@375 → rpx（×2），1px 发丝线保持 px
+/* 由 design-lab/pipeline/compiler 生成，请勿手改。改动请落在 tokens 源文件。
+   ride · 品牌 cycling · 微信小程序目标：px@375 → rpx（×2），1px 发丝线保持 px
 */
 
 /* 浅色：定义在 page 上，自定义属性会继承进所有自定义组件 */
@@ -75,6 +75,15 @@ page {
   --elevation-overlay: 0px 24px 64px rgba(23, 24, 15, 0.18);
   --elevation-raised: 0px 12px 32px rgba(33, 45, 30, 0.12);
   --elevation-subtle: 0px 1px 2px rgba(23, 24, 15, 0.06);
+  --layout-breakpoint-tablet: 1200rpx;
+  --layout-breakpoint-wide: 1800rpx;
+  --layout-columns-phone: 1;
+  --layout-columns-tablet: 2;
+  --layout-content-max-phone: 960rpx;
+  --layout-content-max-tablet: 1400rpx;
+  --layout-gutter-phone: 32rpx;
+  --layout-gutter-tablet: 64rpx;
+  --layout-scale-type-tablet: 1.08;
   --metric-compact-size: 34rpx;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #212d1e;
@@ -241,6 +250,15 @@ page {
     --elevation-overlay: 0px 24px 64px rgba(0, 0, 0, 0.6);
     --elevation-raised: 0px 12px 32px rgba(0, 0, 0, 0.55);
     --elevation-subtle: 0px 1px 2px rgba(0, 0, 0, 0.5);
+    --layout-breakpoint-tablet: 1200rpx;
+    --layout-breakpoint-wide: 1800rpx;
+    --layout-columns-phone: 1;
+    --layout-columns-tablet: 2;
+    --layout-content-max-phone: 960rpx;
+    --layout-content-max-tablet: 1400rpx;
+    --layout-gutter-phone: 32rpx;
+    --layout-gutter-tablet: 64rpx;
+    --layout-scale-type-tablet: 1.08;
     --metric-compact-size: 34rpx;
     --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
     --metric-ink: #faf8f1;
@@ -407,6 +425,15 @@ page {
   --elevation-overlay: 0px 24px 64px rgba(0, 0, 0, 0.6);
   --elevation-raised: 0px 12px 32px rgba(0, 0, 0, 0.55);
   --elevation-subtle: 0px 1px 2px rgba(0, 0, 0, 0.5);
+  --layout-breakpoint-tablet: 1200rpx;
+  --layout-breakpoint-wide: 1800rpx;
+  --layout-columns-phone: 1;
+  --layout-columns-tablet: 2;
+  --layout-content-max-phone: 960rpx;
+  --layout-content-max-tablet: 1400rpx;
+  --layout-gutter-phone: 32rpx;
+  --layout-gutter-tablet: 64rpx;
+  --layout-scale-type-tablet: 1.08;
   --metric-compact-size: 34rpx;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #faf8f1;
@@ -572,6 +599,15 @@ page {
   --elevation-overlay: 0px 24px 64px rgba(23, 24, 15, 0.18);
   --elevation-raised: 0px 12px 32px rgba(33, 45, 30, 0.12);
   --elevation-subtle: 0px 1px 2px rgba(23, 24, 15, 0.06);
+  --layout-breakpoint-tablet: 1200rpx;
+  --layout-breakpoint-wide: 1800rpx;
+  --layout-columns-phone: 1;
+  --layout-columns-tablet: 2;
+  --layout-content-max-phone: 960rpx;
+  --layout-content-max-tablet: 1400rpx;
+  --layout-gutter-phone: 32rpx;
+  --layout-gutter-tablet: 64rpx;
+  --layout-scale-type-tablet: 1.08;
   --metric-compact-size: 34rpx;
   --metric-family: 'SF Mono', ui-monospace, Menlo, monospace;
   --metric-ink: #212d1e;
@@ -662,4 +698,91 @@ page {
   --type-title-size: 44rpx;
   --type-title-tracking: 0px;
   --type-title-weight: 600;
+}
+
+/* 布局：小程序没有容器查询，由 @ds/weapp 的 runtime 给页面根节点加 class */
+page {
+  --layout-gutter: var(--layout-gutter-phone);
+  --layout-content-max: var(--layout-content-max-phone);
+}
+
+.layout-medium {
+  --layout-gutter: var(--layout-gutter-tablet);
+  --layout-content-max: var(--layout-content-max-tablet);
+  --type-display-size: 34.6px;
+  --type-display-line: 41px;
+  --type-display-tracking: -0.3px;
+  --type-title-size: 23.8px;
+  --type-title-line: 30.2px;
+  --type-title-tracking: 0px;
+  --type-heading-size: 19.4px;
+  --type-heading-line: 25.9px;
+  --type-heading-tracking: 0px;
+  --type-body-size: 15.1px;
+  --type-body-line: 23.8px;
+  --type-body-tracking: 0px;
+  --type-caption-size: 13px;
+  --type-caption-line: 19.4px;
+  --type-caption-tracking: 0px;
+  --type-label-size: 11.9px;
+  --type-label-line: 17.3px;
+  --type-label-tracking: 1.2px;
+  --type-data-size: 13px;
+  --type-data-line: 19.4px;
+  --type-data-tracking: 0.4px;
+  --type-metric-size: 43.2px;
+  --type-metric-line: 47.5px;
+  --type-metric-tracking: -0.3px;
+  --button-font-size: 15.1px;
+  --metric-value-size: 43.2px;
+  --metric-value-line: 47.5px;
+  --metric-unit-size: 10.8px;
+  --metric-muted-size: 23.8px;
+  --metric-label-size: 11.9px;
+  --metric-label-tracking: 1.2px;
+}
+
+.layout-expanded {
+  --layout-gutter: var(--layout-gutter-tablet);
+  --layout-content-max: var(--layout-content-max-tablet);
+  --type-display-size: 34.6px;
+  --type-display-line: 41px;
+  --type-display-tracking: -0.3px;
+  --type-title-size: 23.8px;
+  --type-title-line: 30.2px;
+  --type-title-tracking: 0px;
+  --type-heading-size: 19.4px;
+  --type-heading-line: 25.9px;
+  --type-heading-tracking: 0px;
+  --type-body-size: 15.1px;
+  --type-body-line: 23.8px;
+  --type-body-tracking: 0px;
+  --type-caption-size: 13px;
+  --type-caption-line: 19.4px;
+  --type-caption-tracking: 0px;
+  --type-label-size: 11.9px;
+  --type-label-line: 17.3px;
+  --type-label-tracking: 1.2px;
+  --type-data-size: 13px;
+  --type-data-line: 19.4px;
+  --type-data-tracking: 0.4px;
+  --type-metric-size: 43.2px;
+  --type-metric-line: 47.5px;
+  --type-metric-tracking: -0.3px;
+  --button-font-size: 15.1px;
+  --metric-value-size: 43.2px;
+  --metric-value-line: 47.5px;
+  --metric-unit-size: 10.8px;
+  --metric-muted-size: 23.8px;
+  --metric-label-size: 11.9px;
+  --metric-label-tracking: 1.2px;
+}
+
+.layout-medium [data-cols='2'],
+.layout-expanded [data-cols='2'] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.layout-expanded [data-cols='3'] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }

@@ -1,8 +1,8 @@
 # Design Lab · Token 编译车间
 
 一条可以跑通的设计管线：**源 JSON → 解析 → 多目标产物 → 门禁 → 实验台**。
-骑行（`cycling/`）只是参考实例；`ledger/` 是第二个品牌包（白标），用来证明管线与品牌无关。
-当前 **2 品牌 × 2 主题 = 4 套排列**，共用同一套 core、组件与产品语义。
+三个正交维度：**app（产品语义）× brand（视觉身份）× theme（明暗）**。
+当前 **2 产品 × 2 品牌 × 2 主题 = 8 套排列**，共用同一套 core 与同一批组件。
 
 ```
 tokens/*.json  ──▶  编译器（解析 / 换算 / 分级）  ──▶  CSS · WXSS · TS · DTCG · AI 上下文
@@ -48,20 +48,21 @@ design-lab/
 │   │   ├── emit.mjs             # 产物渲染
 │   │   └── qa.mjs               # 对比度配对与计算
 │   └── lint/run.mjs             # 6 条门禁
-├── cycling/                     # 参考实例：品牌包 + 产品语义 + 契约
-│   ├── tokens/{brand,dark,product}.tokens.json
-│   └── contracts/*.component.json
-├── ledger/                      # 第二个品牌包：只换视觉，不碰结构
-│   └── tokens/{brand,dark}.tokens.json
+├── apps/                        # 产品：业务语义 + 页面契约
+│   ├── ride/tokens/product.tokens.json + contracts/*.json
+│   └── ledger/tokens/product.tokens.json + contracts/*.json
+├── brands/                      # 品牌：只换视觉，不碰结构
+│   ├── cycling/tokens/{brand,dark}.tokens.json
+│   └── ledger/tokens/{brand,dark}.tokens.json
 ├── agents/                      # 两个闭环的契约与示例（提案 / 生成）
 ├── packages/
 │   ├── ds-core/                 # headless：输入 → ViewModel（纯函数 + 单测）
 │   └── ds-weapp/                # 小程序组件：WXML/WXSS，只吃 tokens.wxss
 ├── src/
-│   ├── generated/               # 产物（勿手改）
+│   ├── generated/               # 产物（勿手改）：tokens.<app>.{css,wxss,ts} 等
 │   ├── components/ui.tsx        # 只吃 token 的通用组件（VM 来自 ds-core）
-│   ├── cycling/screens.tsx      # 三屏实例
-│   └── lab/*                    # 实验台各面板
+│   ├── apps/{ride,ledger}/screens.tsx  # 各产品的屏
+│   └── lab/*                    # 实验台各面板（含现实界面）
 └── docs/adr/                    # 三个关键取舍
 ```
 
@@ -84,7 +85,8 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 **分层**：`primitive`（原色，禁止业务引用）→ `semantic`（用途）→ `component`（组件私有）。
 品牌包和产品语义是**扩展位**，不是新的一层；品牌包只能覆盖白名单里的 ~20 个键。
 
-**两轴**：排列 = `品牌 × 主题`，两个轴正交。深色只补差值（骑行 53 个、记账 57 个变量），
+**三轴**：排列 = `产品 × 品牌 × 主题`。产品决定有哪些语义键，品牌决定这些键长什么样，
+主题只补差值（骑行 124 个、记账 126 个变量），
 新增排列不需要复制组件样式。风格（运动 / 户外 / 生活记录）是品牌包内部的选择，
 不是第四个维度——这样 3 种风格不会变成 6 套组件。
 
@@ -94,8 +96,20 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 **白标怎么成立**：产品语义引用品牌意图（`route.primary → {color.action.primary}`），
 而不是引用原始色阶。所以换品牌，骑行界面连地图配色和明信片邮戳都会跟着换，结构一行不动。
 
+**跨产品怎么成立**：组件只依赖 semantic / component 层，不碰 `route.*` / `transaction.*`。
+记账两屏与骑行三屏用的是同一批组件，只是产品语义和页面不同。
+
 **单位**：源文件按 `px @ 375` 书写。Web 输出 px；小程序输出 rpx（×2）；
 `1px` 发丝线永远保持 px，不随屏宽缩放。换算只发生在 `format.mjs` 一处。
+
+**布局**：`layout.breakpoint.*` / `layout.gutter.*` / `layout.content.max-*` / `layout.scale.type.tablet` 是 token。
+断点由编译器展开成字面量，其余仍是变量；宽屏下字号按 `layout.scale.type.tablet`（1.08）在编译期放大。
+
+- Web / 实验台用 `@container (min-width: 600px)`——容器查询，看的是样机宽度不是页面宽度；
+- 小程序没有容器查询，产物里给的是 `.layout-medium` / `.layout-expanded` 两个 class，
+  由 `@ds/weapp` 的 `runtime/layout.js` 按 `windowWidth` 挂到页面根节点上。
+
+见 [ADR-0006](docs/adr/0006-layout-tokens.md) 与 [ADR-0007](docs/adr/0007-weapp-responsive.md)。
 
 ## 产物
 
@@ -117,9 +131,10 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 | 主题完整性 | light / dark 键集合必须一致，不允许只在一边新增 | error |
 | 品牌包白名单 | 越权覆盖（例如改 `space.*`）直接失败 | error |
 | 分层依赖方向 | 组件 token 引用色阶即失败；颜色必须走语义层 | error |
-| 对比度 | 15 组配对 × 4 套排列 = 60 项，AA 阈值按用途区分 | error |
+| 对比度 | 15 组配对 × 8 套排列 = 120 项，AA 阈值按用途区分 | error |
 | 组件契约可解析 | 契约里引用的 token 必须存在且公开 | error |
 | 禁止硬编码颜色 | 扫描 `src/**`，`#hex` / `rgb()` / `hsl()` 一律拦 | error |
+| 产品语义不越界 | 通用组件与小程序组件不许用 `route.*` / `transaction.*`；各 app 只能用自己产品的语义 | error |
 | 未被引用的语义 token | 提示，不阻断 | info |
 
 ## 通用性的验收
@@ -153,7 +168,7 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 
 | 级别 | 命令 | 何时跑 | 基线 |
 | --- | --- | --- | --- |
-| PR 级 | `npm run visual` | 每次提交 | `tests/visual/baselines/`（macOS 生成） |
+| PR 级 | `npm run visual` | 每次提交 | 6 张基线（2 产品 × 品牌/主题组合） |
 | 发布级 | `npm run visual:weapp -- --strict` | 发版前 | `tests/visual/weapp/` |
 
 已验证门禁有效：把主色从柠檬绿换成玫红，`cycling-light` 报 3.71%，其余三张 0%。
@@ -164,7 +179,7 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 
 ```
 提案：TCP JSON → npm run proposal 预检 → 改源文件 → verify → visual → PR
-生成：读 design-context.json → 只用现有 token/组件 → lint 与契约校验 → 实验台 → PR
+生成：读 design-context.<app>.json → 写 page recipe → npm run recipe 校验 → 实验台 → PR
 ```
 
 提案预检回答四件事：结构、品牌白名单、影响面、对比度与主题完整性。
@@ -176,13 +191,26 @@ generated ──▶ ds-core（VM） ──▶ components ──▶ screens ─�
 | 主色换成深绿 | 拦截：`on-primary` 1.52:1 |
 | 改 `space.page` | 拦截：不在品牌白名单 |
 
+## 现实界面
+
+`#reality` 段把当前屏按八种真实机型画出来（iPhone SE / 15 Pro / 16 Pro Max、Pixel 7、Galaxy S21、
+Fold 外屏、iPad mini / iPad Pro 11），宽度、留白、断行按设备计算，只有外层容器缩放。
+
+每台机型可以单独：
+
+- **切横竖屏**——852 × 393 会触发 medium 档，直接看到两列布局；
+- **开关安全区**——按机型画 59/34、24/24、62/34 的侵入区；
+- **看档位**——当前宽度落在 compact / medium / expanded 哪一档。
+
+按"手机 / 平板"筛选，就能把三个状态并排比较。
+
 ## 当前边界
 
 > 还没做（按顺序）：
 
-1. 页面级 recipe schema：现在能校验组件契约，还校验不了"页面组合"；
-2. `app` 层拆分：支持"不同产品 × 不同品牌"，而不只是白标；
-3. 真机验证：仓库里没有小程序工程，weapp 只有静态校验 + 待接入的截图脚本。
+1. 平板断点：744 宽下仍是单列布局，需要一套 layout token 才能给出双列；
+2. 真机验证：仓库里没有小程序工程，weapp 只有静态校验 + 待接入的截图脚本；
+3. 组件不依赖产品语义这条规则，目前只写在 design-context 里，还没有 lint 固化。
 
 ## 已知取舍
 

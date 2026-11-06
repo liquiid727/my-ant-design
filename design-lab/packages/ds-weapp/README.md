@@ -11,7 +11,11 @@ WXML / WXSS / JS 三件套，样式**只**引用 `tokens.wxss` 里的自定义�
 npm run weapp     # design-lab 根目录，产物在 packages/ds-weapp/dist
 ```
 
-2. 把 `dist/tokens.wxss` 引进 `app.wxss`（全量只进一次）：
+2. 把 `dist/tokens.wxss` 引进 `app.wxss`（全量只进一次）。构建时用 `DS_APP` 指定产品：
+
+```bash
+DS_APP=ledger npm run weapp   # 产出 ledger 的 tokens.wxss / tokens.ts
+```
 
 ```css
 @import '/packages/ds-weapp/dist/tokens.wxss';
@@ -67,6 +71,37 @@ Page({
 - 组件 wxss 里出现 `#hex` / `rgb()` 会被 `npm run weapp` 直接拦下；
 - 组件用到的每个 `var(--x)` 都必须在 `tokens.wxss` 里真实存在，否则构建失败；
 - 因此换品牌 / 换主题时，组件不需要改一行代码，`page` 上的变量会继承进来。
+
+## 响应式：没有容器查询怎么办
+
+小程序 WebView 不支持 `@container`，所以同一套布局规则用**页面根节点 class**表达：
+
+```js
+import { applyLayout, watchLayout } from '/packages/ds-weapp/dist/runtime/layout';
+
+Page({
+  data: { layoutClass: 'layout-compact' },
+  onLoad() {
+    applyLayout(this);                 // 按 windowWidth 算出 layout-compact / medium / expanded
+    this.stopWatch = watchLayout(this); // 转屏、分屏时重新计算
+  },
+  onUnload() {
+    this.stopWatch?.();
+  },
+});
+```
+
+```html
+<view class="page {{layoutClass}}">
+  <view class="screen">
+    <view class="route-list" data-cols="2">…</view>
+  </view>
+</view>
+```
+
+- `.layout-medium` / `.layout-expanded` 会覆盖 `--layout-gutter`、`--layout-content-max` 与整套字号变量；
+- `data-cols="2"` 的区块在 medium 以上变成两列；
+- 断点值来自 `layout.breakpoint.*`，构建时注入 `dist/runtime/layout.js`，不在运行时重复维护。
 
 ## 环形的实现
 
