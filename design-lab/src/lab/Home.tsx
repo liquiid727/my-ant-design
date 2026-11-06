@@ -3,29 +3,49 @@ import { CopyButton } from '../components/code';
 import { BrowserFrame } from '../components/web';
 import { Button } from '../components/controls';
 import { navigate } from '../lib/router';
+import brandCycling from '../assets/home/brand-cycling.png';
+import brandLedger from '../assets/home/brand-ledger.png';
+import brandNoir from '../assets/home/brand-noir.png';
 import { EXAMPLES, type Example } from './examples';
 import { NoirWeb } from './noir-web';
-import { apps, brandsOf, bytes, manifest, perAppArtifacts } from './model';
+import { apps, brandsOf, bytes, manifest, perAppArtifacts, valueOf } from './model';
 
-const VALUE_LAYOUT = [
+/** 三张证据卡：每张都放一个能查证的东西，不再用三段话解释。 */
+const BRAND_SHOTS = [
+  { id: 'cycling', label: '骑行包 · 鼠尾草', src: brandCycling },
+  { id: 'ledger', label: '记账包 · 朱砂', src: brandLedger },
+  { id: 'noir', label: 'Noir · 黑白', src: brandNoir },
+];
+
+const GATES = ['主题完整性', '品牌白名单', '分层方向', '对比度', '契约可解析', '禁止硬编码颜色', '产品语义不越界'];
+
+const EVIDENCE = [
   {
     index: '01',
-    title: '设计稿和代码不再各说各话',
-    body: '颜色、字号、圆角、时长只写一次。改 JSON，四个平台的产物同时更新，不存在"改漏了某个页面"。',
-    note: '一处定义 → 全部产物',
+    title: '改一处，四个平台同时变',
+    body: '颜色、字号、时长只写一次；CSS、WXSS、TS、DTCG 全部从同一份 JSON 编译出来。',
+    metric: `4 个平台 · ${manifest.artifacts.length} 个产物`,
   },
   {
     index: '02',
-    title: '多端、多品牌，不用复制组件',
-    body: '组件只认语义层。换品牌是换一套变量，换产品是换一套业务语义——页面结构一行都不动。',
-    note: `${apps.length} 产品 × ${brandsOf('ride').length} 品牌 × 2 主题 = ${manifest.permutations} 套排列`,
+    title: '同一批组件，换品牌就换一套',
+    body: '产品语义和页面结构不动，只换品牌包——三套身份，组件代码一行没改。',
+    metric: `${brandsOf('ride').length} 个品牌 × 2 个主题`,
   },
   {
     index: '03',
-    title: 'AI 可以生成，但不能发明样式',
-    body: '模型只能引用已存在的 token，不够用就先提提案；提案与配方在落盘前都会被机器拦一遍。',
-    note: '7 道门禁 · 提案 / 配方预检',
+    title: 'AI 能生成，但不能发明样式',
+    body: '模型只能引用已有 token；提案与配方在落盘前先被机器拦一遍。',
+    metric: `${GATES.length} 道门禁 · 硬编码零容忍`,
   },
+];
+
+const FLOW = [
+  { index: '01', label: '定义', cmd: 'tokens / apps / brands', meta: '6 层 JSON' },
+  { index: '02', label: '编译', cmd: 'npm run tokens', meta: `${manifest.artifacts.length} 个产物` },
+  { index: '03', label: '校验', cmd: 'npm run verify', meta: `${GATES.length} 道门禁` },
+  { index: '04', label: '消费', cmd: 'css / wxss / ts / dtcg', meta: '4 个平台' },
+  { index: '05', label: '回归', cmd: 'npm run visual', meta: '6 张基线' },
 ];
 
 const ExampleCard = ({ example }: { example: Example }) => {
@@ -85,41 +105,6 @@ export const Home = () => {
   const rideArtifacts = perAppArtifacts('ride');
   const rideBytes = rideArtifacts.reduce((sum, item) => sum + item.bytes, 0);
   const publicTokens = manifest.apps.reduce((sum, app) => sum + app.tokens.public, 0);
-
-  const VALUES_METRIC = [
-    {
-      value: String(manifest.artifacts.length),
-      label: '个产物 / 一次编译',
-      calc: [
-        { text: 'tokens.css / wxss / ts：各 1 个', to: '/method/output' },
-        {
-          text: `dtcg：${rideArtifacts.filter((item) => item.kind === 'dtcg').length} 个（${brandsOf('ride').length} 品牌 × 2 主题）`,
-          to: '/method/output',
-        },
-        { text: 'catalog / qa / design-context：3 个', to: '/method/output' },
-        {
-          text: `单个产品 ${rideArtifacts.length} 个 × ${apps.length} 个产品 = ${manifest.artifacts.length}`,
-          to: '/method/output',
-        },
-      ],
-    },
-    {
-      value: String(manifest.permutations),
-      label: '套排列 / 同一批组件',
-      calc: [
-        { text: `${apps.length} 个产品 × ${brandsOf('ride').length} 个品牌 × 2 个主题`, to: '/matrix' },
-        { text: '组件只有一份，排列只影响变量', to: '/method/process' },
-      ],
-    },
-    {
-      value: '7',
-      label: '道门禁 / 硬编码零容忍',
-      calc: [
-        { text: '主题完整性 · 品牌白名单 · 分层方向 · 对比度', to: '/method/process' },
-        { text: '契约可解析 · 禁止硬编码颜色 · 产品语义不越界', to: '/method/process' },
-      ],
-    },
-  ];
 
   return (
     <div className="home">
@@ -205,36 +190,83 @@ export const Home = () => {
 
       <section className="home-section" id="value">
         <header className="home-head">
-          <p className="eyebrow">它解决什么</p>
-          <h2 className="home-title">三个具体的麻烦</h2>
-          <p className="home-note">不是"设计系统"这种抽象名词，是这三个会直接拖慢交付的问题。</p>
+          <p className="eyebrow">三个证据</p>
+          <h2 className="home-title">不是口号，是能查到的三件事</h2>
+          <p className="home-note">每张卡里的数字、截图和值都来自仓库里的产物；想追，链接都通到源文件。</p>
         </header>
-        <ol className="values">
-          {VALUE_LAYOUT.map((value, index) => (
-            <li className="value" key={value.index}>
-              <span className="value-index">{value.index}</span>
-              <p className="value-metric">
-                <strong>{VALUES_METRIC[index].value}</strong>
-                <span>{VALUES_METRIC[index].label}</span>
-              </p>
-              <h3 className="value-title">{value.title}</h3>
-              <p className="value-body">{value.body}</p>
-              <code className="value-note">{value.note}</code>
-              <details className="value-calc">
-                <summary>怎么算的</summary>
-                <ul>
-                  {VALUES_METRIC[index].calc.map((line) => (
-                    <li key={line.text}>
-                      <button type="button" className="calc-link" onClick={() => navigate(line.to)}>
-                        {line.text}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </details>
 
-            </li>
-          ))}
+        <ol className="evidence">
+          <li className="ev-card">
+            <div className="ev-shot ev-token">
+              <div className="ev-token-head">
+                <span className="ev-token-path">color.action.primary</span>
+                <span className="ev-token-layer">semantic</span>
+              </div>
+              <div className="ev-token-values">
+                <span>
+                  <i className="ev-swatch" style={{ background: valueOf('ride', 'cycling', 'color.action.primary', 'light') }} />
+                  <code>{valueOf('ride', 'cycling', 'color.action.primary', 'light')}</code>
+                  <small>浅色</small>
+                </span>
+                <span>
+                  <i className="ev-swatch" style={{ background: valueOf('ride', 'cycling', 'color.action.primary', 'dark') }} />
+                  <code>{valueOf('ride', 'cycling', 'color.action.primary', 'dark')}</code>
+                  <small>深色</small>
+                </span>
+              </div>
+              <p className="ev-compile">
+                <span>一次编译</span>
+                <span aria-hidden="true">→</span>
+                <span>4 个目标</span>
+              </p>
+              <ul className="ev-targets">
+                <li>CSS</li>
+                <li>WXSS</li>
+                <li>TS</li>
+                <li>DTCG</li>
+              </ul>
+            </div>
+            <span className="ev-index">{EVIDENCE[0].index}</span>
+            <h3 className="ev-title">{EVIDENCE[0].title}</h3>
+            <p className="ev-body">{EVIDENCE[0].body}</p>
+            <p className="ev-metric">{EVIDENCE[0].metric}</p>
+          </li>
+
+          <li className="ev-card">
+            <div className="ev-shot ev-phones">
+              {BRAND_SHOTS.map((brand) => (
+                <figure key={brand.id}>
+                  <img src={brand.src} alt={`${brand.label} 下的同一个首页`} width={300} height={567} loading="lazy" />
+                  <figcaption>{brand.label}</figcaption>
+                </figure>
+              ))}
+            </div>
+            <span className="ev-index">{EVIDENCE[1].index}</span>
+            <h3 className="ev-title">{EVIDENCE[1].title}</h3>
+            <p className="ev-body">{EVIDENCE[1].body}</p>
+            <p className="ev-metric">{EVIDENCE[1].metric}</p>
+          </li>
+
+          <li className="ev-card">
+            <div className="ev-shot ev-gates">
+              <ul>
+                {GATES.map((gate) => (
+                  <li key={gate}>
+                    <span aria-hidden="true">✓</span>
+                    {gate}
+                  </li>
+                ))}
+              </ul>
+              <p className="ev-blocked">
+                <span aria-hidden="true">✕</span>
+                示例：主色换深绿 → on-primary 1.52:1
+              </p>
+            </div>
+            <span className="ev-index">{EVIDENCE[2].index}</span>
+            <h3 className="ev-title">{EVIDENCE[2].title}</h3>
+            <p className="ev-body">{EVIDENCE[2].body}</p>
+            <p className="ev-metric">{EVIDENCE[2].metric}</p>
+          </li>
         </ol>
       </section>
 
@@ -260,45 +292,26 @@ export const Home = () => {
       </section>
 
       <section className="home-section" id="how">
-        <header className="home-head">
-          <p className="eyebrow">怎么做到</p>
-          <h2 className="home-title">定义 → 编译 → 门禁 → 回归</h2>
-          <p className="home-note">
-            五个步骤，每一步都有命令与可检查的产物；两个 AI 闭环，在落盘之前就被机器拦一遍。
-          </p>
-        </header>
-        <div className="how">
-          <ol className="how-steps">
-            <li>
-              <span>01</span>
-              <strong>定义</strong>
-              <small>tokens / apps / brands</small>
-            </li>
-            <li>
-              <span>02</span>
-              <strong>编译</strong>
-              <small>npm run tokens</small>
-            </li>
-            <li>
-              <span>03</span>
-              <strong>校验</strong>
-              <small>npm run verify</small>
-            </li>
-            <li>
-              <span>04</span>
-              <strong>消费</strong>
-              <small>css / wxss / ts / dtcg</small>
-            </li>
-            <li>
-              <span>05</span>
-              <strong>回归</strong>
-              <small>npm run visual</small>
-            </li>
-          </ol>
+        <header className="home-head home-head-row">
+          <div>
+            <p className="eyebrow">怎么做到</p>
+            <h2 className="home-title">一条流水线，五个动作</h2>
+            <p className="home-note">每一步都有命令和产物；跑一遍就能看到，不用信任何描述。</p>
+          </div>
           <button type="button" className="how-link" onClick={() => navigate('/method')}>
-            看完整方法（流程、产物、生成方式）→
+            看完整方法 →
           </button>
-        </div>
+        </header>
+        <ol className="flow">
+          {FLOW.map((item) => (
+            <li key={item.index}>
+              <span className="flow-step">{item.index}</span>
+              <strong>{item.label}</strong>
+              <code>{item.cmd}</code>
+              <small>{item.meta}</small>
+            </li>
+          ))}
+        </ol>
       </section>
 
       <section className="home-section start" id="start">

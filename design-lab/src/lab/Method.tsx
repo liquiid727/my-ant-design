@@ -1,47 +1,155 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, type ReactNode } from 'react';
+import baselineShot from '../assets/method/baseline.png';
+import semanticRaw from '../../pipeline/tokens/core/semantic.tokens.json?raw';
+import cssRaw from '../generated/tokens.ride.css?raw';
+import tsRaw from '../generated/tokens.ride.ts?raw';
+import wxssRaw from '../generated/tokens.ride.wxss?raw';
+import dtcgRaw from '../generated/dtcg/ride.cycling.light.tokens.json?raw';
 import { CodeBlock } from '../components/code';
 import { Segmented } from '../components/controls';
 import { apps, bytes, changeOf, changes, manifest, perAppArtifacts } from './model';
+
+type CodeSample = { n: number; text: string };
+
+const splitLines = (raw: string) => raw.split('\n');
+
+/** 从某个标记开始取 count 行，行号保持原文件里的位置。 */
+const around = (raw: string, marker: string, count: number): CodeSample[] => {
+  const lines = splitLines(raw);
+  const index = lines.findIndex((line) => line.includes(marker));
+  const start = index < 0 ? 0 : index;
+  return lines.slice(start, start + count).map((text, i) => ({ n: start + i + 1, text: text.trimEnd() }));
+};
+
+/** 只挑含指定片段的行，用来对比同一份 token 在不同平台上的写法。 */
+const pick = (raw: string, needles: string[], max: number): CodeSample[] =>
+  splitLines(raw)
+    .map((text, i) => ({ n: i + 1, text: text.trim() }))
+    .filter((line) => needles.some((needle) => line.text.includes(needle)))
+    .slice(0, max);
+
+const DEFINE_SAMPLE = around(semanticRaw, '"action": {', 7);
+const COMPILE_SAMPLE = around(cssRaw, '--color-action-primary:', 5);
+
+const FILES = [
+  { id: 'css', name: 'tokens.ride.css', tag: 'Web', lines: pick(cssRaw, ['--color-action-primary:', '--button-height:'], 2) },
+  { id: 'wxss', name: 'tokens.ride.wxss', tag: '小程序', lines: pick(wxssRaw, ['--color-action-primary:', '--button-height:'], 2) },
+  { id: 'ts', name: 'tokens.ride.ts', tag: 'TypeScript', lines: pick(tsRaw, ["'color.action.primary':", "'button.height':"], 2) },
+  { id: 'dtcg', name: 'dtcg/ride.cycling.light.json', tag: 'DTCG', lines: pick(dtcgRaw, ['"$type": "color"', '"hex": "#'], 2) },
+];
+
+const GATES = ['主题完整性', '品牌白名单', '分层方向', '对比度', '契约可解析', '禁止硬编码颜色', '产品语义不越界'];
 
 const STEPS = [
   {
     index: '01',
     title: '定义',
-    body: '一份人可读的 JSON：色阶、语义、组件、产品、品牌、布局六层分开写，品牌只能覆盖白名单。',
+    body: '六层 JSON 分开写：原始、语义、品牌、产品、组件、布局。品牌只能覆盖白名单里的键。',
     note: 'tokens / apps / brands',
   },
   {
     index: '02',
     title: '编译',
-    body: '解析别名与循环，把 px 换算成 rpx，只导出业务可见的变量，按产品拆产物。',
+    body: '解析别名与循环引用，把 px 换算成 rpx，只导出业务可见的变量，按产品拆产物。',
     note: 'npm run tokens',
   },
   {
     index: '03',
     title: '校验',
-    body: '七道门禁：主题完整性、品牌白名单、分层方向、对比度、契约、硬编码、产品边界。',
+    body: '七道门禁一起跑。任何一条不过，合并就被拦住——不靠人眼。',
     note: 'npm run verify',
   },
   {
     index: '04',
     title: '消费',
-    body: 'Web 走 CSS 变量，小程序走 WXSS 与运行时，TS 给类型，DTCG 给外部工具，上下文给 AI。',
+    body: 'Web 吃 CSS 变量，小程序吃 WXSS 与运行时，TS 给类型，DTCG 给外部工具。',
     note: 'css / wxss / ts / dtcg',
   },
   {
     index: '05',
     title: '回归',
-    body: '像素基线锁住肉眼可见的变化；提案与配方再做两道预检，AI 改不动样式。',
+    body: '像素基线锁住肉眼可见的变化；提案与配方各再挡一道。',
     note: 'npm run visual',
   },
 ];
 
-const USAGE = [
-  { label: 'Web', code: "import './tokens.{app}.css'", note: '根节点带 data-app / data-brand / data-theme' },
-  { label: '小程序', code: '@import "tokens.wxss"', note: 'runtime/layout.js 负责断点 class' },
-  { label: '外部工具', code: 'dtcg/*.tokens.json', note: 'DTCG 2025.10，只含业务可见 token' },
-  { label: 'AI', code: 'design-context.{app}.json', note: '唯一输入：token + 契约 + 硬规则' },
-];
+const CodeFile = ({ file, tag, lines }: { file: string; tag?: string; lines: CodeSample[] }) => (
+  <div className="mstep-file">
+    <div className="mstep-file-head">
+      <code>{file}</code>
+      {tag ? <span>{tag}</span> : null}
+    </div>
+    <div className="mstep-code">
+      {lines.map((line) => (
+        <div className="mstep-line" key={`${line.n}-${line.text.slice(0, 16)}`}>
+          <span className="mstep-ln">{line.n}</span>
+          <code>{line.text}</code>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+/** 每一步配一张真实产物：源 JSON、编译出的 CSS、门禁、四平台产物、基线截图。 */
+const PREVIEWS: Record<string, ReactNode> = {
+  '01': (
+    <>
+      <CodeFile file="semantic.tokens.json" tag="语义层" lines={DEFINE_SAMPLE} />
+      <p className="mstep-chips">
+        <span>6 层</span>
+        <span>品牌只覆盖白名单</span>
+      </p>
+    </>
+  ),
+  '02': (
+    <>
+      <CodeFile file="tokens.ride.css" tag="Web" lines={COMPILE_SAMPLE} />
+      <p className="mstep-chips">
+        <span>{manifest.artifacts.length} 个产物</span>
+        <span>4 个平台</span>
+      </p>
+    </>
+  ),
+  '03': (
+    <>
+      <ul className="mstep-gates">
+        {GATES.map((gate) => (
+          <li key={gate}>
+            <span aria-hidden="true">✓</span>
+            {gate}
+          </li>
+        ))}
+      </ul>
+      <p className="mstep-blocked">
+        <span aria-hidden="true">✕</span>
+        示例：主色换深绿 → on-primary 1.52:1
+      </p>
+    </>
+  ),
+  '04': (
+    <div className="mstep-files">
+      {FILES.map((file) => (
+        <CodeFile key={file.id} file={file.name} tag={file.tag} lines={file.lines} />
+      ))}
+    </div>
+  ),
+  '05': (
+    <div className="mstep-visual">
+      <img src={baselineShot} alt="被像素基线锁住的一张手机屏" loading="lazy" />
+      <div className="mstep-metrics">
+        <p>
+          <strong>0.6%</strong>
+          <small>像素差异阈值</small>
+        </p>
+        <p>
+          <strong>6 张</strong>
+          <small>基线覆盖 6 套排列</small>
+        </p>
+        <code>npm run visual</code>
+      </div>
+    </div>
+  ),
+};
 
 const ChangeBadge = ({ name, count }: { name: string; count: number }) => {
   const change = changeOf(name);
@@ -120,13 +228,16 @@ export const Method = ({ focus }: { focus?: string }) => {
       </header>
 
       <section className="home-section" id="process">
-        <ol className="steps">
+        <ol className="msteps">
           {STEPS.map((step) => (
-            <li className="step" key={step.index}>
-              <span className="step-index">{step.index}</span>
-              <h3 className="step-title">{step.title}</h3>
-              <p className="step-body">{step.body}</p>
-              <code className="step-note">{step.note}</code>
+            <li className="mstep" key={step.index}>
+              <div className="mstep-copy">
+                <span className="mstep-index">{step.index}</span>
+                <h3 className="mstep-title">{step.title}</h3>
+                <p className="mstep-body">{step.body}</p>
+                <code className="mstep-note">{step.note}</code>
+              </div>
+              <div className="mstep-shot">{PREVIEWS[step.index]}</div>
             </li>
           ))}
         </ol>
@@ -252,21 +363,9 @@ npm run visual`}
             </tbody>
           </table>
 
-          <div className="usage">
-            <p className="usage-title">这些文件给谁用</p>
-            {USAGE.map((item) => (
-              <div className="usage-row" key={item.label}>
-                <span className="usage-label">{item.label}</span>
-                <span className="usage-body">
-                  <code>{item.code.replace(/\{app\}/g, outputApp)}</code>
-                  <small>{item.note}</small>
-                </span>
-              </div>
-            ))}
-            <p className="output-total">
-              合计 <strong>{bytes(totalBytes)}</strong>，全部由 <code>npm run tokens</code> 生成；产物提交入库，diff 就是评审对象。
-            </p>
-          </div>
+          <p className="output-total">
+            合计 <strong>{bytes(totalBytes)}</strong>，全部由 <code>npm run tokens</code> 生成；产物提交入库，diff 就是评审对象。
+          </p>
         </div>
       </section>
 

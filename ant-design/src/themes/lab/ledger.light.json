@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "ledger.light",
+  "name": "Ledger · light",
+  "algorithm": "default",
+  "token": {
+    "colorPrimary": "#B4341E",
+    "colorTextLightSolid": "#FFFFFF",
+    "colorBgLayout": "#F6F7F9",
+    "colorBgContainer": "#FFFFFF",
+    "colorBgElevated": "#FFFFFF",
+    "colorText": "#14161A",
+    "colorTextSecondary": "#4C5562",
+    "colorTextTertiary": "#636C78",
+    "colorBorder": "#D3D7DE",
+    "colorBorderSecondary": "#E4E7EC",
+    "colorSplit": "#E4E7EC",
+    "colorSuccess": "#4E633D",
+    "colorSuccessBg": "#E9F0DF",
+    "colorWarning": "#84592E",
+    "colorWarningBg": "#F7E8CC",
+    "colorError": "#8A4A5E",
+    "colorErrorBg": "#F7DFE4",
+    "colorInfo": "#46656F",
+    "colorInfoBg": "#DDEAF0",
+    "colorLink": "#46656F",
+    "borderRadius": 6,
+    "borderRadiusLG": 10,
+    "fontFamily": "-apple-system, \"PingFang SC\", \"Helvetica Neue\", sans-serif",
+    "fontFamilyCode": "\"SF Mono\", ui-monospace, Menlo, monospace",
+    "fontSize": 14,
+    "padding": 16,
+    "paddingSM": 12,
+    "paddingLG": 20,
+    "margin": 16,
+    "marginSM": 8,
+    "marginLG": 32,
+    "motionDurationFast": "0.14s",
+    "motionDurationMid": "0.22s",
+    "motionDurationSlow": "0.32s",
+    "motionEaseInOut": "cubic-bezier(0.2, 0, 0, 1)",
+    "boxShadow": "0px 8px 24px 0px rgba(20, 22, 26, 0.1)",
+    "boxShadowSecondary": "0px 24px 64px 0px rgba(23, 24, 15, 0.18)"
+  },
+  "components": {
+    "Button": {
+      "borderRadius": 6,
+      "controlHeight": 44,
+      "primaryShadow": "none",
+      "defaultShadow": "none"
+    },
+    "Card": {
+      "borderRadiusLG": 10,
+      "paddingLG": 20
+    },
+    "Input": {
+      "borderRadius": 6,
+      "controlHeight": 44
+    },
+    "Select": {
+      "borderRadius": 6,
+      "optionSelectedBg": "#FDECE8"
+    },
+    "Modal": {
+      "borderRadiusLG": 10
+    },
+    "Table": {
+      "headerBg": "#EDEFF3",
+      "rowHoverBg": "#F6F7F9",
+      "borderColor": "#E4E7EC"
+    },
+    "Menu": {
+      "itemSelectedBg": "#FDECE8",
+      "itemBorderRadius": 6
+    }
+  }
+}

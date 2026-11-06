@@ -36,10 +36,19 @@ await page.waitForSelector('.recipe-phone');
 
 let failed = 0;
 
+// 主题在顶栏：图标按钮 + 下拉。已经是目标主题就不用再点开。
+const setTheme = async (label) => {
+  const trigger = page.locator('.topbar-theme-trigger');
+  if (!(await trigger.count())) return;
+  if ((await trigger.getAttribute('aria-label'))?.includes(label)) return;
+  await trigger.click();
+  await page.locator('.topbar-theme-menu').waitFor();
+  await page.locator(`.topbar-theme-option:has-text("${label}")`).click();
+  await page.locator('.topbar-theme-menu').waitFor({ state: 'detached' });
+};
+
 for (const item of CASES) {
-  // 主题在顶栏，设备在渲染区
-  const themeButton = page.locator(`.topbar .ctl-segment:has-text("${item.theme}")`);
-  if (await themeButton.count()) await themeButton.first().click();
+  await setTheme(item.theme);
   await page.locator(`.studio-render-head .ctl-segment:has-text("${item.device}")`).first().click();
   await page.waitForTimeout(200);
 

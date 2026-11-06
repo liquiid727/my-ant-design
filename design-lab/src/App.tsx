@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { ProviderSettings, openProviderSettings } from './components/provider-settings';
 import { ToastHost } from './components/toast';
 import { About } from './lab/About';
@@ -6,11 +6,13 @@ import { CasePage } from './lab/CasePage';
 import { Home } from './lab/Home';
 import { Matrix } from './lab/Matrix';
 import { Method } from './lab/Method';
-import { Segmented } from './components/controls';
+import { ResourcePage } from './lab/ResourcePage';
+import { ThemeMenu } from './components/theme-menu';
 import { Studio } from './lab/Studio';
 import { exampleById } from './lab/examples';
 import { brandsOf, type ThemeName } from './lab/model';
 import { useRoute } from './lib/router';
+import { preloadAdminStudio } from './lab/adminPreload';
 
 /** 站点外壳是暗色的，预览也默认从深色开始；浅色仍然可以手动切换。 */
 const initialTheme = (): ThemeName => 'dark';
@@ -22,6 +24,9 @@ const initialBrand = (appId: string) => {
 };
 
 const REPO = 'https://github.com/liquiid727/my-ant-design';
+
+/** 主题工作室是 antd 消费者，按需加载，不进首屏包。 */
+const AdminStudio = lazy(() => import('./lab/AdminStudio').then((module) => ({ default: module.AdminStudio })));
 
 export default function App() {
   const route = useRoute();
@@ -88,6 +93,17 @@ export default function App() {
           <a href="#/method" data-active={route.name === 'method'}>
             方法
           </a>
+          <a href="#/resources" data-active={route.name === 'resources'}>
+            资源
+          </a>
+          <a
+            href="#/admin"
+            data-active={route.name === 'admin'}
+            onMouseEnter={preloadAdminStudio}
+            onFocus={preloadAdminStudio}
+          >
+            主题工作室
+          </a>
           <a href="#/about" data-active={route.name === 'about'}>
             关于
           </a>
@@ -97,17 +113,7 @@ export default function App() {
           {route.name === 'studio' ? (
             <div className="topbar-preview">
               <span className="topbar-preview-label">预览</span>
-              <div className="topbar-theme">
-                <Segmented
-                  label="预览主题"
-                  value={theme}
-                  options={[
-                    { id: 'light', label: '浅色' },
-                    { id: 'dark', label: '深色' },
-                  ]}
-                  onChange={setTheme}
-                />
-              </div>
+              <ThemeMenu value={theme} onChange={setTheme} />
             </div>
           ) : null}
           <button type="button" className="topbar-config" onClick={openProviderSettings}>
@@ -119,7 +125,11 @@ export default function App() {
         </div>
       </header>
 
-      {route.name === 'case' ? (
+      {route.name === 'admin' ? (
+        <Suspense fallback={<div className="admin-loading" role="status">正在加载主题工作室…</div>}>
+          <AdminStudio path={route.path} />
+        </Suspense>
+      ) : route.name === 'case' ? (
         <CasePage exampleId={route.example} tab={route.tab} width={route.width} />
       ) : route.name === 'matrix' ? (
         <Matrix app={app} brand={brand} theme={theme} onApp={setApp} onBrand={setBrand} onTheme={setTheme} />
@@ -137,6 +147,8 @@ export default function App() {
         <About filter={route.filter} groupBy={route.groupBy} search={route.search} preset={route.preset} phase={route.phase} />
       ) : route.name === 'method' ? (
         <Method focus={route.focus} />
+      ) : route.name === 'resources' ? (
+        <ResourcePage group={route.group} />
       ) : (
         <Home />
       )}
@@ -144,7 +156,7 @@ export default function App() {
       <ProviderSettings />
       <ToastHost />
 
-      {isCase ? null : (
+      {isCase || route.name === 'admin' ? null : (
         <footer className="site-foot">
           <span className="site-foot-mark">
             Alro&apos;s studio
@@ -153,6 +165,7 @@ export default function App() {
           <nav className="site-foot-links" aria-label="页脚">
             <a href="#/matrix">排列</a>
             <a href="#/method">方法</a>
+            <a href="#/resources">资源</a>
             <a href="#/about">关于</a>
             <a href={REPO} target="_blank" rel="noreferrer">
               源代码 ↗

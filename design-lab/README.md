@@ -62,6 +62,7 @@ design-lab/
 │   ├── ds-core/                 # headless：输入 → ViewModel（纯函数 + 单测）
 │   └── ds-weapp/                # 小程序组件：WXML/WXSS，只吃 tokens.wxss
 ├── src/
+│   ├── assets/res/              # 资源页的图标与预览（第三方，来源见 docs/resource-assets.md）
 │   ├── generated/               # 产物（勿手改）：tokens.<app>.{css,wxss,ts} 等
 │   ├── components/ui.tsx        # 只吃 token 的通用组件（VM 来自 ds-core）
 │   ├── apps/{ride,ledger}/screens.tsx  # 各产品的手机屏
@@ -207,12 +208,14 @@ Noir Web 示例；浅色排列是同一套语言的冷白对照。
 `npm run dev` 之后是两个层级，而不是一条长滚动页：
 
 ```
-#/                 首页：三个示例（Ride / Ledger / Noir）+ 方法摘要 + 三条命令
-#/studio           工作台：生成/导入参考图 → 抽出配色角色 → 归一成品牌包 → 重建 + 像素 diff
+#/                 首页：三个证据卡（真实 token / 三张身份截图 / 门禁）+ 三个示例 + 一行五步流程 + 三条命令
+#/studio           工作台：生成/导入参考图 → 抽出配色角色 → 归一成品牌包 → 重建 + 像素 diff，顶部一条产物缩略图时间线
                    → 自动映射页面配方 → 用配方渲染界面（可切品牌验证"只换变量"）
                    （BYO key 调 OpenAI 兼容的 /images/generations 与 /chat/completions，
                    图片只在浏览器里分析，产出 brand/dark token、visual-recipe、page-recipe）
-#/method           方法：五步流程 · 生成方式 · 交付物（切产品 + 本次编译改动）
+#/method           方法：五步，每步配一张真实产物（源 JSON / CSS / 门禁 / 四平台文件 / 基线截图）· 生成方式 · 交付物
+#/resources        资源：20 个开源项目（真实图标 + 四个页面预览），按流程六组，带筛选深链
+#/resources?group=motion   深链到某一组（与案例页标签同一个思路：筛选状态即 URL）
 #/about            关于：为什么做、交付什么、不是什么、现在到哪了、时间线（git log · 按日期/里程碑 · 类型筛选 · 折叠）、谁做的
 #/matrix?app=ride  排列矩阵：产品 × 品牌 × 主题，12 套排列一次看全
 #/case/ride        示例页：Ride Atlas · 移动端 · 骑行包 · 浅色
@@ -221,6 +224,7 @@ Noir Web 示例；浅色排列是同一套语言的冷白对照。
                    移动端：概览 / 现实界面 / 动效 / 审计 / Token 表 / 设计决策
                    Web：Web 界面 / 动效 / 审计 / Token 表 / 设计决策
 #/case/ledger/reality   深链到某个标签（标签即 URL，可分享）
+#/admin                 主题工作室（挂载 ../ant-design，antd 主题的生产与管理）
 ```
 
 首页只回答"这是什么、解决什么问题、凭什么相信"；怎么实现搬到 `方法`，

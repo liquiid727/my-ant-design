@@ -14,7 +14,7 @@ export type ThemeRuntimeComponent = ComponentType<ThemeRuntimeProps>;
 
 export type ThemePresetDefinition = {
   id: string;
-  group: 'official' | 'custom' | 'community';
+  group: 'official' | 'lab' | 'custom' | 'community';
   order: number;
   name: string;
   style: string;

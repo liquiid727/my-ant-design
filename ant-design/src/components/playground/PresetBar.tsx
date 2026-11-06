@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import { Tooltip } from 'antd';
 import {
   customThemePresets,
+  labThemePresets,
   officialThemePresets,
   prefetchThemePreset,
 } from '../../themes/registry';
@@ -10,17 +11,16 @@ import { useThemeStore } from '../../stores/themeStore';
 export function PresetBar() {
   const selectedPresetId = useThemeStore((state) => state.activePresetId);
   const setPreset = useThemeStore((state) => state.setPreset);
-  const presets = [...officialThemePresets, ...customThemePresets];
+  const presets = [...officialThemePresets, ...labThemePresets, ...customThemePresets];
 
   return (
     <div className="preset-bar" aria-label="Theme presets" role="tablist">
       {presets.map((preset, index) => {
         const Icon = preset.icon;
-        const showCustomDivider =
-          preset.group === 'custom' && index > 0 && presets[index - 1]?.group !== 'custom';
+        const showGroupDivider = index > 0 && presets[index - 1]?.group !== preset.group;
         return (
           <Fragment key={preset.id}>
-            {showCustomDivider && <span className="preset-divider" aria-hidden="true" />}
+            {showGroupDivider && <span className="preset-divider" aria-hidden="true" />}
             <Tooltip title={`${preset.name} - ${preset.style}`} placement="top">
               <button
                 aria-label={preset.name}

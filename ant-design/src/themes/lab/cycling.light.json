@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "cycling.light",
+  "name": "Ride Atlas · light",
+  "algorithm": "default",
+  "token": {
+    "colorPrimary": "#B7CE5E",
+    "colorTextLightSolid": "#212D1E",
+    "colorBgLayout": "#F7F4E9",
+    "colorBgContainer": "#FFFCF2",
+    "colorBgElevated": "#FFFCF2",
+    "colorText": "#212D1E",
+    "colorTextSecondary": "#3B4A34",
+    "colorTextTertiary": "#666A57",
+    "colorBorder": "#D0CDBF",
+    "colorBorderSecondary": "#E6E3D7",
+    "colorSplit": "#E6E3D7",
+    "colorSuccess": "#4E633D",
+    "colorSuccessBg": "#E9F0DF",
+    "colorWarning": "#84592E",
+    "colorWarningBg": "#F7E8CC",
+    "colorError": "#8A4A5E",
+    "colorErrorBg": "#F7DFE4",
+    "colorInfo": "#46656F",
+    "colorInfoBg": "#DDEAF0",
+    "colorLink": "#46656F",
+    "borderRadius": 14,
+    "borderRadiusLG": 20,
+    "fontFamily": "-apple-system, \"PingFang SC\", \"Helvetica Neue\", sans-serif",
+    "fontFamilyCode": "\"SF Mono\", ui-monospace, Menlo, monospace",
+    "fontSize": 14,
+    "padding": 16,
+    "paddingSM": 12,
+    "paddingLG": 20,
+    "margin": 16,
+    "marginSM": 8,
+    "marginLG": 32,
+    "motionDurationFast": "0.14s",
+    "motionDurationMid": "0.22s",
+    "motionDurationSlow": "0.32s",
+    "motionEaseInOut": "cubic-bezier(0.2, 0, 0, 1)",
+    "boxShadow": "0px 12px 32px 0px rgba(33, 45, 30, 0.12)",
+    "boxShadowSecondary": "0px 24px 64px 0px rgba(23, 24, 15, 0.18)"
+  },
+  "components": {
+    "Button": {
+      "borderRadius": 14,
+      "controlHeight": 44,
+      "primaryShadow": "none",
+      "defaultShadow": "none"
+    },
+    "Card": {
+      "borderRadiusLG": 20,
+      "paddingLG": 20
+    },
+    "Input": {
+      "borderRadius": 14,
+      "controlHeight": 44
+    },
+    "Select": {
+      "borderRadius": 14,
+      "optionSelectedBg": "#D8E4C8"
+    },
+    "Modal": {
+      "borderRadiusLG": 20
+    },
+    "Table": {
+      "headerBg": "#F2F0E6",
+      "rowHoverBg": "#F7F4E9",
+      "borderColor": "#E6E3D7"
+    },
+    "Menu": {
+      "itemSelectedBg": "#D8E4C8",
+      "itemBorderRadius": 14
+    }
+  }
+}

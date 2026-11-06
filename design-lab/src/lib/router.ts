@@ -6,6 +6,8 @@ export type Route =
   | { name: 'method'; focus?: string }
   | { name: 'studio'; sample?: boolean; device?: string; brand?: string; width?: number; landscape?: boolean }
   | { name: 'case'; example: string; tab?: string; width?: number }
+  | { name: 'resources'; group?: string }
+  | { name: 'admin'; path: string }
   | { name: 'matrix'; app?: string; brand?: string; theme?: string };
 
 export const parseRoute = (hash = window.location.hash): Route => {
@@ -33,6 +35,13 @@ export const parseRoute = (hash = window.location.hash): Route => {
       preset: params.get('preset') ?? undefined,
       phase: params.get('phase') ?? undefined,
     };
+
+  if (path === '/resources') return { name: 'resources', group: params.get('group') ?? undefined };
+
+  // 挂载的 antd 主题工作室：#/admin 之后的路径交给它自己的内存路由
+  if (path === '/admin' || path.startsWith('/admin/')) {
+    return { name: 'admin', path: path.slice('/admin'.length) || '/' };
+  }
 
   if (path === '/studio' || path === '/workbench') {
     return {

@@ -14,6 +14,15 @@ const ComponentsPreview = lazy(() =>
 const DashboardPreview = lazy(() =>
   import('./official/OfficialDashboardPreview'),
 );
+const StatesPreview = lazy(() =>
+  import('./official/OfficialStatesPreview').then((module) => ({ default: module.OfficialStatesPreview })),
+);
+const CatalogPreview = lazy(() =>
+  import('./official/OfficialCatalogPreview').then((module) => ({ default: module.OfficialCatalogPreview })),
+);
+
+const VIEWS = ['components', 'dashboard', 'states', 'catalog'] as const;
+type PlaygroundView = (typeof VIEWS)[number];
 
 export function PlaygroundPage() {
   const { message } = App.useApp();
@@ -24,7 +33,10 @@ export function PlaygroundPage() {
   const overrides = useThemeStore((state) => state.overrides);
   const setResolvedTheme = useThemeStore((state) => state.setResolvedTheme);
   const openAI = useUIStore((state) => state.openAI);
-  const activeView = searchParams.get('view') === 'dashboard' ? 'dashboard' : 'components';
+  const requestedView = searchParams.get('view');
+  const activeView: PlaygroundView = VIEWS.includes(requestedView as PlaygroundView)
+    ? (requestedView as PlaygroundView)
+    : 'components';
   const activePreset = getThemePreset(activePresetId);
   const ThemeRuntime = useMemo(() => lazy(activePreset.loadRuntime), [activePreset]);
   const sceneBackground = activePreset.scene.background.startsWith('linear-gradient')
@@ -49,6 +61,8 @@ export function PlaygroundPage() {
           options={[
             { label: 'Components', value: 'components' },
             { label: 'Dashboard', value: 'dashboard' },
+            { label: 'States', value: 'states' },
+            { label: 'Catalog', value: 'catalog' },
           ]}
           onChange={(value) => navigate(`/?view=${value}`)}
         />
@@ -84,19 +98,26 @@ export function PlaygroundPage() {
           overrides={overrides}
           onResolvedTheme={setResolvedTheme}
         >
-          {(config) =>
-            activeView === 'dashboard' ? (
-              <DashboardPreview
-                className="official-dashboard-card"
-                config={config}
-                activeTheme={{
-                  icon: activePreset.icon,
-                  name: activePreset.name,
-                  bgImgDark: activePreset.scene.dark,
-                }}
-                style={{ borderRadius: 16 }}
-              />
-            ) : (
+          {(config) => {
+            if (activeView === 'dashboard') {
+              return (
+                <DashboardPreview
+                  className="official-dashboard-card"
+                  config={config}
+                  activeTheme={{
+                    icon: activePreset.icon,
+                    name: activePreset.name,
+                    bgImgDark: activePreset.scene.dark,
+                  }}
+                  style={{ borderRadius: 16 }}
+                />
+              );
+            }
+
+            if (activeView === 'states') return <StatesPreview config={config} />;
+            if (activeView === 'catalog') return <CatalogPreview config={config} />;
+
+            return (
               <ComponentsPreview
                 className="official-components-card"
                 containerClassName="official-preview-container"
@@ -104,8 +125,8 @@ export function PlaygroundPage() {
                 isDark={false}
                 isDarkTheme={activePreset.scene.dark}
               />
-            )
-          }
+            );
+          }}
         </ThemeRuntime>
       </Suspense>
       <Drawer

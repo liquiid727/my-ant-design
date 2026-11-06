@@ -418,6 +418,89 @@ export const Studio = ({
         ))}
       </nav>
 
+      <ol className="studio-outputs" aria-label="本次会话的产物">
+        <li>
+          <button type="button" className="studio-output" data-ready={Boolean(reference)} onClick={() => setStep(1)}>
+            <span className="studio-output-thumb">
+              {reference ? <img src={reference.src} alt="" /> : <span className="studio-output-empty">01</span>}
+            </span>
+            <span className="studio-output-text">
+              <strong>参考图</strong>
+              <small>{reference ? '已选 1 张' : '还没选'}</small>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button type="button" className="studio-output" data-ready={Boolean(profile)} onClick={() => setStep(2)}>
+            <span className="studio-output-thumb">
+              {profile ? (
+                <span className="studio-output-swatches">
+                  {(['background', 'surface', 'accent', 'ink'] as Role[]).map((role) => (
+                    <i key={role} style={{ background: profile.roles[role]?.hex ?? 'transparent' }} />
+                  ))}
+                </span>
+              ) : (
+                <span className="studio-output-empty">02</span>
+              )}
+            </span>
+            <span className="studio-output-text">
+              <strong>配色</strong>
+              <small>{profile ? `${profile.clusters.length} 个色簇` : '未分析'}</small>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button type="button" className="studio-output" data-ready="true" onClick={() => setStep(3)}>
+            <span className="studio-output-thumb">
+              <span className="studio-output-ramp">
+                {Object.entries(pack.ramp).map(([stepKey, hex]) => (
+                  <i key={stepKey} style={{ background: hex }} />
+                ))}
+              </span>
+            </span>
+            <span className="studio-output-text">
+              <strong>品牌包</strong>
+              <small>{id}</small>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button type="button" className="studio-output" data-ready={Boolean(rebuild)} onClick={() => setStep(4)}>
+            <span className="studio-output-thumb">
+              {rebuild ? <img src={rebuild.diff.heatmap} alt="" /> : <span className="studio-output-empty">04</span>}
+            </span>
+            <span className="studio-output-text">
+              <strong>重建</strong>
+              <small>{rebuild ? `差异 ${(rebuild.diff.mismatch * 100).toFixed(1)}%` : '待重建'}</small>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            className="studio-output"
+            data-ready={Boolean(mapping?.recipe)}
+            onClick={() => setStep(4)}
+          >
+            <span className="studio-output-thumb">
+              {mapping?.recipe ? (
+                <span className="studio-output-bars">
+                  {mapping.recipe.sections.slice(0, 4).map((section) => (
+                    <i key={section.component} />
+                  ))}
+                </span>
+              ) : (
+                <span className="studio-output-empty">05</span>
+              )}
+            </span>
+            <span className="studio-output-text">
+              <strong>页面配方</strong>
+              <small>{mapping?.recipe ? `${mapping.recipe.sections.length} 个区块` : '未生成'}</small>
+            </span>
+          </button>
+        </li>
+      </ol>
+
       {step === 1 ? (
         <section className="studio-panel">
           <div className="studio-split">

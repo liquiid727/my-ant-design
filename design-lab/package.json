@@ -26,8 +26,17 @@
     "visual:studio:update": "node scripts/visual-studio.mjs --update"
   },
   "dependencies": {
+    "@ant-design/compatible": "^5.1.4",
+    "@ant-design/fast-color": "^3.0.1",
+    "@ant-design/icons": "^6.3.2",
+    "antd": "^6.5.1",
+    "antd-style": "^4.1.0",
+    "clsx": "^2.1.1",
+    "nanoid": "^5.1.16",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^6.30.6",
+    "zustand": "^5.0.16"
   },
   "devDependencies": {
     "@types/react": "^19.3.0",

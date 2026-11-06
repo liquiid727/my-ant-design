@@ -148,6 +148,7 @@ pre,
 .case,
 .method,
 .about,
+.resources,
 .studio,
 .matrix {
   width: min(var(--lab-content), 100% - var(--lab-gutter) * 2);

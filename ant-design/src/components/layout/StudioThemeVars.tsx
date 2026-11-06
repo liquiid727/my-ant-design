@@ -52,7 +52,9 @@ export function StudioThemeVars({ dark }: { dark: boolean }) {
     Object.entries(vars).forEach(([name, value]) => {
       if (value) root.style.setProperty(name, value);
     });
-    root.style.colorScheme = dark ? 'dark' : 'light';
+    // color-scheme 挂在 studio 自己的根节点上：被 design-lab 挂载时不能改 html，
+    // 否则会盖掉 lab 的暗色外壳。
+    root.querySelector('.studio-root')?.setAttribute('data-scheme', dark ? 'dark' : 'light');
   }, [token, dark]);
 
   return null;

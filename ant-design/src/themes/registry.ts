@@ -24,6 +24,7 @@ import { SereneIcon } from './official/SereneIcon';
 import { OFFICIAL_SOURCE_COMMIT } from './types';
 import type { ThemePresetDefinition } from './types';
 import { runtimeLoader } from './runtime';
+import { labThemePresets as labPresets } from './labRegistry';
 
 const source = (path: string) => ({ commit: OFFICIAL_SOURCE_COMMIT, path });
 const raw = (loader: () => Promise<{ default: string }>) => () => loader().then((module) => module.default);
@@ -109,6 +110,7 @@ const registry = [
     loadRuntime: runtimeLoader('serene', 'Serene', () => import('./official/sereneTheme')),
     loadSource: raw(() => import('./official/sereneTheme.ts?raw')),
   },
+  ...labPresets,
   {
     id: 'coffee', group: 'custom', order: 100, name: 'Coffee', style: 'Custom warm neutral', icon: coffeeIcon,
     scene: { background: 'linear-gradient(180deg, #fcfaf8 0%, #f3eee8 100%)' },
@@ -126,6 +128,7 @@ const duplicateIds = themePresetRegistry.filter(
 if (duplicateIds.length) throw new Error(`Duplicate theme preset ids: ${duplicateIds.map((item) => item.id).join(', ')}`);
 
 export const officialThemePresets = themePresetRegistry.filter((item) => item.group === 'official');
+export const labThemePresets = themePresetRegistry.filter((item) => item.group === 'lab');
 export const customThemePresets = themePresetRegistry.filter((item) => item.group === 'custom');
 
 export const getThemePreset = (id: string) => {

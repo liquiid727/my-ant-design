@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "noir.light",
+  "name": "Noir · light",
+  "algorithm": "default",
+  "token": {
+    "colorPrimary": "#0A0A0C",
+    "colorTextLightSolid": "#FFFFFF",
+    "colorBgLayout": "#F5F5F7",
+    "colorBgContainer": "#FFFFFF",
+    "colorBgElevated": "#FFFFFF",
+    "colorText": "#0A0A0C",
+    "colorTextSecondary": "#4B4B52",
+    "colorTextTertiary": "#63636A",
+    "colorBorder": "#C9C9D1",
+    "colorBorderSecondary": "#E2E2E8",
+    "colorSplit": "#E2E2E8",
+    "colorSuccess": "#4E633D",
+    "colorSuccessBg": "#E9F0DF",
+    "colorWarning": "#84592E",
+    "colorWarningBg": "#F7E8CC",
+    "colorError": "#8A4A5E",
+    "colorErrorBg": "#F7DFE4",
+    "colorInfo": "#46656F",
+    "colorInfoBg": "#DDEAF0",
+    "colorLink": "#46656F",
+    "borderRadius": 22,
+    "borderRadiusLG": 26,
+    "fontFamily": "-apple-system, \"PingFang SC\", \"Helvetica Neue\", sans-serif",
+    "fontFamilyCode": "\"SF Mono\", ui-monospace, Menlo, monospace",
+    "fontSize": 14,
+    "padding": 16,
+    "paddingSM": 12,
+    "paddingLG": 20,
+    "margin": 16,
+    "marginSM": 8,
+    "marginLG": 32,
+    "motionDurationFast": "0.14s",
+    "motionDurationMid": "0.22s",
+    "motionDurationSlow": "0.32s",
+    "motionEaseInOut": "cubic-bezier(0.2, 0, 0, 1)",
+    "boxShadow": "0px 14px 34px 0px rgba(10, 10, 12, 0.1)",
+    "boxShadowSecondary": "0px 24px 64px 0px rgba(23, 24, 15, 0.18)"
+  },
+  "components": {
+    "Button": {
+      "borderRadius": 22,
+      "controlHeight": 44,
+      "primaryShadow": "none",
+      "defaultShadow": "none"
+    },
+    "Card": {
+      "borderRadiusLG": 26,
+      "paddingLG": 20
+    },
+    "Input": {
+      "borderRadius": 22,
+      "controlHeight": 44
+    },
+    "Select": {
+      "borderRadius": 22,
+      "optionSelectedBg": "#EDEDF1"
+    },
+    "Modal": {
+      "borderRadiusLG": 26
+    },
+    "Table": {
+      "headerBg": "#ECECF0",
+      "rowHoverBg": "#F5F5F7",
+      "borderColor": "#E2E2E8"
+    },
+    "Menu": {
+      "itemSelectedBg": "#EDEDF1",
+      "itemBorderRadius": 22
+    }
+  }
+}
