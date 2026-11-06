@@ -11,7 +11,24 @@ export default defineConfig({
   resolve: {
     // studio 源码在 ../ant-design 下，会就近解析到它自己的 node_modules。
     // 不 dedupe 就会出现两份 React，hooks 直接崩。
-    dedupe: ['react', 'react-dom', 'react-router', 'react-router-dom'],
+    // 其余是 studio 源码的裸包：只用 design-lab 的 node_modules 时（独立部署、
+    // 或本地没装 ant-design 的依赖）它们必须回落到这里，否则构建解析不到。
+    dedupe: [
+      'react',
+      'react-dom',
+      'react-router',
+      'react-router-dom',
+      'antd',
+      'antd-style',
+      '@ant-design/compatible',
+      '@ant-design/fast-color',
+      '@ant-design/icons',
+      '@rc-component/steps',
+      '@rc-component/util',
+      'clsx',
+      'nanoid',
+      'zustand',
+    ],
     alias: {
       '@ds/core': path.join(root, 'packages/ds-core/src/index.ts'),
       // antd 主题工作室以路由方式挂载，直接引用源码，不再复制一份产物
